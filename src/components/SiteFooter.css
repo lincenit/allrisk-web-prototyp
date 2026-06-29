@@ -1,0 +1,19 @@
+/* ============================================================
+   SiteFooter — JEDEN spoločný footer pre celý prototyp.
+   Self-contained (vlastné .sfoot triedy + :root premenné),
+   funguje aj mimo .wf stránok (napr. Test).
+   ============================================================ */
+.sfoot{background:#091633;color:rgba(255,255,255,.6);}
+.sfoot-wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(18px,5vw,32px);}
+.sfoot-top{display:grid;grid-template-columns:1fr;gap:30px;padding-block:clamp(40px,6vw,64px);}
+.sfoot-brand .fl{height:30px;width:auto;display:block;}
+.sfoot-brand p{margin-top:14px;font-size:14px;max-width:32ch;line-height:1.6;color:rgba(255,255,255,.6);}
+.sfoot-brand .soc{display:flex;gap:10px;margin-top:18px;}
+.sfoot-brand .soc a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.2s;}
+.sfoot-brand .soc a:hover{background:var(--blue);}
+.sfoot-col h4{color:#fff;font-family:var(--display);font-size:14px;letter-spacing:.03em;margin-bottom:14px;}
+.sfoot-col a{display:block;font-size:14px;padding:6px 0;color:rgba(255,255,255,.6);transition:.2s;text-decoration:none;}
+.sfoot-col a:hover{color:#fff;}
+.sfoot-bot{border-top:1px solid rgba(255,255,255,.1);padding-block:20px;display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;font-size:12.5px;color:rgba(255,255,255,.4);}
+.sfoot-bot a{color:rgba(255,255,255,.4);text-decoration:none;} .sfoot-bot a:hover{color:#fff;}
+@media(min-width:760px){.sfoot-top{grid-template-columns:1.7fr 1fr 1fr 1fr;}}

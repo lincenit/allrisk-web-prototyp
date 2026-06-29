@@ -1,0 +1,131 @@
+/* ============================================================
+   SiteHeader — JEDEN spoločný header pre celý prototyp.
+   Pôvodne inline „wfh" header z homepage, vytiahnutý do komponentu.
+   Sticky modrý gradient bar, mega-menu Produkty, hľadanie, mobilný drawer.
+   Premenné berie z :root (index.css) — funguje na ktorejkoľvek stránke.
+   ============================================================ */
+.wfh{position:sticky;top:0;z-index:200;background:var(--grad-blue);}
+
+/* ===== svetlá varianta headera (prepínač v „Ladění stylu") ===== */
+.header-light .wfh{background:#fff;border-bottom:1px solid var(--l);}
+.header-light .wfh-logo img{filter:brightness(0);}
+.header-light .wfh-nav button,.header-light .wfh-nav a{color:var(--g700);}
+.header-light .wfh-nav button:hover,.header-light .wfh-nav a:hover{background:var(--blue-50);color:var(--blue);}
+.header-light .wfh-nav button.on,.header-light .wfh-nav a.active{background:var(--blue-50);color:var(--blue);}
+.header-light .wfh-divider{background:var(--l);}
+.header-light .wfh-iconbtn{color:var(--g700);}
+.header-light .wfh-iconbtn:hover,.header-light .wfh-iconbtn.on{background:var(--blue-50);color:var(--blue);}
+.header-light .wfh-mua{color:var(--ink);border-color:var(--g300);}
+.header-light .wfh-mua:hover{background:var(--blue-50);}
+.header-light .wfh-burger i{background:var(--ink);}
+
+.wfh-bar{display:flex;align-items:center;gap:10px;height:64px;max-width:var(--maxw);margin:0 auto;padding-inline:clamp(14px,4vw,28px);}
+.wfh-logo{display:inline-flex;align-items:center;text-decoration:none;}
+.wfh-logo img{height:26px;width:auto;display:block;}
+.wfh-spacer{flex:1;}
+.wfh-burger{display:flex;flex-direction:column;gap:4px;background:none;border:0;padding:6px;margin-left:6px;}
+.wfh-burger i{width:20px;height:2px;background:#fff;border-radius:2px;transition:.25s;}
+.wfh-burger.on i:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.wfh-burger.on i:nth-child(2){opacity:0;}
+.wfh-burger.on i:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+.wfh-nav{display:none;align-items:center;gap:8px;}
+.wfh-nav button,.wfh-nav a{border:0;background:none;padding:9px 12px;border-radius:9px;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.85);position:relative;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit;}
+.wfh-nav button:hover,.wfh-nav a:hover{background:rgba(255,255,255,.12);color:#fff;}
+.wfh-nav button.on,.wfh-nav a.active{color:#fff;background:rgba(255,255,255,.12);}
+.wfh-divider{display:none;width:1px;height:24px;background:rgba(255,255,255,.22);margin:0 6px;}
+
+/* malý dropdown v navigácii (Společnost) */
+.wfh-dd-wrap{position:relative;display:inline-flex;}
+.wfh-dd{position:absolute;top:calc(100% + 10px);left:0;min-width:210px;background:var(--box);border:1px solid var(--l);border-radius:14px;box-shadow:0 24px 48px -24px rgba(13,31,91,.42);padding:10px;display:flex;flex-direction:column;gap:6px;z-index:120;}
+.wfh-nav .wfh-dd a{display:flex;align-items:center;padding:12px 14px;border-radius:10px;font-size:14.5px;font-weight:500;color:var(--g700);background:none;text-decoration:none;transition:.15s;}
+.wfh-nav .wfh-dd a:hover{background:var(--blue-50);color:var(--blue);}
+.wfh-actions{display:flex;align-items:center;gap:8px;}
+.wfh-iconbtn{display:none;width:40px;height:40px;border-radius:10px;border:0;background:transparent;color:#fff;align-items:center;justify-content:center;transition:.2s;cursor:pointer;}
+.wfh-iconbtn:hover,.wfh-iconbtn.on{background:rgba(255,255,255,.14);}
+.wfh-mua{display:none;align-items:center;gap:7px;height:40px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:0 15px;font-size:13.5px;font-weight:600;color:#fff;background:transparent;cursor:pointer;text-decoration:none;}
+.wfh-mua:hover{background:rgba(255,255,255,.12);}
+.wfh-claim{display:inline-flex;align-items:center;gap:7px;height:40px;background:var(--red);color:#fff;border:0;border-radius:10px;padding:0 15px;font-size:13.5px;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;text-decoration:none;}
+.wfh-claim:hover{filter:brightness(1.08);}
+
+/* ikonka v mega položkách */
+.wfh-ic{width:32px;height:32px;border-radius:9px;background:var(--blue-50);display:flex;align-items:center;justify-content:center;flex:none;transition:.25s;}
+.wfh-ic svg{width:18px;height:18px;stroke:var(--blue);}
+
+/* PRODUKTY mega */
+.wf-mega-wrap{position:absolute;top:calc(100% + 10px);left:0;right:0;display:flex;justify-content:center;z-index:110;pointer-events:none;}
+.wf-mega{pointer-events:auto;width:min(980px,calc(100vw - 32px));background:var(--box);border:1px solid var(--l);border-radius:18px;box-shadow:0 30px 60px -28px rgba(13,31,91,.45);overflow:hidden;}
+.wf-mega-body{display:grid;grid-template-columns:240px 1fr;}
+.wf-rail{background:#f7f9fc;border-right:1px solid var(--l2);padding:12px;display:flex;flex-direction:column;}
+.wf-rail-cats{display:flex;flex-direction:column;gap:3px;}
+.wf-rail-cats button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:none;border-radius:9px;padding:11px 10px;font-size:14px;font-weight:600;color:var(--g700);transition:.15s;}
+.wf-rail-cats button .ch{margin-left:auto;color:var(--g300);display:inline-flex;}
+.wf-rail-cats button:hover{background:#eef2f7;}
+.wf-rail-cats button.on{background:var(--blue-50);color:var(--blue);}
+.wf-rail-cats button.on .ch{color:var(--blue);}
+
+/* segment switch „Pro koho" — taby v jednom riadku nad produktami */
+.wf-seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.wf-seg button{border:1px solid var(--l);background:#fff;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;color:var(--g700);transition:.15s;}
+.wf-seg button:hover{border-color:var(--blue);color:var(--blue);}
+.wf-seg button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.wf-panel{padding:18px;}
+.wf-search-lbl{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:13px;}
+.wf-mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.wf-item{display:flex;gap:11px;align-items:center;border:1px solid transparent;border-radius:10px;padding:10px 11px;background:var(--box);cursor:pointer;transition:.15s;text-decoration:none;}
+.wf-item:hover{background:var(--blue-50);}
+.wf-item .wfh-ic{width:auto;height:auto;background:transparent;border-radius:0;}
+.wf-item .wfh-ic svg{width:22px;height:22px;}
+.wf-item b{display:block;font-size:13.5px;color:var(--ink);font-weight:600;font-family:var(--sans);}
+.wf-item small{display:block;font-size:11.5px;color:var(--g500);margin-top:2px;}
+
+/* helper karta — posledná dlaždica v gride */
+.wf-item--help{background:var(--blue-50);border-color:var(--blue-100);}
+.wf-item--help:hover{background:#dbeafe;border-color:var(--blue);}
+.wf-item--help .wfh-ic svg{stroke:var(--blue);}
+.wf-item--help b{color:var(--blue);}
+
+/* SEARCH dropdown (rovnaký rámec ako mega) */
+.wf-search{width:min(620px,calc(100vw - 32px));}
+.wf-search-bar{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid var(--l2);color:var(--blue);}
+.wf-search-bar input{flex:1;border:0;outline:0;background:none;font-family:var(--sans);font-size:16px;color:var(--ink);}
+.wf-search-bar input::placeholder{color:var(--mut);}
+.wf-search-clear{flex:none;width:26px;height:26px;border:0;border-radius:8px;background:var(--g100);color:var(--g500);font-size:12px;cursor:pointer;transition:.15s;}
+.wf-search-clear:hover{background:var(--g200);color:var(--ink);}
+.wf-search-body{padding:16px;max-height:min(60vh,420px);overflow-y:auto;}
+.wf-search-empty{padding:18px 4px;color:var(--g500);font-size:14px;}
+.wf-search-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.wf-search-chips button{border:1px solid var(--l);background:var(--box);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--g700);cursor:pointer;transition:.15s;}
+.wf-search-chips button:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-50);}
+
+/* MOBILE DRAWER */
+.wf-drawer{position:fixed;left:0;right:0;top:64px;bottom:0;z-index:190;background:var(--box);overflow-y:auto;transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.wf-drawer.open{transform:none;}
+.wf-drawer-in{padding:16px clamp(14px,4vw,28px) 40px;display:flex;flex-direction:column;gap:14px;}
+.wf-mfield{height:44px;border:1px solid var(--g300);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--mut);font-size:14px;background:none;width:100%;}
+.wf-segtabs{display:flex;gap:6px;padding:12px 4px;}
+.wf-segtabs button{flex:1;border:1px solid var(--g300);background:var(--box);border-radius:10px;padding:11px 4px;font-size:12.5px;font-weight:600;color:var(--g700);}
+.wf-segtabs button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.wf-acc{display:flex;flex-direction:column;}
+.wf-acc-row{display:flex;align-items:center;width:100%;border:0;background:none;padding:13px 4px;font-size:15px;font-weight:600;color:var(--ink);font-family:inherit;border-bottom:1px solid var(--l2);text-align:left;}
+.wf-acc-row::after{content:"▾";margin-left:auto;color:var(--g400);font-weight:400;font-size:13px;}
+.wf-acc-row.open{color:var(--blue);}
+.wf-acc-row.open::after{content:"▴";color:var(--blue);}
+.wf-acc-sub{border-bottom:1px solid var(--l2);}
+.wf-acc-item{display:flex;align-items:center;gap:12px;padding:12px 4px 12px 14px;font-size:13.5px;color:var(--g700);text-decoration:none;}
+.wf-acc-item .wfh-ic{width:28px;height:28px;}
+.wf-mlinks{display:flex;flex-direction:column;}
+.wf-mlinks a{padding:13px 4px;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--l2);text-decoration:none;}
+.wf-mfoot{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
+.wf-mfoot .wfh-claim{justify-content:center;height:46px;}
+.wf-mfoot .wfh-mua{display:flex;justify-content:center;height:46px;border-color:var(--g300);color:var(--ink);}
+
+/* ============ DESKTOP ============ */
+@media(min-width:980px){
+  .wfh-burger{display:none;}
+  .wfh-nav{display:flex;}
+  .wfh-divider{display:block;}
+  .wfh-mua{display:inline-flex;}
+  .wfh-iconbtn{display:inline-flex;}
+  .wf-drawer{display:none;}
+  .wf-mega-grid{grid-template-columns:repeat(3,1fr);}
+}
