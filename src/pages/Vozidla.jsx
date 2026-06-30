@@ -3,14 +3,24 @@ import { Link } from 'react-router-dom'
 import './wireframe.css'
 import './vozidla.css'
 import { asset } from '../asset.js'
+import { useHeroHeader } from '../useHeroHeader.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import {
   IconShield, IconCarCrash, IconWindow, IconTool, IconRoute,
   IconCircleCheck, IconArrowRight,
   IconChevronRight, IconCar, IconUser, IconUsers,
-  IconBuildingCommunity, IconPaw, IconLock, IconBulb,
+  IconBuildingCommunity, IconPaw, IconLock, IconBulb, IconHeadset,
+  IconMotorbike, IconCaravan, IconTractor,
 } from '@tabler/icons-react'
+
+// kategórie vozidiel, ktoré vieme poistiť
+const VEHICLE_CATS = [
+  { code: 'L', icon: IconMotorbike, desc: 'Motorky, tříkolky' },
+  { code: 'M', icon: IconCar, desc: 'Osobní vozidla' },
+  { code: 'O', icon: IconCaravan, desc: 'Přípojná vozidla' },
+  { code: 'R', icon: IconTractor, desc: 'Ostatní vozidla' },
+]
 
 
 // 5 produktov = záložky (ako přepínátko u Directu) -----------------------
@@ -20,18 +30,18 @@ const TABS = [
     icon: IconShield,
     label: 'Povinné ručení',
     tag: 'Ze zákona povinné',
-    lead: 'Zákonné pojištění, bez kterého nesmí vozidlo na silnici. Kryje škody na zdraví i majetku, které svým vozem způsobíte někomu jinému – včetně asistence v základu a zelené karty pro cesty do zahraničí.',
-    covers: ['Škoda na zdraví třetí osoby', 'Škoda na cizím majetku', 'Asistenční služby v základu', 'Zelená karta pro cesty do zahraničí'],
-    note: 'Bez povinného ručení nesmí vozidlo na silnici.',
+    lead: 'Pojištění odpovědnosti z provozu vozidla, které musí ze zákona mít každý provozovatel vozidla. V případě nehody, kterou zaviníte, se postará o úhradu způsobených škod na zdraví a majetku třetích osob.',
+    covers: ['Škody na zdraví třetích osob', 'Škody na cizím majetku', 'Asistenční služby v základu', 'Zelená karta pro cesty do zahraničí'],
+    note: 'Limit krytí volíte vy – od zákonných 50 mil. Kč přes 100 mil. až po 1 miliardu Kč. Povinné ručení ale nekryje škody na vašem vlastním voze ani jeho odcizení – na to slouží havarijní pojištění.',
   },
   {
     key: 'havarijni',
     icon: IconCarCrash,
     label: 'Havarijní pojištění',
     tag: 'Chrání vaše auto',
-    lead: 'Vlastní produkt autopojištění Allrisk vám dá komplexní krytí vlastního vozu, ať se stane cokoliv – nehoda, krádež nebo jiné poškození. Havárie, vandalismus i živel na jednom místě.',
-    covers: ['Havárie a střet', 'Odcizení celého vozidla', 'Vandalismus', 'Živelní události – krupobití, povodeň'],
-    note: 'Lze sjednat samostatně i k povinnému ručení.',
+    lead: 'Ochranný štít pro vaše vozidlo pro případ nehody, poškození i odcizení. Pokryje veškeré náklady na váš vůz – opravy, nové díly, odtah i zapůjčení náhradního vozu po dobu opravy v servisu.',
+    covers: ['Poškození vlastního vozu při nehodě', 'Odcizení vozidla', 'Vandalismus a živelní události', 'Náhradní vůz po dobu opravy'],
+    note: 'Při sjednání si pohlídejte územní platnost, výši pojistné částky a spoluúčasti – některé pojišťovny zlevňují produkt právě omezováním těchto parametrů.',
   },
   {
     key: 'skla',
@@ -40,25 +50,25 @@ const TABS = [
     tag: 'Připojištění',
     lead: 'Oprava nebo výměna čelního i ostatních skel bez velkých výdajů. Drobné prasklinky vyřešíme rychle a často bez vlivu na vaše ostatní pojištění.',
     covers: ['Čelní sklo', 'Boční a zadní skla', 'Oprava často bez spoluúčasti'],
-    note: 'Drobná prasklina = rychlá oprava na počkání.',
+    note: 'Drobná prasklina = rychlá oprava na počkání, často bez vlivu na bonus.',
   },
   {
     key: 'asistence',
     icon: IconTool,
     label: 'Technické asistence',
     tag: 'Připojištění',
-    lead: 'Pomoc na cestě 24/7, ať se stane cokoliv. Odtah, oprava na místě i náhradní vůz až na 20 dní zdarma – v ČR i v zahraničí, s asistencí na nejvyšší úrovni.',
-    covers: ['Odtah nepojízdného vozidla', 'Oprava na místě', 'Náhradní vozidlo až 20 dní zdarma', 'Nonstop dispečink 24/7'],
-    note: 'Funguje v ČR i v zahraničí.',
+    lead: 'Pomoc na cestě 24/7, 365 dní v roce – v ČR i v zahraničí. Odtah do servisu, oprava na místě, náhradní vozidlo i ubytování, když se vůz porouchá daleko od domova.',
+    covers: ['Odtah a vyproštění vozidla', 'Oprava na místě – baterie, palivo, odemčení', 'Náhradní vozidlo nebo ubytování', 'Non-stop dispečink a právní pomoc'],
+    note: 'Limit asistence můžete zvýšit nálepkou Allrisk – nalepíte ji na vůz, pošlete foto se SPZ a do 5 pracovních dnů ji aktivujeme zdarma.',
   },
   {
     key: 'cesty',
     icon: IconRoute,
     label: 'Ochrana na cestách',
     tag: 'Připojištění',
-    lead: 'Klid pro celou posádku i zavazadla na výletech a dovolené. Léčebné výlohy v zahraničí, úraz řidiče i spolujezdců a storno cesty, když do plánů zasáhne nečekaná událost.',
-    covers: ['Léčebné výlohy v zahraničí', 'Úraz řidiče a posádky', 'Pojištění zavazadel', 'Storno cesty'],
-    note: 'Ideální doplněk před dovolenou autem.',
+    lead: 'Až 80 % vozidel nemá dostatečné limity technické asistence. Ochrana na cestách je zvýší přesně na dobu, kdy je potřebujete – na výlet i dovolenou autem, doma i v zahraničí.',
+    covers: ['Vyšší limity asistence – 10 000 Kč v ČR, 40 000 Kč v zahraničí', 'Ubytování i doprava posádky na cestě', 'Delší uskladnění a odtah vozidla', 'Asistence při odcizení vozu'],
+    note: 'Pro klienty s autopojištěním Allrisk aktivujete na 20 dní za 199 Kč přímo v portálu mujallrisk.cz – klidně i dopředu na plánovanou cestu.',
   },
 ]
 
@@ -125,10 +135,15 @@ export default function Vozidla() {
   const presetMods = prof.preset.map((k) => MODULES.find((m) => m.key === k)).filter(Boolean)
   const total = prof.base + presetMods.reduce((s, m) => s + m.price, 0)
 
+  // header priehľadný nad foto-hero, plný po zoskrolovaní pod hero (spoločné s ostatnými foto-hero stránkami)
+  useHeroHeader()
+
   return (
-    <div className="wf">
+    <div className="site">
       {/* ============ 1 · ÚVODNÍ SEKCE – kompaktní záhlaví kategorie ============ */}
       <section className="hero vz-hero">
+        {/* foto vozu pod hero + modrý overlay (foto vloží klient do public/vozidla/hero.jpg) */}
+        <div className="vz-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
         <div className="wrap vz-crumb-wrap">
           <nav className="vz-crumb">
             <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} />
@@ -145,34 +160,71 @@ export default function Vozidla() {
               <a href="#vz-modely" className="btn">Modelové situace</a>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ============ 1.5 · ÚVOD – vlastní autopojištění (text) ============ */}
-      <section className="sec wrap vz-intro">
-        <div className="vz-intro-tx">
-          <span className="ey">Vlastní autopojištění Allrisk</span>
-          <h2>Starosti o vozidlo <b>nechte na nás</b></h2>
-          <p>Vlastní produkty autopojištění jsou další jedinečností Allrisku. Poskytujeme vám komplexní krytí v případě nehody, krádeže nebo jiného poškození vozu – a k tomu asistenci na nejvyšší úrovni.</p>
-          <p>Váš čas je drahý, proto žijte. O vše ostatní se postaráme za vás. Umíme vám sestavit nejlepší kombinaci pojištění tak, aby přesně sedělo na to, jak a kde jezdíte.</p>
-        </div>
-        <ul className="vz-highlights">
-          <li><span className="vz-hl-ic"><IconCar size={22} stroke={1.6} /></span><div><b>Náhradní vůz až 20 dní zdarma</b><small>Abyste zůstali mobilní i během opravy vozu.</small></div></li>
-          <li><span className="vz-hl-ic"><IconTool size={22} stroke={1.6} /></span><div><b>Vlastní oddělení likvidace 24/7</b><small>Škodu řešíme interně, 365 dní v roce.</small></div></li>
-          <li><span className="vz-hl-ic"><IconRoute size={22} stroke={1.6} /></span><div><b>Služby autopůjčovny</b><small>Vše kolem vozu pod jednou střechou.</small></div></li>
-        </ul>
-        <div className="vz-note-box">
-          <h3>Jedinečný inkasní systém Allrisk</h3>
-          <p>V roce 2005 jsme na český trh přinesli jedinečný systém inkasního pojištění Allrisk. Díky globálnímu nákupu velkého množství produktů dosáhneme nejen optimální ceny, ale i sjednoceného vyúčtování – ať pojišťujete jedno auto, nebo celou flotilu.</p>
-          <ul>
-            <li>Jedno vyúčtování pro 1 i 100 vozidel</li>
-            <li>Flexibilní frekvence placení, měsíčně až ročně</li>
-            <li>Klientský portál mujallrisk.cz s přehledem pojistných událostí</li>
+          <ul className="vz-hero-points">
+            <li>
+              <span className="vz-hp-ic"><IconCar size={28} stroke={1.5} /></span>
+              <span className="vz-hp-tx"><b>Náhradní vůz až na 20 dní zdarma</b><small>Abyste zůstali mobilní i během opravy vozu.</small></span>
+            </li>
+            <li>
+              <span className="vz-hp-ic"><IconHeadset size={28} stroke={1.5} /></span>
+              <span className="vz-hp-tx"><b>Oddělení likvidací 24/7, 365 dní</b><small>Škodu řešíme interně, kdykoliv ji nahlásíte.</small></span>
+            </li>
+            <li>
+              <span className="vz-hp-ic"><IconRoute size={28} stroke={1.5} /></span>
+              <span className="vz-hp-tx"><b>Služby autopůjčovny</b><small>Vše kolem vozu pod jednou střechou.</small></span>
+            </li>
           </ul>
         </div>
       </section>
 
-      {/* ============ 2 · ZÁLOŽKY PRODUKTŮ ============ */}
+      {/* ============ 2 · INKASNÍ SYSTÉM (2× 50/50 text + foto), bez veľkého nadpisu ============ */}
+      <section className="sec wrap vz-system">
+        {/* riadok 1 – Systém + kategórie vozidel vľavo, foto vpravo */}
+        <div className="vz-feat">
+          <div className="vz-feat-tx">
+            <div className="vz-feat-block">
+              <h3>Systém</h3>
+              <p>V roce 2005 jsme na český trh přinesli jedinečný systém inkasního pojištění Allrisk. Díky globálnímu nákupu velkého množství produktů dosáhneme nejen optimální ceny, ale od každé pojišťovny nebo asistenční společnosti kupujeme jen ty produkty, které jsou prověřené trhem. Tyto produkty pak dle preferencí klienta poskládáme do balíčků, které svým obsahem zaručeně poskytují nejlepší poměr výkonu a ceny na trhu. Na pozadí celého projektu stojí obří IT zázemí, které vyvíjí a neustále zdokonaluje software Allrisk.</p>
+            </div>
+            <div className="vz-feat-block">
+              <h3>Kategorie vozidel</h3>
+              <ul className="vz-cats-mini">
+                {VEHICLE_CATS.map((c) => {
+                  const C = c.icon
+                  return (
+                    <li key={c.code}>
+                      <span className="vz-cat-ic"><C size={20} stroke={1.6} /></span>
+                      <span className="vz-cm-tx"><b>Kategorie {c.code}</b><small>{c.desc}</small></span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+          <div className="vz-feat-img"><img src={asset('/vozidla/system.jpg')} alt="Inkasní systém Allrisk" loading="lazy" /></div>
+        </div>
+
+        {/* riadok 2 – foto vľavo, texty vpravo */}
+        <div className="vz-feat rev">
+          <div className="vz-feat-img"><img src={asset('/vozidla/vyhody.jpg')} alt="Autopojištění Allrisk" loading="lazy" /></div>
+          <div className="vz-feat-tx">
+            <div className="vz-feat-block">
+              <h3>Obsah balíčku ZDARMA</h3>
+              <p>Nad rámec základních produktů autopojištění jsou naší nejsilnější ochranou vozidel asistenční služby ZDARMA. <a href="#vz-produkty">Více informací</a></p>
+            </div>
+            <div className="vz-feat-block">
+              <h3>Sjednocené vyúčtování</h3>
+              <p>Ať už máte 1 nebo 100 vozidel, máte vždy jedno jednoduché vyúčtování, které se vám vždy synchronizuje s kalendářním rokem. Sami klienti si určují frekvenci placení od měsíčních po roční platbu bez procentních poplatků za područní platby.</p>
+            </div>
+            <div className="vz-feat-block">
+              <h3>Klientský portál</h3>
+              <p>Klientský portál mujallrisk.cz poskytuje našim klientům ucelený přehled na všechny produkty a smlouvy inkasního pojištění Allrisk. Přihlášení a veškeré změny probíhají prostřednictvím SMS hesla, které je vázané na klienty zaregistrované telefonní číslo. Důležitou součástí klientského portálu je přehled o pojistných událostech, které řešíte přes oddělení likvidace Allrisk.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ============ 4 · ZÁLOŽKY PRODUKTŮ ============ */}
       <section id="vz-produkty" className="sec wrap">
         <div className="sec-h">
           <span className="ey">Co lze sjednat</span>
@@ -208,7 +260,7 @@ export default function Vozidla() {
           </div>
 
           <aside className="vz-aside">
-            <span className="vz-aside-ic">{(() => { const C = active.icon; return <C size={30} stroke={1.5} /> })()}</span>
+            <span className="vz-aside-ic">{(() => { const C = active.icon; return <C size={38} stroke={1.5} /> })()}</span>
             <div className="vz-aside-t">Dobré vědět</div>
             <p>{active.note}</p>
             <div className="vz-aside-div" />
@@ -217,7 +269,6 @@ export default function Vozidla() {
             <div className="vz-aside-row"><IconCircleCheck size={18} stroke={1.8} /> Poradce nablízku po celé ČR</div>
           </aside>
         </div>
-        <p className="vz-cap">Záložky lze na mobilu posouvat vodorovně. Každý produkt má stejnou kostru, takže nikde nevznikají prázdná místa.</p>
       </section>
 
       {/* ============ 3 · MODELOVÉ SITUACE (3 modely na preklik) ============ */}
@@ -306,7 +357,8 @@ export default function Vozidla() {
         </div>
       </section>
 
-      {/* ============ 4 · KONTAKT (spoločný banner) ============ */}
+
+      {/* ============ 5 · KONTAKT (spoločný banner) ============ */}
       <ContactBand />
 
       {/* ============ FOOTER (spoločný) ============ */}

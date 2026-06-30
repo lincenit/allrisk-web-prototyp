@@ -1,7 +1,7 @@
 /* ============================================================
    SiteFooter — JEDEN spoločný footer pre celý prototyp.
    Self-contained (vlastné .sfoot triedy + :root premenné),
-   funguje aj mimo .wf stránok (napr. Test).
+   funguje aj mimo .site stránok (napr. Test).
    ============================================================ */
 .sfoot{background:#091633;color:rgba(255,255,255,.6);}
 .sfoot-wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(18px,5vw,32px);}

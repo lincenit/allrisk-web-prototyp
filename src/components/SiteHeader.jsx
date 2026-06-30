@@ -17,7 +17,7 @@ const ICONMAP = {
   bolt: IconBolt, key: IconKey, warn: IconAlertTriangle, doc: IconFileText, leaf: IconPlant2,
   fish: IconFish, phone: IconPhone,
 }
-const Ic = ({ k }) => { const C = ICONMAP[k] || IconFileText; return <span className="wfh-ic"><C size={18} stroke={1.7} /></span> }
+const Ic = ({ k }) => { const C = ICONMAP[k] || IconFileText; return <span className="hdr-ic"><C size={18} stroke={1.7} /></span> }
 
 const COMPANY = [['O nás', '#'], ['Kariéra', '#'], ['Magazín', '#']]
 const POPULAR = ['Vozidla', 'Cestovní', 'Nemovitost', 'Investice', 'Život a úraz']
@@ -75,40 +75,40 @@ export default function SiteHeader() {
 
   return (
     <>
-      <header className="wfh" ref={headerRef}>
-        <div className="wfh-bar">
-          <Link className="wfh-logo" to="/" onClick={closeAll} aria-label="Allrisk – domů">
+      <header className="hdr" ref={headerRef}>
+        <div className="hdr-bar">
+          <Link className="hdr-logo" to="/" onClick={closeAll} aria-label="Allrisk – domů">
             <img src={asset('/allrisk-logo-white.svg')} alt="Allrisk" />
           </Link>
-          <span className="wfh-spacer" />
-          <nav className="wfh-nav">
+          <span className="hdr-spacer" />
+          <nav className="hdr-nav">
             <button className={prodOpen ? 'on' : ''} onClick={() => { setProdOpen((p) => !p); setCompOpen(false); setSearchOpen(false) }}>Produkty <IconChevronDown size={15} stroke={2.2} /></button>
             <NavLink to="/test" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Test pojištění</NavLink>
-            <div className="wfh-dd-wrap">
+            <div className="hdr-dd-wrap">
               <button className={compOpen ? 'on' : ''} onClick={() => { setCompOpen((p) => !p); setProdOpen(false); setSearchOpen(false) }}>Společnost <IconChevronDown size={15} stroke={2.2} /></button>
               {compOpen && (
-                <div className="wfh-dd">
+                <div className="hdr-dd">
                   {COMPANY.map(([l, to]) => <a key={l} href={to} onClick={closeAll}>{l}</a>)}
                 </div>
               )}
             </div>
-            <a href="#">Kontakt</a>
+            <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakt</NavLink>
           </nav>
-          <span className="wfh-divider" />
-          <div className="wfh-actions">
-            <button className={`wfh-iconbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" onClick={openSearch}><IconSearch size={18} stroke={2} /></button>
-            <button className="wfh-mua"><IconUser size={16} stroke={2} /> Můj Allrisk</button>
-            <Link to="/vozidla" className="wfh-claim" onClick={closeAll}><IconAlertTriangle size={16} stroke={2} /> Nahlásit škodu</Link>
+          <span className="hdr-divider" />
+          <div className="hdr-actions">
+            <button className={`hdr-iconbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" onClick={openSearch}><IconSearch size={18} stroke={2} /></button>
+            <button className="hdr-mua"><IconUser size={16} stroke={2} /> Můj Allrisk</button>
+            <Link to="/vozidla" className="hdr-claim" onClick={closeAll}><IconAlertTriangle size={16} stroke={2} /> Nahlásit škodu</Link>
           </div>
-          <button className={`wfh-burger ${drawer ? 'on' : ''}`} onClick={() => setDrawer((d) => !d)} aria-label="Menu"><i /><i /><i /></button>
+          <button className={`hdr-burger ${drawer ? 'on' : ''}`} onClick={() => setDrawer((d) => !d)} aria-label="Menu"><i /><i /><i /></button>
         </div>
 
         {prodOpen && (
-          <div className="wf-mega-wrap">
-            <div className="wf-mega">
-              <div className="wf-mega-body">
-                <div className="wf-rail">
-                  <div className="wf-rail-cats">
+          <div className="hdr-mega-wrap">
+            <div className="hdr-mega">
+              <div className="hdr-mega-body">
+                <div className="hdr-rail">
+                  <div className="hdr-rail-cats">
                     {CATS.map((c) => (
                       <button key={c.key} className={railCat === c.key ? 'on' : ''} onMouseEnter={() => setRailCat(c.key)} onClick={() => setRailCat(c.key)}>
                         {c.label}<span className="ch"><IconChevronRight size={16} stroke={2} /></span>
@@ -116,21 +116,21 @@ export default function SiteHeader() {
                     ))}
                   </div>
                 </div>
-                <div className="wf-panel">
-                  <div className="wf-seg">
+                <div className="hdr-panel">
+                  <div className="hdr-seg">
                     {SEGMENTS.map((s) => (
                       <button key={s.key} className={s.key === seg ? 'on' : ''} onClick={() => setSeg(s.key)}>{s.label}</button>
                     ))}
                   </div>
-                  <div className="wf-mega-grid">
+                  <div className="hdr-mega-grid">
                     {MENU[seg][railCat].map((item) => (
-                      <Link className="wf-item" key={item.label} to={routeFor(item.label)} onClick={closeAll}>
+                      <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={closeAll}>
                         <Ic k={item.icon} />
                         <span><b>{item.label}</b></span>
                       </Link>
                     ))}
-                    <Link className="wf-item wf-item--help" to="/test" onClick={closeAll}>
-                      <span className="wfh-ic"><IconCompass size={22} stroke={1.7} /></span>
+                    <Link className="hdr-item hdr-item--help" to="/test" onClick={closeAll}>
+                      <span className="hdr-ic"><IconCompass size={22} stroke={1.7} /></span>
                       <span><b>Nevíte si rady?</b></span>
                     </Link>
                   </div>
@@ -141,21 +141,21 @@ export default function SiteHeader() {
         )}
 
         {searchOpen && (
-          <div className="wf-mega-wrap">
-            <div className="wf-mega wf-search">
-              <div className="wf-search-bar">
+          <div className="hdr-mega-wrap">
+            <div className="hdr-mega hdr-search">
+              <div className="hdr-search-bar">
                 <IconSearch size={20} stroke={2} />
                 <input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Hledat produkt nebo službu…" />
-                {query && <button className="wf-search-clear" onClick={() => setQuery('')} aria-label="Vymazat">✕</button>}
+                {query && <button className="hdr-search-clear" onClick={() => setQuery('')} aria-label="Vymazat">✕</button>}
               </div>
-              <div className="wf-search-body">
+              <div className="hdr-search-body">
                 {q ? (
                   results.length ? (
                     <>
-                      <div className="wf-search-lbl">Výsledky · {results.length}</div>
-                      <div className="wf-mega-grid">
+                      <div className="hdr-search-lbl">Výsledky · {results.length}</div>
+                      <div className="hdr-mega-grid">
                         {results.map((item) => (
-                          <Link className="wf-item" key={item.label} to={routeFor(item.label)} onClick={closeSearch}>
+                          <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={closeSearch}>
                             <Ic k={item.icon} />
                             <span><b>{item.label}</b><small>{item.cat}</small></span>
                           </Link>
@@ -163,12 +163,12 @@ export default function SiteHeader() {
                       </div>
                     </>
                   ) : (
-                    <div className="wf-search-empty">Pro „{query}" jsme nic nenašli. Zkuste jiný výraz.</div>
+                    <div className="hdr-search-empty">Pro „{query}" jsme nic nenašli. Zkuste jiný výraz.</div>
                   )
                 ) : (
                   <>
-                    <div className="wf-search-lbl">Oblíbená hledání</div>
-                    <div className="wf-search-chips">
+                    <div className="hdr-search-lbl">Oblíbená hledání</div>
+                    <div className="hdr-search-chips">
                       {POPULAR.map((p) => <button key={p} onClick={() => setQuery(p)}>{p}</button>)}
                     </div>
                   </>
@@ -180,32 +180,37 @@ export default function SiteHeader() {
       </header>
 
       {/* mobile drawer */}
-      <div className={`wf-drawer ${drawer ? 'open' : ''}`}>
-        <div className="wf-drawer-in">
-          <button className="wf-mfield" onClick={() => { setDrawer(false); setSearchOpen(true) }}><IconSearch size={18} stroke={2} /> Hledat…</button>
-          <div className="wf-acc">
+      <div className={`hdr-drawer ${drawer ? 'open' : ''}`}>
+        <div className="hdr-drawer-in">
+          <button className="hdr-mfield" onClick={() => { setDrawer(false); setSearchOpen(true) }}><IconSearch size={18} stroke={2} /> Hledat…</button>
+          <div className="hdr-acc">
             {CATS.map((c) => (
               <div key={c.key}>
-                <button className={`wf-acc-row ${acc === c.key ? 'open' : ''}`} onClick={() => setAcc(acc === c.key ? null : c.key)}>{c.label}</button>
+                <button className={`hdr-acc-row ${acc === c.key ? 'open' : ''}`} onClick={() => setAcc(acc === c.key ? null : c.key)}>{c.label}</button>
                 {acc === c.key && (
-                  <div className="wf-acc-sub">
-                    <div className="wf-segtabs">{SEGMENTS.map((s) => (<button key={s.key} className={s.key === seg ? 'on' : ''} onClick={() => setSeg(s.key)}>{s.short}</button>))}</div>
-                    {MENU[seg][c.key].map((item) => (
-                      <Link className="wf-acc-item" key={item.label} to={routeFor(item.label)} onClick={() => setDrawer(false)}><Ic k={item.icon} />{item.label}</Link>
-                    ))}
+                  <div className="hdr-acc-sub">
+                    <div className="hdr-segtabs">{SEGMENTS.map((s) => (<button key={s.key} className={s.key === seg ? 'on' : ''} onClick={() => setSeg(s.key)}>{s.short}</button>))}</div>
+                    <div className="hdr-mega-grid">
+                      {MENU[seg][c.key].map((item) => (
+                        <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={() => setDrawer(false)}>
+                          <Ic k={item.icon} />
+                          <span><b>{item.label}</b></span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
             ))}
           </div>
-          <div className="wf-mlinks">
+          <div className="hdr-mlinks">
             <Link to="/test" onClick={() => setDrawer(false)}>Test pojištění</Link>
             {COMPANY.map(([l, to]) => <a key={l} href={to}>{l}</a>)}
-            <a href="#">Kontakt</a>
+            <Link to="/kontakt" onClick={() => setDrawer(false)}>Kontakt</Link>
           </div>
-          <div className="wf-mfoot">
-            <Link to="/vozidla" className="wfh-claim" onClick={() => setDrawer(false)}><IconAlertTriangle size={16} stroke={2} /> Nahlásit škodu</Link>
-            <button className="wfh-mua"><IconUser size={16} stroke={2} /> Můj Allrisk</button>
+          <div className="hdr-mfoot">
+            <Link to="/vozidla" className="hdr-claim" onClick={() => setDrawer(false)}><IconAlertTriangle size={16} stroke={2} /> Nahlásit škodu</Link>
+            <button className="hdr-mua"><IconUser size={16} stroke={2} /> Můj Allrisk</button>
           </div>
         </div>
       </div>

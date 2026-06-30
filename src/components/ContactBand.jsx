@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { IconPhone, IconMail, IconMapPin, IconArrowRight } from '@tabler/icons-react'
 
-// Modrý banner „Ozvěte se nám" – rovnaký na všetkých .wf stránkach (Home, Vozidla).
+// Modrý banner „Ozvěte se nám" – rovnaký na všetkých .site stránkach (Home, Vozidla).
 // Štýl je v wireframe.css (.contact-band), ktorý tieto stránky importujú.
 export default function ContactBand() {
   return (
@@ -14,7 +14,7 @@ export default function ContactBand() {
           <div className="info">
             <div className="info-row"><span className="ic"><IconPhone size={18} stroke={1.7} /></span> +420 545 110 341</div>
             <div className="info-row"><span className="ic"><IconMail size={18} stroke={1.7} /></span> allrisk@allrisk.cz</div>
-            <Link to="#" className="pob"><span className="ic"><IconMapPin size={18} stroke={1.7} /></span> Najít pobočku<span className="ar"><IconArrowRight size={18} stroke={2.2} /></span></Link>
+            <Link to="/pobocky" className="pob"><span className="ic"><IconMapPin size={18} stroke={1.7} /></span> Najít pobočku<span className="ar"><IconArrowRight size={18} stroke={2.2} /></span></Link>
           </div>
         </div>
         <form className="form" onSubmit={(e) => e.preventDefault()}>

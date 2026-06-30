@@ -9,7 +9,7 @@ import {
   IconCar, IconHome, IconArmchair, IconShield, IconScale, IconHeartHandshake, IconWorld,
   IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconTruck, IconBriefcase,
   IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPlant2, IconFish, IconPhone,
-  IconArrowRight, IconStarFilled,
+  IconArrowRight, IconStarFilled, IconChevronDown, IconHelpCircle,
   IconLicense, IconShieldCheck, IconMapPin, IconPhoto, IconLayoutNavbar,
   IconPlayerPlayFilled, IconPlayerPauseFilled, IconVolume, IconVolumeOff,
 } from '@tabler/icons-react'
@@ -35,33 +35,57 @@ const SMALL = [
   [IconMapPin, 'Široká síť poboček', 'Poradce nablízku po celé ČR.', '#'],
 ]
 const NUMS_MAIN = [['230 000+', 'spokojených klientů'], ['1,5 mld. Kč', 'pojistného'], ['300+', 'poradců'], ['18', 'let na trhu']]
+const FAQ = [
+  ['Kolik mě poradenství stojí?', 'Nic. Poradce vám sjedná pojištění i finance zdarma – naši práci platí pojišťovny a partneři, ne vy. Vy platíte jen samotnou smlouvu, kterou si vyberete.'],
+  ['Jsem vázaný na jednu pojišťovnu?', 'Ne. Spolupracujeme s desítkami pojišťoven a partnerů, takže porovnáme nabídky napříč trhem a vybereme tu, která vám sedne nejlépe – cenou i krytím.'],
+  ['Jak probíhá řešení škody?', 'Škodu likvidujeme interně, vlastním týmem. Stačí jeden kontakt – nepřehazujeme vás mezi pojišťovnami a celý proces hlídáme za vás, rychleji a férově.'],
+  ['Můžu mít poradce nablízku?', 'Ano. Máme širokou síť poboček po celé ČR, takže vždy najdete poradce ve svém okolí. Schůzku zvládneme osobně i online – jak vám to vyhovuje.'],
+  ['Co když už pojištění mám?', 'Rádi vám ho zdarma zrevidujeme. Projdeme stávající smlouvy, ukážeme, kde platíte zbytečně moc nebo kde máte díry v krytí, a navrhneme řešení – bez závazku.'],
+]
 const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
 const PHIL = 'Neprodáváme produkty. Jsme partner, který poradí, postará se a stojí při vás v každé životní situaci.'
 const ACCENT = new Set(['partner,', 'poradí,', 'postará', 'stojí', 'vás'])
 
-// ilustrácie poskladané z „komponent" (chips)
+// ilustrácie poskladané z „komponent" (chips) – fallback, keď blok nemá vlastnú ilustráciu
 const chip = (icon, label, pos, lg) => ({ icon, label, pos, lg })
-const FEATURES = [
+
+// „Proč Allrisk" – varianta v štýle feature sekcií (text + ilustrácia, striedavo)
+const WHY = [
   {
-    ey: 'Vlastní likvidace', t: <>Škodu vyřešíme <b>za vás</b></>,
-    p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně – jeden kontakt, rychleji a férově.', cta: 'Jak to funguje', alt: false,
-    img: '/illus/claims.svg',
+    ey: 'Vše pod jednou střechou', t: <>Unikátní <b>ekosystém služeb</b></>,
+    p: 'Pojištění, reality, finance i energie pod jednou střechou – propojené tak, ať spolu dávají smysl a nikde nevznikají díry.',
+    cta: 'Prozkoumat ekosystém', alt: false,
+    img: '/illus/tabler/ecosystem.png',
+    chips: [
+      chip(<IconWorld size={24} stroke={1.6} />, 'Pod jednou střechou', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
+      chip(<IconShield size={18} stroke={1.7} />, 'Pojištění', { left: '6%', top: '16%' }),
+      chip(<IconBuildingSkyscraper size={18} stroke={1.7} />, 'Reality', { right: '6%', top: '20%' }),
+      chip(<IconChartLine size={18} stroke={1.7} />, 'Finance', { left: '10%', bottom: '16%' }),
+      chip(<IconBolt size={18} stroke={1.7} />, 'Energie', { right: '8%', bottom: '14%' }),
+    ],
+  },
+  {
+    ey: 'Vlastní produkty', t: <>Inkasní pojištění, které <b>jinde nedostanete</b></>,
+    p: 'Vyvíjíme vlastní pojistné produkty – řešení šitá na míru situacím, na které běžné pojišťovny nemyslí.',
+    cta: 'Naše produkty', alt: true,
+    img: '/illus/tabler/products.png',
+    chips: [
+      chip(<IconLicense size={24} stroke={1.6} />, 'Vlastní produkt', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
+      chip(<IconFileText size={18} stroke={1.7} />, 'Na míru', { left: '8%', top: '18%' }),
+      chip(<IconShieldCheck size={18} stroke={1.7} />, 'Kryje víc', { right: '7%', top: '24%' }),
+      chip(<IconCoin size={18} stroke={1.7} />, 'Férová cena', { left: '14%', bottom: '15%' }),
+    ],
+  },
+  {
+    ey: 'Vlastní likvidace', t: <>Škodu <b>vyřešíme za vás</b></>,
+    p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně – jeden kontakt, rychleji a férově.',
+    cta: 'Jak to funguje', alt: false,
+    img: '/illus/tabler/claims.png',
     chips: [
       chip(<IconShieldCheck size={24} stroke={1.6} />, 'Likvidace', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
       chip(<IconAlertTriangle size={18} stroke={1.7} />, 'Nahlášeno', { left: '6%', top: '14%' }),
       chip(<IconPhone size={18} stroke={1.7} />, 'Jeden kontakt', { right: '6%', top: '22%' }),
       chip(<IconCar size={18} stroke={1.7} />, 'Vyřešeno', { left: '12%', bottom: '14%' }),
-    ],
-  },
-  {
-    ey: 'Allrisk EFFECTIVE', t: <>Ušetřete na <b>energiích i tarifech</b></>,
-    p: 'Díky objemu vyjednáme lepší ceny energií, leasingu i telekomunikací, než byste dostali sami.', cta: 'Spočítat úsporu', alt: true,
-    img: '/illus/savings.svg',
-    chips: [
-      chip(<IconCoin size={24} stroke={1.6} />, 'Úspora', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
-      chip(<IconBolt size={18} stroke={1.7} />, 'Energie', { left: '8%', top: '16%' }),
-      chip(<IconPhone size={18} stroke={1.7} />, 'Tarify', { right: '8%', top: '22%' }),
-      chip(<IconTruck size={18} stroke={1.7} />, 'Leasing', { left: '14%', bottom: '14%' }),
     ],
   },
 ]
@@ -80,7 +104,14 @@ function Illus({ chips, dark }) {
 
 export default function Wireframe() {
   const [heroStyle, setHeroStyle] = useState('blue')
+  const [whyStyle, setWhyStyle] = useState('feature')
   const [headerStyle, setHeaderStyle] = useState(() => localStorage.getItem('wfHeader') || 'blue')
+  const [faqOpen, setFaqOpen] = useState(0)
+
+  const scrollToRozcestnik = (e) => {
+    e.preventDefault()
+    document.getElementById('rozcestnik')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   // prepínač headera (svetlá/modrá) – cez triedu na <html>, lebo header žije mimo Wireframe
   useEffect(() => {
@@ -130,7 +161,7 @@ export default function Wireframe() {
   }, [])
 
   return (
-    <div className="wf">
+    <div className="site">
       {/* ============ HERO ============ */}
       <section className={`hero ${heroStyle === 'light' ? 'light' : ''} ${heroStyle === 'video' ? 'video' : ''} ${videoActive ? 'video-on' : ''}`}>
         {heroStyle === 'video' && (
@@ -161,8 +192,8 @@ export default function Wireframe() {
               </div>
             </div>
             <div className="hero-cta">
-              <Link to="/test" className="btn fill">S čím potřebuji poradit <IconArrowRight size={18} stroke={2.2} /></Link>
-              <Link to="/test" className="btn">Prohlédnout produkty</Link>
+              <a href="#rozcestnik" className="btn fill" onClick={scrollToRozcestnik}>S čím potřebuji poradit <IconArrowRight size={18} stroke={2.2} /></a>
+              <Link to="/test" className="btn">Otestujte, jak dobře jste pojištěni</Link>
             </div>
           </div>
           {heroStyle === 'video' ? (
@@ -173,13 +204,15 @@ export default function Wireframe() {
               </button>
             </div>
           ) : (
-            <div className="hero-media"><span>Video / obrázek</span></div>
+            <div className="hero-media hero-media-img">
+              <img src={asset('/brand/line-10.png')} alt="" />
+            </div>
           )}
         </div>
       </section>
 
       {/* ============ ROZCESTNÍK ============ */}
-      <section className="sec wrap">
+      <section id="rozcestnik" className="sec wrap">
         <div className="sec-h"><span className="ey">Potřebový rozcestník</span><h2>Vstup je <b>situace</b>, ne název produktu.</h2></div>
         <div className="needs">
           {NEEDS.map(([ic, t, c, to]) => {
@@ -204,41 +237,45 @@ export default function Wireframe() {
         </div>
       </section>
 
-      {/* ============ PROČ ALLRISK – bento ============ */}
+      {/* ============ PROČ ALLRISK ============ */}
       <section className="sec wrap">
-        <div className="sec-h"><span className="ey">Proč Allrisk</span><h2>Partner, ne <b>prodejce smluv</b></h2></div>
-        <div className="bento">
-          <div className="bento-big">
-            <div className="bimg"><span><IconPhoto size={26} stroke={1.5} /> Obrázek</span></div>
-            <h3>Unikátní ekosystém služeb</h3>
-            <p>Pojištění, reality, finance i energie pod jednou střechou – propojené tak, ať spolu dávají smysl a nikde nevznikají díry.</p>
+        {whyStyle === 'bento' && (
+          <div className="sec-h"><span className="ey">Proč Allrisk</span><h2>Partner, ne <b>prodejce smluv</b></h2></div>
+        )}
+
+        {whyStyle === 'bento' ? (
+          <div className="bento">
+            <div className="bento-big">
+              <div className="bimg"><span><IconPhoto size={26} stroke={1.5} /> Obrázek</span></div>
+              <h3>Unikátní ekosystém služeb</h3>
+              <p>Pojištění, reality, finance i energie pod jednou střechou – propojené tak, ať spolu dávají smysl a nikde nevznikají díry.</p>
+            </div>
+            <div className="bento-col">
+              {SMALL.map(([C, t, d, to]) => (
+                <Link className="mcard" key={t} to={to}>
+                  <span className="ic"><C size={22} stroke={1.7} /></span>
+                  <div><h3>{t}</h3><p>{d}</p></div>
+                  <span className="mcard-go"><IconArrowRight size={18} stroke={2} /></span>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="bento-col">
-            {SMALL.map(([C, t, d, to]) => (
-              <Link className="mcard" key={t} to={to}>
-                <span className="ic"><C size={22} stroke={1.7} /></span>
-                <div><h3>{t}</h3><p>{d}</p></div>
-                <span className="mcard-go"><IconArrowRight size={18} stroke={2} /></span>
-              </Link>
+        ) : (
+          <div className="why-feats">
+            {WHY.map((f) => (
+              <div className={`feature ${f.alt ? 'alt' : ''}`} key={f.ey}>
+                <div className="feature-tx">
+                  <span className="ey">{f.ey}</span>
+                  <h2>{f.t}</h2>
+                  <p>{f.p}</p>
+                  <span className="btn fill" style={{ background: 'var(--blue)', borderColor: 'var(--blue)', color: '#fff' }}>{f.cta} <IconArrowRight size={18} stroke={2.2} /></span>
+                </div>
+                <div className="illus">{f.img ? <img className="illus-img" src={asset(f.img)} alt="" aria-hidden /> : <Illus chips={f.chips} />}</div>
+              </div>
             ))}
           </div>
-        </div>
+        )}
       </section>
-
-      {/* ============ FEATURE sekcie ============ */}
-      {FEATURES.map((f) => (
-        <section className="sec wrap" style={{ paddingTop: 0 }} key={f.ey}>
-          <div className={`feature ${f.alt ? 'alt' : ''}`}>
-            <div className="feature-tx">
-              <span className="ey">{f.ey}</span>
-              <h2>{f.t}</h2>
-              <p>{f.p}</p>
-              <span className="btn fill" style={{ background: 'var(--blue)', borderColor: 'var(--blue)', color: '#fff' }}>{f.cta} <IconArrowRight size={18} stroke={2.2} /></span>
-            </div>
-            <div className="illus">{f.img ? <img className="illus-img" src={asset(f.img)} alt="" aria-hidden /> : <Illus chips={f.chips} />}</div>
-          </div>
-        </section>
-      ))}
 
       {/* ============ VALIDATOR BANNER ============ */}
       <section className="sec wrap" style={{ paddingTop: 0 }}>
@@ -275,6 +312,26 @@ export default function Wireframe() {
         </div>
       </section>
 
+      {/* ============ FAQ ============ */}
+      <section className="sec wrap" style={{ paddingTop: 0 }}>
+        <div className="sec-h"><span className="ey">Časté dotazy</span><h2>Co lidé <b>nejčastěji řeší</b></h2></div>
+        <div className="faq">
+          {FAQ.map(([q, a], i) => {
+            const open = faqOpen === i
+            return (
+              <div className={`acc-item ${open ? 'open' : ''}`} key={q}>
+                <button className="acc-q" onClick={() => setFaqOpen(open ? -1 : i)} aria-expanded={open}>
+                  <span className="ic"><IconHelpCircle size={18} stroke={1.7} /></span>
+                  <span className="acc-q-tx">{q}</span>
+                  <span className="acc-ch"><IconChevronDown size={20} stroke={2} /></span>
+                </button>
+                <div className="acc-a"><p>{a}</p></div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
       {/* ============ KONTAKT (spoločný banner) ============ */}
       <ContactBand />
 
@@ -289,6 +346,10 @@ export default function Wireframe() {
         <DebugGroup
           icon={IconPhoto} label="Hero sekce" value={heroStyle} onChange={setHeroStyle}
           options={[{ value: 'blue', label: 'Modrá' }, { value: 'light', label: 'Bílá' }, { value: 'video', label: 'Video' }]}
+        />
+        <DebugGroup
+          icon={IconLayoutNavbar} label="Proč Allrisk" value={whyStyle} onChange={setWhyStyle}
+          options={[{ value: 'bento', label: 'Bento' }, { value: 'feature', label: 'Sekce' }]}
         />
       </DebugPanel>
     </div>
