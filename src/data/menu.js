@@ -24,19 +24,23 @@ export const ICONS = {
   phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 5a2 2 0 012-2',
 }
 
+// primary = tri hlavné obchodné línie; zvyšok sú doplnkové služby (spodný pás menu).
 export const CATS = [
-  { key: 'pojisteni', label: 'Pojištění' },
-  { key: 'reality', label: 'Reality' },
-  { key: 'finance', label: 'Finance' },
+  { key: 'pojisteni', label: 'Pojištění', primary: true },
+  { key: 'reality', label: 'Reality', primary: true },
+  { key: 'finance', label: 'Finance', primary: true },
   { key: 'servis', label: 'Klientský servis' },
   { key: 'effective', label: 'Allrisk EFFECTIVE' },
 ]
 
 export const SEGMENTS = [
-  { key: 'rodiny', label: 'Rodiny a jednotlivci', short: 'Rodiny' },
-  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé' },
-  { key: 'mesta', label: 'Města a obce', short: 'Města a obce' },
+  { key: 'rodiny', label: 'Rodiny a jednotlivci', short: 'Rodiny', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
+  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
+  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
 ]
+
+// koľko služieb ponúkame danému segmentu (číslo v hlavičke menu)
+export const countFor = (seg) => CATS.reduce((n, c) => n + (MENU[seg]?.[c.key]?.length || 0), 0)
 
 const it = (label, icon, desc) => ({ label, icon, desc })
 
@@ -53,8 +57,8 @@ export const MENU = {
       it('Rybářské', 'fish', 'Vybavení a odpovědnost'),
     ],
     reality: [
-      it('Prodej nemovitostí', 'house'), it('Výkup nemovitostí', 'house'),
-      it('Nákup nemovitostí', 'house'), it('Aukce', 'doc'),
+      it('Prodej nemovitostí', 'houseSell'), it('Výkup nemovitostí', 'houseBuyout'),
+      it('Nákup nemovitostí', 'houseBuy'), it('Aukce', 'doc'),
       it('Developerské projekty', 'building'), it('Nájem bez rizika', 'key'),
     ],
     finance: [

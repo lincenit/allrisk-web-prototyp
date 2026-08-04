@@ -1,40 +1,42 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import './wireframe.css'
+import './profile.css'
 import { asset } from '../asset.js'
-import { DebugPanel, DebugGroup } from '../components/DebugPanel.jsx'
+import { useHeroHeader } from '../useHeroHeader.js'
+import { ProfileCards } from '../components/ProfileParts.jsx'
+import { PROFILES, countGen } from '../data/profiles.js'
+import { NEED_INTENTS, NEED_CLAIM } from '../data/needfinder.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
+import { ReferenceCarousel } from '../components/References.jsx'
+import { REFERENCES_HOME } from '../data/references.js'
+import { SecHead } from '../components/PageParts.jsx'
 import {
-  IconCar, IconHome, IconArmchair, IconShield, IconScale, IconHeartHandshake, IconWorld,
-  IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconTruck, IconBriefcase,
-  IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPlant2, IconFish, IconPhone,
-  IconArrowRight, IconStarFilled, IconChevronDown, IconHelpCircle,
-  IconLicense, IconShieldCheck, IconMapPin, IconPhoto, IconLayoutNavbar,
+  IconCar, IconHome, IconShield, IconWorld, IconBox, IconScale, IconHeart, IconFish,
+  IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPhone,
+  IconArrowRight, IconArrowLeft, IconChevronDown,
+  IconTruck, IconPigMoney, IconCreditCard, IconDeviceMobile, IconGavel, IconMessageCircle,
+  IconHomeDollar, IconHomeSearch, IconHomeCheck,
+  IconLicense, IconShieldCheck,
   IconPlayerPlayFilled, IconPlayerPauseFilled, IconVolume, IconVolumeOff,
+  IconMaximize, IconMinimize,
 } from '@tabler/icons-react'
 
-const ICONMAP = {
-  car: IconCar, house: IconHome, box: IconArmchair, shield: IconShield, scale: IconScale,
-  heart: IconHeartHandshake, globe: IconWorld, chart: IconChartLine, coin: IconCoin,
-  bank: IconBuildingBank, building: IconBuildingSkyscraper, truck: IconTruck, briefcase: IconBriefcase,
-  bolt: IconBolt, key: IconKey, warn: IconAlertTriangle, doc: IconFileText, leaf: IconPlant2,
-  fish: IconFish, phone: IconPhone,
+// Ikony rozcestníka: kľúč z data/needfinder.js -> tabler komponent (dáta zostávajú bez Reactu).
+const RZ_ICONS = {
+  car: IconCar, house: IconHome, box: IconBox, shield: IconShield, shieldCheck: IconShieldCheck,
+  scale: IconScale, heart: IconHeart, globe: IconWorld, fish: IconFish, bank: IconBuildingBank,
+  coin: IconCoin, piggy: IconPigMoney, card: IconCreditCard, truck: IconTruck, chart: IconChartLine,
+  building: IconBuildingSkyscraper, key: IconKey, gavel: IconGavel, bolt: IconBolt,
+  mobile: IconDeviceMobile, houseSell: IconHomeDollar, houseSearch: IconHomeSearch,
+  houseCheck: IconHomeCheck, chat: IconMessageCircle,
 }
-const NEEDS = [
-  ['car', 'Chci pojistit auto', 'Povinné ručení i havárie', '/vozidla'], ['house', 'Chci pojistit bydlení', 'Nemovitost a domácnost', '#'],
-  ['chart', 'Řeším investice', 'Portfolio na míru', '#'], ['heart', 'Chci zabezpečit rodinu', 'Život a příjem', '#'],
-  ['globe', 'Chystám se cestovat', 'Léčebné výlohy, storno', '#'], ['coin', 'Zajímá mě investování / finance', 'Spoření a penze', '#'],
-  ['bolt', 'Chci nabídku výhodných energií', 'Allrisk EFFECTIVE', '#'], ['phone', 'Chci nabídku výhodných tarifů', 'Telekomunikace', '#'],
-  ['key', 'Chci si půjčit auto', 'Autopůjčovna', '#'], ['warn', 'Chci nahlásit škodu', 'Vlastní likvidace', '#'],
-  ['doc', 'Chci zkontrolovat stávající smlouvy', 'Revize zdarma', '#'],
-]
-const SMALL = [
-  [IconLicense, 'Vlastní produkty inkasního pojištění', 'Řešení, která jinde nedostanete.', '#'],
-  [IconShieldCheck, 'Vlastní likvidace škod', 'Škodu vyřešíme interně – rychleji a férově.', '#'],
-  [IconMapPin, 'Široká síť poboček', 'Poradce nablízku po celé ČR.', '#'],
-]
-const NUMS_MAIN = [['230 000+', 'spokojených klientů'], ['1,5 mld. Kč', 'pojistného'], ['300+', 'poradců'], ['18', 'let na trhu']]
+// Produktové stránky zatiaľ neexistujú – bez vlastnej routy ide položka na kontakt s témou.
+const temaHref = (label) => `/kontakt?tema=${encodeURIComponent(label)}`
+const productHref = (p) => p.to || temaHref(p.label)
+// väzba „vybrat z…" žiada genitív, tam je tvar rovnaký pre všetky počty
+const productPickLabel = (n) => `Vybrat z ${n} produktů`
 const FAQ = [
   ['Kolik mě poradenství stojí?', 'Nic. Poradce vám sjedná pojištění i finance zdarma – naši práci platí pojišťovny a partneři, ne vy. Vy platíte jen samotnou smlouvu, kterou si vyberete.'],
   ['Jsem vázaný na jednu pojišťovnu?', 'Ne. Spolupracujeme s desítkami pojišťoven a partnerů, takže porovnáme nabídky napříč trhem a vybereme tu, která vám sedne nejlépe – cenou i krytím.'],
@@ -42,12 +44,29 @@ const FAQ = [
   ['Můžu mít poradce nablízku?', 'Ano. Máme širokou síť poboček po celé ČR, takže vždy najdete poradce ve svém okolí. Schůzku zvládneme osobně i online – jak vám to vyhovuje.'],
   ['Co když už pojištění mám?', 'Rádi vám ho zdarma zrevidujeme. Projdeme stávající smlouvy, ukážeme, kde platíte zbytečně moc nebo kde máte díry v krytí, a navrhneme řešení – bez závazku.'],
 ]
-const LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
 const PHIL = 'Neprodáváme produkty. Jsme partner, který poradí, postará se a stojí při vás v každé životní situaci.'
-const ACCENT = new Set(['partner,', 'poradí,', 'postará', 'stojí', 'vás'])
 
-// ilustrácie poskladané z „komponent" (chips) – fallback, keď blok nemá vlastnú ilustráciu
+// Video na pozadí hera. Má to byť tichá značková slučka bez titulkov a bez
+// tvárí — inak text v hero konkuruje deju vo videu.
+// hero.mp4 = webový export z 16x9_Allrisk_smycka.mp4 (koreň workspace, 332 MB):
+//   1920×1080, H.264 high, CRF 25 / max 3,2 Mb/s, +faststart → ~20 MB.
+//   Predchádzajúci export mal 1280×720 pri 444 kb/s a na celej obrazovke sa rozpadal.
+// TODO(asset): obsahovo je to stále provizórium — má hovorené slovo aj titulky.
+const HERO_VIDEO = '/hero.mp4'
+
+// Banner „revize smluv" – nahrádza zrušený test pojištění.
+// Nadpis je len háčik („Věděli jste, že…?"), celé tvrdenie aj vysvetlenie ide do textu,
+// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero na /uvod) – zámerne
+// väčšia než banner, presah oreže overflow:hidden na .banner.
+// TODO(obchod): doplniť reálnu priemernú úsporu z dát Allrisku (zatiaľ placeholder).
+const AVG_SAVING = 'XY 000'
+const REVIEW_TEXT = 'Projdeme je s vámi a ukážeme, kde platíte zbytečně a kde chybí krytí. Zdarma a bez závazku.'
+// Use case k revízii zatiaľ nemá vlastnú stránku – dočasne mieri na kontakt s predvyplnenou témou.
+const REVIEW_CASE = '/kontakt?tema=Revize smluv'
+// ilustrácie poskladané z „komponent" (chips) – fallback, keď blok nemá vlastnú ilustráciu.
+// Musí stáť nad WHY — volá ho už pri vyhodnotení modulu.
 const chip = (icon, label, pos, lg) => ({ icon, label, pos, lg })
+const ACCENT = new Set(['partner,', 'poradí,', 'postará', 'stojí', 'vás'])
 
 // „Proč Allrisk" – varianta v štýle feature sekcií (text + ilustrácia, striedavo)
 const WHY = [
@@ -102,46 +121,209 @@ function Illus({ chips, dark }) {
   )
 }
 
-export default function Wireframe() {
-  const [heroStyle, setHeroStyle] = useState('blue')
-  const [whyStyle, setWhyStyle] = useState('feature')
-  const [headerStyle, setHeaderStyle] = useState(() => localStorage.getItem('wfHeader') || 'blue')
-  const [faqOpen, setFaqOpen] = useState(0)
+// Dlaždica rozcestníka – vždy prepínač druhej úrovne, preto nesie aj náznak,
+// že sa pod ňou niečo otvorí („Vybrat z N produktů").
+function NeedTile({ n, open, onToggle }) {
+  const C = RZ_ICONS[n.icon] || IconShield
+  const inner = (
+    <>
+      {/* tá istá ikona ešte raz ako veľký vodoznak vpravo – tretinou vyčnieva von z dlaždice */}
+      <span className="rz-bg" aria-hidden="true"><C size={200} stroke={1.1} /></span>
+      <span className="ni"><C size={28} stroke={1.6} /></span>
+      <b>{n.t}</b>
+      <small>{n.d}</small>
+    </>
+  )
+  return (
+    <button
+      type="button"
+      className={`rz-tile rz-tile-btn${open ? ' on' : ''}`}
+      aria-expanded={open}
+      aria-controls={`rz-open-${n.key}`}
+      onClick={onToggle}
+    >
+      {inner}
+      <span className="rz-more">
+        {productPickLabel(n.products.length)}
+        <IconChevronDown className="cv" size={16} stroke={2.2} aria-hidden="true" />
+      </span>
+    </button>
+  )
+}
 
-  const scrollToRozcestnik = (e) => {
-    e.preventDefault()
+// Produktová karta – jediný obsah druhej úrovne. Žiadne popisy navyše, len ponuka.
+// Šípku v rohu nemá: celá karta je odkaz a v rohu robila len šum.
+function ProductCard({ pr }) {
+  const C = RZ_ICONS[pr.icon] || IconShield
+  return (
+    <Link to={productHref(pr)} className="rz-p">
+      <span className="pi"><C size={26} stroke={1.6} /></span>
+      <span className="tx"><b>{pr.label}</b><small>{pr.desc}</small></span>
+    </Link>
+  )
+}
+
+// Nadpis kroku má modrý akcent ako každá iná hlavička sekcie. Ktorá časť sa zvýrazní,
+// určujú dáta (`accent`) – česky sa to nedá odvodiť pravidlom („Chci se pojistit“ vs „Chci úvěr“).
+function needTitle(n) {
+  const i = n.accent ? n.t.lastIndexOf(n.accent) : -1
+  if (i === -1) return n.t
+  return <>{n.t.slice(0, i)}<b>{n.accent}</b>{n.t.slice(i + n.accent.length)}</>
+}
+
+// Rozcestník ako celok, v dvoch krokoch: mriežka potrieb ustúpi a druhý krok je
+// samostatná obrazovka — šípka späť, názov potreby, produktové karty.
+// (Varianta „roztažená karta", ktorá produkty otvárala vnútri dlaždice, je zrušená.)
+function NeedFinder() {
+  const [openKey, setOpenKey] = useState(null)
+  const open = NEED_INTENTS.find((n) => n.key === openKey) || null
+
+  // Druhý krok prepíše nadpis aj vetu celej sekcie, takže ju človek musí mať pred
+  // očami – inak by po kliknutí na dlaždicu dolu v mriežke zmenu vôbec nevidel.
+  // (Scroll-margin rieši sticky header.)
+  const toggle = (key) => {
+    setOpenKey((k) => (k === key ? null : key))
     document.getElementById('rozcestnik')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // prepínač headera (svetlá/modrá) – cez triedu na <html>, lebo header žije mimo Wireframe
-  useEffect(() => {
-    document.documentElement.classList.toggle('header-light', headerStyle === 'light')
-    localStorage.setItem('wfHeader', headerStyle)
-  }, [headerStyle])
+  // V druhom kroku prevezme hlavičku sekcie zvolená potreba – nadpis aj veta pod ním.
+  // Druhý nadpis vnútri kroku tak odpadá a človek má na obrazovke len jednu vec naraz.
+  const step = open
+  const head = (
+    <SecHead
+      key={step ? open.key : 'root'}
+      /* v kroku 2 stojí tlačidlo späť na mieste eyebrowu – jeden stĺpec, žiadna šípka zboku.
+         Eyebrow tam nechýba: názov sekcie už nesie cesta, po ktorej sa človek prekliká. */
+      ey={step ? (
+        <button type="button" className="btn rz-back" onClick={() => toggle(openKey)}>
+          <IconArrowLeft size={18} stroke={2.2} aria-hidden="true" />
+          Zpět na výběr
+        </button>
+      ) : 'Potřebový rozcestník'}
+      title={step ? needTitle(open) : <>Co právě <b>řešíte?</b></>}
+      lead={step ? open.d : 'Řekněte to svými slovy, ne názvem produktu. Ozve se vám poradce, který danou situaci zná – a zůstane u ní až do konce.'}
+    />
+  )
 
-  // video hero – default je gradient + linka + tlačidlo; klik prehrá video cez celý hero, pauza ho zavrie
+  // druhý krok: hlavičku už nesie sekcia, tu ostávajú len produktové karty
+  if (step) {
+    return (
+      <>
+        {head}
+        <div className="rz-plist rz-fade">
+          {open.products.map((pr) => <ProductCard key={pr.label} pr={pr} />)}
+        </div>
+      </>
+    )
+  }
+
+  return (
+    <>
+      {head}
+      <div className="rz-grid">
+      {NEED_INTENTS.map((n) => (
+        <NeedTile
+          key={n.key}
+          n={n}
+          open={openKey === n.key}
+          onToggle={() => toggle(n.key)}
+        />
+      ))}
+      </div>
+
+      {/* Škoda nie je nákup – vlastný pás a jediné miesto, kde na tejto sekcii žije AllRed.
+          V druhom kroku odpadá: tam už ide o výber produktu, nie o rozhodovanie, čo vlastne riešim. */}
+      <Link to={NEED_CLAIM.to} className="rz-claim">
+        <span className="ni"><IconAlertTriangle size={28} stroke={1.8} /></span>
+        <span className="tx"><b>{NEED_CLAIM.t}</b><small>{NEED_CLAIM.d}</small></span>
+        <span className="rz-claim-go">Nahlásit teď <IconArrowRight size={18} stroke={2.2} aria-hidden="true" /></span>
+      </Link>
+    </>
+  )
+}
+
+export default function Wireframe() {
+  const [faqOpen, setFaqOpen] = useState(0)
+
+  /* ---- video v hero ----
+     Video kryje celú sekciu a beží samo a potichu — je to kulisa, nie obsah.
+     Preto je aj bez tlačidla „přehrát": ovládanie je len pauza a zvuk pre
+     toho, koho pohyb ruší. */
   const videoRef = useRef(null)
-  const [videoActive, setVideoActive] = useState(false)
+  const heroRef = useRef(null)
+  // Video beží aj pod hlavičkou (na každej šírke), takže header nesmie mať vlastnú
+  // plochu — hook ho sprehľadní a plné pozadie mu vráti až scroll.
+  useHeroHeader()
+  const [videoPlaying, setVideoPlaying] = useState(true)
   const [videoMuted, setVideoMuted] = useState(true)
-  const openVideo = () => setVideoActive(true)
-  const closeVideo = () => setVideoActive(false)
+  const [videoFs, setVideoFs] = useState(false)
+  // Hlasitosť je posuvník, nie len prepínač – kulisa má znieť potichu, nie naplno.
+  // Autoplay ale beží stlmene (inak ho prehliadač nespustí), takže je to hodnota
+  // „ako nahlas to bude, keď to odtlmíš".
+  const [videoVol, setVideoVol] = useState(0.5)
+  const videoBoxRef = useRef(null)
+  const playVideo = () => {
+    setVideoPlaying(true)
+    videoRef.current?.play().catch(() => {})
+  }
+  const pauseVideo = () => {
+    setVideoPlaying(false)
+    videoRef.current?.pause()
+  }
   const toggleMute = () => {
     const v = videoRef.current
     if (!v) return
+    // odtlmiť na nulovej hlasitosti je ticho, ktoré vyzerá ako porucha – vrátime slušnú hodnotu
+    if (v.muted && videoVol === 0) { v.volume = 0.5; setVideoVol(0.5) }
     v.muted = !v.muted
     setVideoMuted(v.muted)
   }
-  // prehraj/zastav až po re-renderi (keď je kontajner reálne viditeľný – inak Chrome video hneď pozastaví)
-  useEffect(() => {
+  // Ťahanie posuvníka je zároveň žiadosť o zvuk; nula naopak stlmí.
+  const changeVol = (e) => {
+    const val = Number(e.target.value)
     const v = videoRef.current
+    setVideoVol(val)
     if (!v) return
-    if (videoActive) { v.currentTime = 0; v.play().catch(() => {}) }
-    else v.pause()
-  }, [videoActive])
-  // pri prepnutí mimo video varianty zavri prípadne bežiace video
+    v.volume = val
+    v.muted = val === 0
+    setVideoMuted(v.muted)
+  }
+  // Pomer stránke nediktujeme natvrdo – berieme ho z videa samotného, nech sedí
+  // aj keď klient nahrá iný export než 16:9.
+  const readVideoRatio = () => {
+    const v = videoRef.current
+    const hero = heroRef.current
+    // hlasitosť z posuvníka platí od prvej snímky (video beží stlmene, kým ju človek nepustí)
+    if (v) v.volume = videoVol
+    if (!hero || !v?.videoWidth || !v.videoHeight) return
+    // Pomer bezrozmerne (calc() so zápisom `16 / 9` ako aspect-ratio pracovať nevie).
+    // Na sekciu, nie na samotný pás – vlastné vlastnosti sa dedia nadol.
+    hero.style.setProperty('--vid-arn', String(v.videoWidth / v.videoHeight))
+  }
+  const toggleFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {})
+      return
+    }
+    const box = videoBoxRef.current
+    const v = videoRef.current
+    // Otočiť displej sa dá vyžiadať len vo fullscreene a len tam, kde to prehliadač
+    // vie (Android). Na iOS si telefón otočí človek sám, preto chybu ticho ignorujeme.
+    const lockLandscape = () => { screen.orientation?.lock?.('landscape').catch(() => {}) }
+    if (box?.requestFullscreen) box.requestFullscreen().then(lockLandscape, () => {})
+    // iOS Safari nevie fullscreen na ľubovoľnom elemente – tam ide do fullscreenu
+    // samotné video cez natívny prehrávač (a ten si otočenie rieši sám).
+    else if (v?.webkitEnterFullscreen) v.webkitEnterFullscreen()
+  }
   useEffect(() => {
-    if (heroStyle !== 'video') setVideoActive(false)
-  }, [heroStyle])
+    const onFsChange = () => {
+      const on = document.fullscreenElement === videoBoxRef.current
+      setVideoFs(on)
+      if (!on) screen.orientation?.unlock?.()
+    }
+    document.addEventListener('fullscreenchange', onFsChange)
+    return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
 
   const philRef = useRef(null)
   useEffect(() => {
@@ -163,68 +345,43 @@ export default function Wireframe() {
   return (
     <div className="site">
       {/* ============ HERO ============ */}
-      <section className={`hero ${heroStyle === 'light' ? 'light' : ''} ${heroStyle === 'video' ? 'video' : ''} ${videoActive ? 'video-on' : ''}`}>
-        {heroStyle === 'video' && (
-          <div className="hero-video">
-            <video ref={videoRef} className="hero-video-el" muted loop playsInline>
-              <source src={asset('/hero.mp4')} type="video/mp4" />
-            </video>
-            <div className="hero-video-ctrls">
-              <button onClick={closeVideo} aria-label="Zavřít video"><IconPlayerPauseFilled size={17} /></button>
+      <section className="hero wf-hero" ref={heroRef}>
+        <div className="hero-bgvid" ref={videoBoxRef}>
+          <video ref={videoRef} className="hero-video-el" muted loop playsInline autoPlay
+                 onLoadedMetadata={readVideoRatio}>
+            <source src={asset(HERO_VIDEO)} type="video/mp4" />
+          </video>
+          <div className="hero-video-ctrls">
+            <button onClick={videoPlaying ? pauseVideo : playVideo} aria-label={videoPlaying ? 'Pozastavit video' : 'Přehrát video'}>
+              {videoPlaying ? <IconPlayerPauseFilled size={17} /> : <IconPlayerPlayFilled size={17} />}
+            </button>
+            {/* zvuk = prepínač + rozsah; posuvník sa rozbalí pri prejdení myšou,
+                aby rad tlačidiel na telefóne nezaberal pol šírky videa */}
+            <div className="hero-vol">
               <button onClick={toggleMute} aria-label={videoMuted ? 'Zapnout zvuk' : 'Ztlumit'}>
                 {videoMuted ? <IconVolumeOff size={18} /> : <IconVolume size={18} />}
               </button>
+              <input
+                type="range" className="hero-vol-range" min="0" max="1" step="0.05"
+                value={videoVol} onChange={changeVol} aria-label="Hlasitost videa"
+                style={{ '--vol': `${videoVol * 100}%` }}
+              />
             </div>
+            {/* na telefóne je hero len pás v pomere videa – celá obrazovka je tu, po otočení na šírku */}
+            <button onClick={toggleFullscreen} aria-label={videoFs ? 'Ukončit celou obrazovku' : 'Přehrát přes celou obrazovku'}>
+              {videoFs ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
+            </button>
           </div>
-        )}
-        <div className="wrap hero-in">
-          <div className="hero-tx">
-            <h1>Pomáháme lidem plnit <b>sny</b>.</h1>
-            <p>Vše pod jednou střechou – s poradcem, který vás zná, a škodami, které řešíme sami.</p>
-            <div className="hero-stats">
-              <div className="hero-stats-grid">
-                {NUMS_MAIN.map(([n, c]) => (
-                  <div className="hero-stat" key={c}>
-                    <div className="n">{n}</div>
-                    <div className="c">{c}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="hero-cta">
-              <a href="#rozcestnik" className="btn fill" onClick={scrollToRozcestnik}>S čím potřebuji poradit <IconArrowRight size={18} stroke={2.2} /></a>
-              <Link to="/test" className="btn">Otestujte, jak dobře jste pojištěni</Link>
-            </div>
-          </div>
-          {heroStyle === 'video' ? (
-            <div className="hero-media hero-media-play">
-              <button className="hero-play" onClick={openVideo} aria-label="Přehrát video">
-                <span className="ic"><IconPlayerPlayFilled size={28} /></span>
-                <span className="tx">Přehrát video</span>
-              </button>
-            </div>
-          ) : (
-            <div className="hero-media hero-media-img">
-              <img src={asset('/brand/line-10.png')} alt="" />
-            </div>
-          )}
         </div>
       </section>
 
+      {/* Za videom nič nenasleduje – stránka ide rovno do rozcestníka. */}
+
       {/* ============ ROZCESTNÍK ============ */}
       <section id="rozcestnik" className="sec wrap">
-        <div className="sec-h"><span className="ey">Potřebový rozcestník</span><h2>Vstup je <b>situace</b>, ne název produktu.</h2></div>
-        <div className="needs">
-          {NEEDS.map(([ic, t, c, to]) => {
-            const C = ICONMAP[ic] || IconFileText
-            return (
-              <Link className="need" key={t} to={to}>
-                <span className="ni"><C size={26} stroke={1.7} /></span>
-                <b>{t}</b><small>{c}</small>
-              </Link>
-            )
-          })}
-        </div>
+        {/* hlavička sekcie žije vnútri rozcestníka – v druhom kroku ju prepíše
+            zvolená potreba, takže veta hore hovorí o tom, čo je práve na obrazovke */}
+        <NeedFinder />
       </section>
 
       {/* ============ FILOZOFIA ============ */}
@@ -239,91 +396,64 @@ export default function Wireframe() {
 
       {/* ============ PROČ ALLRISK ============ */}
       <section className="sec wrap">
-        {whyStyle === 'bento' && (
-          <div className="sec-h"><span className="ey">Proč Allrisk</span><h2>Partner, ne <b>prodejce smluv</b></h2></div>
-        )}
-
-        {whyStyle === 'bento' ? (
-          <div className="bento">
-            <div className="bento-big">
-              <div className="bimg"><span><IconPhoto size={26} stroke={1.5} /> Obrázek</span></div>
-              <h3>Unikátní ekosystém služeb</h3>
-              <p>Pojištění, reality, finance i energie pod jednou střechou – propojené tak, ať spolu dávají smysl a nikde nevznikají díry.</p>
-            </div>
-            <div className="bento-col">
-              {SMALL.map(([C, t, d, to]) => (
-                <Link className="mcard" key={t} to={to}>
-                  <span className="ic"><C size={22} stroke={1.7} /></span>
-                  <div><h3>{t}</h3><p>{d}</p></div>
-                  <span className="mcard-go"><IconArrowRight size={18} stroke={2} /></span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className="why-feats">
-            {WHY.map((f) => (
-              <div className={`feature ${f.alt ? 'alt' : ''}`} key={f.ey}>
-                <div className="feature-tx">
-                  <span className="ey">{f.ey}</span>
-                  <h2>{f.t}</h2>
-                  <p>{f.p}</p>
-                  <span className="btn fill" style={{ background: 'var(--blue)', borderColor: 'var(--blue)', color: '#fff' }}>{f.cta} <IconArrowRight size={18} stroke={2.2} /></span>
-                </div>
-                <div className="illus">{f.img ? <img className="illus-img" src={asset(f.img)} alt="" aria-hidden /> : <Illus chips={f.chips} />}</div>
+        <div className="why-feats">
+          {WHY.map((f) => (
+            <div className={`feature ${f.alt ? 'alt' : ''}`} key={f.ey}>
+              <div className="feature-tx">
+                <span className="ey">{f.ey}</span>
+                <h2>{f.t}</h2>
+                <p>{f.p}</p>
+                <span className="btn fill" style={{ background: 'var(--blue)', borderColor: 'var(--blue)', color: '#fff' }}>{f.cta} <IconArrowRight size={18} stroke={2.2} /></span>
               </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* ============ VALIDATOR BANNER ============ */}
-      <section className="sec wrap" style={{ paddingTop: 0 }}>
-        <div className="banner">
-          <div className="banner-tx">
-            <h2>Zjistěte, jak <b>dobře jste pojištěni</b></h2>
-            <p>Odpovězte na pár otázek a uvidíte skóre pokrytí i slabá místa – co je a co není kryté.</p>
-            <Link to="/test" className="btn">Spustit test <IconArrowRight size={18} stroke={2.2} /></Link>
-          </div>
-          <div className="banner-side">
-            <div className="ring">
-              <svg width="150" height="150" viewBox="0 0 150 150">
-                <circle cx="75" cy="75" r="64" fill="none" stroke="rgba(255,255,255,.18)" strokeWidth="11" />
-                <circle cx="75" cy="75" r="64" fill="none" stroke="#5CC8FF" strokeWidth="11" strokeLinecap="round" strokeDasharray={2 * Math.PI * 64} strokeDashoffset={2 * Math.PI * 64 * 0.38} transform="rotate(-90 75 75)" />
-              </svg>
-              <span className="pc">?%</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ============ REFERENCE ============ */}
-      <section className="sec wrap" style={{ paddingTop: 0 }}>
-        <div className="sec-h"><span className="ey">Reference</span><h2>Co říkají <b>klienti</b></h2></div>
-        <div className="refs">
-          {[['JN', 'Jan N.', 'klient od 2019'], ['EM', 'Eva M.', 'klientka od 2021'], ['PK', 'Petr K.', 'klient od 2017']].map(([av, nm, role]) => (
-            <div className="ref" key={nm}>
-              <div className="stars">{[0, 1, 2, 3, 4].map((i) => <IconStarFilled key={i} size={16} />)}</div>
-              <p>„{LOREM}“</p>
-              <div className="who"><span className="av">{av}</span><div><b>{nm}</b><small>{role}</small></div></div>
+              <div className="illus">{f.img ? <img className="illus-img" src={asset(f.img)} alt="" aria-hidden /> : <Illus chips={f.chips} />}</div>
             </div>
           ))}
         </div>
       </section>
 
+      {/* ============ REVIZE SMLUV – banner ============ */}
+      <section className="sec wrap">
+        <div className="banner">
+          <img className="banner-line" src={asset('/brand/line-hero-1.png')} alt="" aria-hidden width="720" height="673" decoding="async" loading="lazy" />
+          <div className="banner-tx">
+            <h2>Věděli jste, že…?</h2>
+            <p>Pravidelnou revizí smluv ušetříte <b>v průměru {AVG_SAVING} Kč ročně.</b> {REVIEW_TEXT}</p>
+            <Link to={REVIEW_CASE} className="btn">Jak revize probíhá <IconArrowRight size={18} stroke={2.2} /></Link>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ============ KLIENTSKÉ PROFILY ============ */}
+      {/* Dlaždica už nie je tab s panelom – každý profil má vlastnú stránku /profil/:slug. */}
+      <section className="sec wrap">
+        <SecHead
+          ey="Klientské profily"
+          title={<>Najděte se v <b>jednom ze {countGen(PROFILES.length)} profilů</b></>}
+          lead="Vyberte typ klienta, který je vám nejblíž. Ukážeme, co je v jeho situaci dobré mít vyřešeno a co se stane, když to chybí."
+        />
+        <ProfileCards profiles={PROFILES} />
+      </section>
+
+      {/* ============ REFERENCE ============ */}
+      {/* posuvný rad – šípky na desktope, swipe na mobile; celý zoznam žije na /reference */}
+      <section className="sec wrap">
+        <ReferenceCarousel items={REFERENCES_HOME} />
+      </section>
+
       {/* ============ FAQ ============ */}
-      <section className="sec wrap" style={{ paddingTop: 0 }}>
-        <div className="sec-h"><span className="ey">Časté dotazy</span><h2>Co lidé <b>nejčastěji řeší</b></h2></div>
-        <div className="faq">
+      {/* otázky sú číslované (Inter, nie Magistral) – ikona pri každej otázke pôsobila rušivo */}
+      <section className="sec wrap">
+        <SecHead ey="Časté dotazy" title={<>Co lidé <b>nejčastěji řeší</b></>} />
+        <div className="faq faq-list">
           {FAQ.map(([q, a], i) => {
             const open = faqOpen === i
             return (
               <div className={`acc-item ${open ? 'open' : ''}`} key={q}>
                 <button className="acc-q" onClick={() => setFaqOpen(open ? -1 : i)} aria-expanded={open}>
-                  <span className="ic"><IconHelpCircle size={18} stroke={1.7} /></span>
+                  <span className="acc-n">{String(i + 1).padStart(2, '0')}</span>
                   <span className="acc-q-tx">{q}</span>
-                  <span className="acc-ch"><IconChevronDown size={20} stroke={2} /></span>
+                  <span className="acc-ch"><IconChevronDown size={18} stroke={2.2} /></span>
                 </button>
                 <div className="acc-a"><p>{a}</p></div>
               </div>
@@ -337,21 +467,6 @@ export default function Wireframe() {
 
       {/* ============ FOOTER (spoločný) ============ */}
       <SiteFooter />
-
-      <DebugPanel>
-        <DebugGroup
-          icon={IconLayoutNavbar} label="Header" value={headerStyle} onChange={setHeaderStyle}
-          options={[{ value: 'blue', label: 'Modrá' }, { value: 'light', label: 'Bílá' }]}
-        />
-        <DebugGroup
-          icon={IconPhoto} label="Hero sekce" value={heroStyle} onChange={setHeroStyle}
-          options={[{ value: 'blue', label: 'Modrá' }, { value: 'light', label: 'Bílá' }, { value: 'video', label: 'Video' }]}
-        />
-        <DebugGroup
-          icon={IconLayoutNavbar} label="Proč Allrisk" value={whyStyle} onChange={setWhyStyle}
-          options={[{ value: 'bento', label: 'Bento' }, { value: 'feature', label: 'Sekce' }]}
-        />
-      </DebugPanel>
     </div>
   )
 }

@@ -23,11 +23,23 @@ export function DebugPanel({ title = '', children }) {
   )
 }
 
-export function DebugGroup({ icon: Icon, label, value, onChange, options }) {
+// Voľba, ktorá musí prežiť preklik na inú stránku – ten istý prvok (napr. rad záložiek)
+// žije na viacerých stránkach a porovnávať sa dá len vtedy, keď sa výber neresetuje.
+export function useDebugOption(key, fallback) {
+  const [value, setValue] = useState(() => localStorage.getItem(`dbg:${key}`) || fallback)
+  const set = (next) => {
+    setValue(next)
+    localStorage.setItem(`dbg:${key}`, next)
+  }
+  return [value, set]
+}
+
+// wrap = viac možností, než sa zmestí do jedného riadku (zalomí do mriežky 2×N)
+export function DebugGroup({ icon: Icon, label, value, onChange, options, wrap }) {
   return (
     <div className="switch-grp">
       <span className="lbl">{Icon && <Icon size={14} stroke={1.8} />} {label}</span>
-      <div className="opts">
+      <div className={`opts${wrap ? ' opts-wrap' : ''}`}>
         {options.map((o) => (
           <button key={o.value} className={value === o.value ? 'on' : ''} onClick={() => onChange(o.value)}>{o.label}</button>
         ))}

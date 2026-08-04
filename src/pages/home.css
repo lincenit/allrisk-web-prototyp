@@ -1,0 +1,279 @@
+/* /uvod — nová domovská stránka.
+   Reuse: wireframe.css (tokeny, .site atoms, hero, sekcie, feature, refs, contact-band, footer).
+   Tu len: signature „cesta života" (jrn2-* scrolly krivka + jrn-v mobil), hero, proč, ekosystém, proof, dostupnost. */
+
+/* kotvy nesmú skončiť pod sticky headerom (64px) — rovnaká hodnota ako vo vehicles.css */
+#cesta,#nabidka{scroll-margin-top:80px;}
+
+/* ============================================================
+   HERO — drobné doladenie nad zdieľaným .hero
+   ============================================================ */
+/* hero presahuje pod sticky header (transparentný nad gradientom, hook useHeroHeader) */
+.site .home-hero{margin-top:calc(-1 * var(--hdr-h));padding-top:var(--hdr-h);}
+.site .home-hero .hero-tx h1{max-width:14ch;}
+.site .home-hero .hero-lead{max-width:44ch;}
+/* Jedno číslo, nie triplet — ten patrí sekcii Důkaz. Nezlomiteľné medzery sú v dátach ( ). */
+.site .home-hero-mini{display:flex;align-items:center;gap:16px;max-width:44ch;
+  margin-top:clamp(24px,3.5vw,36px);padding-top:clamp(18px,2.6vw,24px);border-top:1px solid rgba(255,255,255,.2);}
+.site .home-hero-mini .n{flex:none;font-family:var(--display);font-weight:800;
+  font-size:clamp(30px,3.6vw,40px);color:#fff;line-height:1;letter-spacing:-.02em;}
+.site .home-hero-mini .c{min-width:0;color:rgba(255,255,255,.78);font-size:var(--fs-sm);line-height:1.45;}
+
+.site .home-hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+.site .home-hero-visual img{width:100%;height:auto;max-height:min(56vh,460px);object-fit:contain;
+  filter:drop-shadow(0 30px 60px rgba(0,0,0,.28));}
+
+/* Značková linka ako veľkoplošný prvok hera: je zámerne vyššia než sekcia
+   a presahuje ju hore aj dole — orez robí overflow:hidden na .hero.
+   Musí byť vyňatá z toku (absolute), inak by hero o svoj presah narástlo
+   a k presahu by nikdy nedošlo.
+
+   Kotvou je .hero-in (má position:relative), ktorý stojí o 64px nižšie než
+   .hero — ten má padding-top na sticky header. Odtiaľ -32px v top aj +64px
+   vo výške; bez toho by bol presah dole dvojnásobný oproti presahu hore.
+
+   Obrázok je takmer štvorcový (2500×2337), takže pri výške sekcie + presah
+   vyjde šírka cez 1100px. Vpravo sa smie rozliať za okraj mriežky aj mimo
+   obrazovku, vľavo ho drží 46 %, aby nenabehol na headline.
+
+   Posun nadol nie je kozmetika: kresba sa spodnej hrany rámu dotýka až
+   celkom vpravo, takže pri zvislom vycentrovaní by spodný orez padol mimo
+   obrazovku. Takto pretne spodok fialový chvost ešte v zábere. */
+@media(min-width:980px){
+  .site .home-hero-visual{position:static;}
+  .site .home-hero-visual img{
+    position:absolute;top:calc(50% + clamp(70px,13vh,150px));left:46%;translate:0 -50%;
+    width:auto;max-width:none;max-height:none;
+    height:calc(100% + 64px + clamp(180px,27vh,320px));
+  }
+}
+
+/* ============================================================
+   CESTA ŽIVOTA — signature journey
+   ============================================================ */
+.site .jrn{background:#fff;}
+.site .jrn-intro{max-width:56ch;}
+
+/* --- skratky: škoda hore (jemný tint, nie poplach) + preskočenie na nabídku --- */
+.site .jrn-jump{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+.site .jrn-jump-b{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:10px 17px;
+  border:1px solid var(--l);border-radius:var(--r-pill);background:#fff;font-size:var(--fs-sm);font-weight:600;
+  color:var(--g700);text-decoration:none;transition:background .18s,border-color .18s,color .18s;}
+.site .jrn-jump-b svg{flex:none;transition:transform .18s var(--ease);}
+.site .jrn-jump-b:hover{background:var(--blue-50);border-color:var(--blue);color:var(--blue);}
+.site .jrn-jump-b:hover svg{transform:translateX(3px);}
+.site .jrn-jump-b:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+.site .jrn-jump-b.red{background:#fbe9e9;border-color:transparent;color:var(--red);}
+.site .jrn-jump-b.red:hover{background:var(--red);border-color:var(--red);color:#fff;}
+.site .jrn-jump-b.red:focus-visible{outline-color:var(--red);}
+
+/* --- desktop: vertikálna krivka vľavo + sticky obsah vpravo --- */
+.site .jrn2-h{display:none;}
+.site .jrn2-grid{display:grid;grid-template-columns:minmax(320px,380px) 1fr;gap:clamp(30px,4vw,64px);}
+.site .jrn2-rail{position:relative;}          /* výška = počet krokov × STEPH (inline style) */
+.site .jrn2-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.site .jrn2-base{fill:none;stroke:var(--g200);stroke-width:10;stroke-linecap:round;vector-effect:non-scaling-stroke;}
+.site .jrn2-prog{fill:none;stroke:url(#jrnGrad);stroke-width:10;stroke-linecap:round;vector-effect:non-scaling-stroke;
+  stroke-dasharray:1;stroke-dashoffset:var(--prog,1);transition:stroke-dashoffset .6s var(--ease);}
+
+.site .jrn2-node{position:absolute;transform:translate(-50%,-50%);width:60px;height:60px;
+  background:none;border:0;padding:0;cursor:pointer;}
+.site .jrn2-dot{width:60px;height:60px;border-radius:50%;background:#fff;border:2px solid var(--l);
+  box-shadow:0 8px 22px -10px rgba(13,31,91,.4);display:flex;align-items:center;justify-content:center;color:var(--blue);
+  transition:transform .28s var(--ease),background .25s,border-color .25s,box-shadow .28s,color .25s;}
+.site .jrn2-dot svg{width:28px;height:28px;}
+.site .jrn2-node.visited .jrn2-dot{background:var(--blue);border-color:var(--blue);color:#fff;}
+.site .jrn2-node.on .jrn2-dot{background:var(--blue);border-color:var(--blue);color:#fff;transform:scale(1.14);
+  box-shadow:0 16px 34px -12px rgba(0,70,200,.6);}
+.site .jrn2-node.red.visited .jrn2-dot,.site .jrn2-node.red.on .jrn2-dot{background:var(--red);border-color:var(--red);color:#fff;}
+.site .jrn2-node:focus-visible{outline:none;}
+.site .jrn2-node:focus-visible .jrn2-dot{box-shadow:0 0 0 4px rgba(0,70,200,.3);}
+/* štítok sa smie zalomiť (dlhšie CZ/EN reťazce) — max-width drží krivku aj štítok v ľavom stĺpci */
+.site .jrn2-nlab{position:absolute;left:calc(100% + 16px);top:50%;transform:translateY(-50%);
+  width:max-content;max-width:150px;text-align:left;}
+.site .jrn2-nlab b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--g500);line-height:1.15;transition:color .2s;}
+.site .jrn2-nlab span{font-size:var(--fs-label);color:var(--g500);line-height:1.3;display:block;margin-top:2px;}
+.site .jrn2-node.on .jrn2-nlab b{color:var(--ink);}
+.site .jrn2-node.red.on .jrn2-nlab b{color:var(--red);}
+
+/* sticky detail panel (desktop) — stav hore ostáva, obsah pod ním sa prestrieda */
+.site .jrn2-panel{position:sticky;top:88px;background:#fff;border:1px solid var(--l);border-radius:20px;
+  padding:clamp(24px,3vw,36px);box-shadow:0 20px 50px -30px rgba(13,31,91,.45);}
+.site .jrn2-step{display:flex;align-items:center;gap:14px;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--l2);}
+.site .jrn2-step-n{flex:none;font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g500);}
+.site .jrn2-step-bar{position:relative;flex:1;height:4px;border-radius:4px;background:var(--g200);overflow:hidden;}
+/* miniatúrna ozvena signature Line — koľko z cesty je za mnou */
+.site .jrn2-step-bar i{position:absolute;inset:0;border-radius:4px;background:var(--grad-core);
+  clip-path:inset(0 calc(100% - var(--p,0) * 100%) 0 0);transition:clip-path .5s var(--ease);}
+.site .jrn2-panel-in{display:grid;grid-template-columns:1fr;gap:clamp(20px,2.4vw,32px);}
+@media(min-width:1180px){.site .jrn2-panel-in{grid-template-columns:1.05fr .95fr;align-items:start;}}
+
+@media(min-width:900px){
+  .site .jrn-v{display:none;}
+  .site .jrn2-h{display:block;}
+}
+
+/* --- zdieľaný detail (desktop panel aj mobilný accordion) --- */
+.site .jrn-fade{animation:jrnFade .4s var(--ease);}
+@keyframes jrnFade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.site .jrn-tag{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:var(--blue-50);
+  color:var(--blue);border-radius:var(--r-pill);padding:6px 13px;font-size:var(--fs-label);font-weight:700;letter-spacing:.02em;}
+.site .jrn-tag.red{background:#fbe9e9;color:var(--red);}
+.site .btn.red-cta{background:var(--red);border-color:var(--red);color:#fff;}
+.site .btn.red-cta:hover{background:#a30b0b;border-color:#a30b0b;}
+.site .jrn-main h3{font-size:var(--fs-h3);margin:14px 0 0;color:var(--ink);}
+.site .jrn-main>p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:46ch;}
+.site .jrn-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;}
+.site .jrn-cov-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--g500);margin-bottom:12px;}
+.site .jrn-cov{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;}
+.site .jrn-cov li{display:flex;gap:12px;align-items:flex-start;}
+.site .jrn-cov .ci{flex:none;width:26px;height:26px;border-radius:8px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.site .jrn-cov.red .ci{background:#fbe9e9;color:var(--red);}
+.site .jrn-cov b{font-family:var(--display);font-size:var(--fs-body);color:var(--ink);display:block;line-height:1.25;}
+.site .jrn-cov small{font-size:var(--fs-sm);color:var(--g600);line-height:1.5;display:block;margin-top:2px;}
+
+/* --- mobil: vertikálna časová os --- */
+.site .jrn-v{position:relative;margin-top:26px;padding-left:4px;}
+.site .jrn-v::before{content:"";position:absolute;left:27px;top:26px;bottom:26px;width:4px;border-radius:4px;background:var(--grad-core);}
+.site .jrn-item{position:relative;padding:0 0 8px 64px;}
+.site .jrn-vhead{width:100%;text-align:left;background:none;border:0;padding:12px 0;display:flex;flex-direction:column;gap:2px;cursor:pointer;font-family:inherit;}
+.site .jrn-vhead b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);}
+.site .jrn-vhead span{font-size:var(--fs-sm);color:var(--g500);}
+.site .jrn-item.on .jrn-vhead b{color:var(--blue);}
+.site .jrn-item.red.on .jrn-vhead b{color:var(--red);}
+.site .jrn-vdot{position:absolute;left:6px;top:12px;width:44px;height:44px;border-radius:50%;background:#fff;
+  border:2px solid var(--l);display:flex;align-items:center;justify-content:center;color:var(--blue);transition:.2s;z-index:2;}
+.site .jrn-vdot svg{width:22px;height:22px;}
+.site .jrn-item.on .jrn-vdot{background:var(--blue);border-color:var(--blue);color:#fff;}
+.site .jrn-item.red.on .jrn-vdot{background:var(--red);border-color:var(--red);color:#fff;}
+.site .jrn-vhead:focus-visible{outline:none;}
+.site .jrn-vhead:focus-visible b{text-decoration:underline;text-underline-offset:3px;}
+.site .jrn-vbody{padding:4px 0 18px;}
+.site .jrn-vbody>p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-bottom:16px;}
+
+/* ============================================================
+   KOMPLETNÍ NABÍDKA — segment switch + rozbaľovací rozcestník
+   ============================================================ */
+.site .home-seg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:clamp(18px,2.5vw,24px);}
+.site .home-seg button{min-height:44px;border:1px solid var(--l);background:#fff;border-radius:var(--r-pill);padding:10px 20px;
+  font-size:var(--fs-sm);font-weight:600;color:var(--g700);transition:.18s;cursor:pointer;font-family:inherit;}
+.site .home-seg button:hover{border-color:var(--blue);color:var(--blue);}
+.site .home-seg button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.site .home-seg button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(0,70,200,.25);}
+
+/* rozsah ponuky je vidieť aj keď je zbalená */
+.site .home-catbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;
+  margin-bottom:clamp(20px,3vw,28px);}
+.site .home-catcount{margin:0;color:var(--g500);font-size:var(--fs-sm);}
+.site .home-catall{min-height:44px;border:0;background:none;padding:8px 0;font-family:inherit;font-size:var(--fs-sm);
+  font-weight:700;color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:3px;
+  text-decoration-thickness:1px;text-decoration-color:var(--blue-200);transition:text-decoration-color .18s;}
+.site .home-catall:hover{text-decoration-color:var(--blue);}
+.site .home-catall:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px;}
+
+.site .home-catgroups{display:flex;flex-direction:column;gap:clamp(18px,2.4vw,26px);}
+.site .home-catgroup>h3{margin:0;}
+.site .home-catgroup>h3>button{display:flex;align-items:center;gap:12px;width:100%;min-height:52px;
+  border:0;border-bottom:1px solid var(--l);background:none;padding:0 0 12px;text-align:left;
+  cursor:pointer;font-family:inherit;transition:border-color .18s;}
+.site .home-catgroup>h3>button:hover{border-color:var(--blue);}
+.site .home-catgroup>h3>button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px;}
+.site .home-catgroup>h3 .lbl{font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);}
+.site .home-catgroup>h3 .cnt{flex:none;background:var(--g100);color:var(--g600);border-radius:var(--r-pill);
+  padding:3px 9px;font-size:var(--fs-label);font-weight:700;line-height:1.4;font-family:var(--sans);letter-spacing:0;}
+.site .home-catgroup>h3 .cv{flex:none;margin-left:auto;color:var(--g500);transition:transform .25s var(--ease);}
+.site .home-catgroup.open>h3 .cv{transform:rotate(180deg);}
+
+/* auto-fill (nie auto-fit): jednopoložková kategória nezostane roztiahnutá cez celý riadok */
+.site .home-catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:8px;margin-top:16px;}
+.site .home-catgrid[hidden]{display:none;}
+.site .home-catitem{display:flex;gap:12px;align-items:center;border:1px solid transparent;border-radius:14px;
+  padding:12px 14px;text-decoration:none;color:inherit;transition:background .15s,border-color .15s;}
+.site .home-catitem:hover{background:var(--blue-50);}
+.site .home-catitem:focus-visible{outline:2px solid var(--blue);outline-offset:1px;}
+.site .home-catitem .ci{flex:none;width:38px;height:38px;border-radius:11px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;transition:.15s;}
+.site .home-catitem .ci svg{width:20px;height:20px;}
+.site .home-catitem:hover .ci{background:var(--blue);color:#fff;}
+.site .home-catitem .tx{min-width:0;}
+.site .home-catitem b{display:block;font-size:var(--fs-body);color:var(--ink);font-weight:600;font-family:var(--sans);line-height:1.2;}
+.site .home-catitem small{display:block;font-size:var(--fs-label);color:var(--g600);margin-top:2px;line-height:1.35;}
+
+/* ============================================================
+   PROČ ALLRISK — bare rows, žiadny card grid
+   ============================================================ */
+.site .home-attrs{display:grid;grid-template-columns:1fr;gap:clamp(26px,4vw,40px);margin-top:8px;}
+.site .home-attr{display:flex;gap:16px;align-items:flex-start;}
+.site .home-attr .ai{flex:none;width:48px;height:48px;border-radius:14px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;}
+.site .home-attr .ai svg{width:24px;height:24px;}
+.site .home-attr h3{font-size:var(--fs-card);color:var(--ink);}
+.site .home-attr p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:6px;max-width:42ch;}
+.site .home-attr-lead{max-width:20ch;}
+.site .home-attr-lead h2{font-size:var(--fs-title);font-weight:500;line-height:1.1;}
+.site .home-attr-lead h2 b{color:var(--blue);font-weight:700;}
+.site .home-attr-lead p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:16px;max-width:34ch;}
+
+@media(min-width:720px){.site .home-attrs{grid-template-columns:1fr 1fr;gap:clamp(30px,4vw,52px) 44px;}}
+@media(min-width:1000px){
+  .site .home-why{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(40px,5vw,72px);align-items:start;}
+  .site .home-why .home-attrs{margin-top:0;}
+}
+
+/* ============================================================
+   EKOSYSTÉM — text + ilustrácia
+   ============================================================ */
+.site .home-eco{display:grid;grid-template-columns:1fr;gap:clamp(24px,4vw,48px);align-items:center;}
+.site .home-eco-tx h2{font-size:var(--fs-title);font-weight:500;}
+.site .home-eco-tx h2 b{color:var(--blue);font-weight:700;}
+.site .home-eco-tx>p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:16px;max-width:46ch;}
+.site .home-eco-list{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:12px;}
+.site .home-eco-list li{display:flex;align-items:center;gap:12px;font-size:var(--fs-body);color:var(--ink);font-weight:500;}
+.site .home-eco-list .ci{flex:none;width:26px;height:26px;border-radius:8px;background:var(--blue-50);color:var(--blue);display:flex;align-items:center;justify-content:center;}
+.site .home-eco .illus{min-height:280px;}
+@media(min-width:860px){.site .home-eco{grid-template-columns:1.05fr .95fr;}}
+
+/* ============================================================
+   DŮKAZ — stats + award + reference
+   ============================================================ */
+.site .home-stats{display:flex;flex-wrap:wrap;gap:clamp(26px,5vw,64px);margin:8px 0 clamp(30px,4vw,44px);}
+.site .home-stat .n{font-family:var(--display);font-weight:800;font-size:var(--fs-title);color:var(--ink);line-height:1;letter-spacing:-.02em;}
+.site .home-stat .c{color:var(--g600);font-size:var(--fs-body);margin-top:8px;max-width:22ch;}
+.site .home-award{display:inline-flex;align-items:center;gap:12px;background:var(--blue-50);border:1px solid var(--blue-100);
+  border-radius:16px;padding:14px 18px;margin-bottom:clamp(26px,4vw,40px);}
+.site .home-award .aw-ic{flex:none;width:44px;height:44px;border-radius:12px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;}
+.site .home-award .aw-ic svg{width:24px;height:24px;}
+.site .home-award b{font-family:var(--display);font-size:var(--fs-body);color:var(--ink);display:block;line-height:1.2;}
+.site .home-award small{font-size:var(--fs-label);color:var(--g600);}
+.site .home-refs{display:grid;grid-template-columns:1fr;gap:14px;}
+@media(min-width:720px){.site .home-refs{grid-template-columns:1fr 1fr;}}
+
+/* ============================================================
+   DOSTUPNOST — vždy nablízku
+   ============================================================ */
+.site .home-avail{position:relative;overflow:hidden;background:var(--grad-blue);border-radius:24px;color:#fff;
+  padding:clamp(30px,5vw,56px);box-shadow:var(--shadow-band);display:grid;grid-template-columns:1fr;gap:26px;align-items:center;}
+.site .home-avail::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(55% 60% at 92% 0,rgba(70,211,255,.22),transparent 60%);}
+.site .home-avail-tx{position:relative;z-index:2;}
+.site .home-avail-tx h2{color:#fff;font-weight:500;font-size:var(--fs-title);}
+.site .home-avail-tx p{color:rgba(255,255,255,.84);margin-top:12px;max-width:40ch;font-size:var(--fs-lead);}
+.site .home-avail-tx .btn{margin-top:24px;background:#fff;border-color:#fff;color:var(--blue);}
+.site .home-avail-tx .btn:hover{background:var(--blue-50);}
+.site .home-avail-nums{position:relative;z-index:2;display:flex;gap:clamp(22px,4vw,40px);flex-wrap:wrap;}
+.site .home-avail-nums .n{font-family:var(--display);font-weight:800;font-size:var(--fs-h2);color:#fff;line-height:1;}
+.site .home-avail-nums .c{color:rgba(255,255,255,.72);font-size:var(--fs-sm);margin-top:6px;}
+@media(min-width:820px){.site .home-avail{grid-template-columns:1.3fr .7fr;}}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media(prefers-reduced-motion:reduce){
+  .site .jrn2-prog{transition:none;}
+  .site .jrn2-step-bar i{transition:none;}
+  .site .jrn-fade{animation:none;}
+  .site .jrn-jump-b svg{transition:none;}
+  .site .jrn-jump-b:hover svg{transform:none;}
+  .site .home-catgroup>h3 .cv{transition:none;}
+}

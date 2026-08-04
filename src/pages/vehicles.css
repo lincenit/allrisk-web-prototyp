@@ -1,0 +1,315 @@
+/* /vozidla — kategória "Pojištění vozidel" na jednej stránke.
+   Reuse: wireframe.css (tokeny, header, hero, sekcie, kontakt, footer).
+   Tu len: breadcrumb, hero foto, záložkový systém, modelové príklady, form. */
+
+/* ---- breadcrumb v hero ----
+   Bez vlastného paddingu: blokové odsadenie celého hera nesie .veh-hero (jedno miesto),
+   breadcrumb je jeho súčasťou rovnako ako nadpis. */
+.site .veh-crumb-wrap{position:relative;z-index:2;}
+.site .veh-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);}
+.site .veh-crumb a{color:rgba(255,255,255,.7);transition:.2s;}
+.site .veh-crumb a:hover{color:#fff;}
+.site .veh-crumb b{color:#fff;font-weight:600;}
+.site .veh-crumb svg{opacity:.55;}
+
+/* ---- kompaktné záhlavie kategórie (menšie ako hero na home, žiadne full-height) ---- */
+/* foto vozu pod hero + modrý overlay – fallback je značkový gradient (--grad-blue) na .hero.
+   Hero presahuje pod sticky header (margin -64 / padding +64), takže foto vidno aj za hlavičkou. */
+/* Celý pás má odsadenie na jednom mieste: hore aj dole rovnaká rytmická jednotka
+   (--sec-pad), hore navyše výška hlavičky, pod ktorú hero podlieza. Deti (breadcrumb,
+   .hero-in) už žiadny blokový padding nepridávajú – nesú len vnútorné medzery. */
+.site .veh-hero{position:relative;isolation:isolate;margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+/* foto je čiernobiele (filter len na obrázku) */
+.site .veh-hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+  background-repeat:no-repeat;filter:grayscale(100%);}
+/* modrý overlay je samostatná vrstva nad fotkou, takže ho grayscale neovplyvní */
+.site .veh-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
+
+/* header priehľadný nad foto-hero rieši spoločný hook useHeroHeader + .hero-hdr v SiteHeader.css */
+
+/* rytmika so zalomkami: breadcrumbs → 16 → title → 16 → text → 32 → buttons.
+   Blokový padding pásu drží .veh-hero, tu ostáva len medzera pod breadcrumbom. */
+/* align-items:start je časť tej rytmiky: pri centrovaní (default .hero-in) závisela medzera
+   pod breadcrumbom od výšky pravého stĺpca, takže na každej stránke vyšla iná. Pravý stĺpec
+   si centrovanie pýta sám (.veh-hero-points{align-self:center}). */
+.site .veh-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
+  padding-block:16px 0;align-items:start;}
+.site .veh-hero .hero-tx{max-width:640px;gap:0;}
+.site .veh-hero .hero-tx>p{margin-top:16px;}
+.site .veh-hero .hero-tx>.hero-cta{margin-top:32px;}
+/* veľkosť titulku drží spoločný token --fs-title (rovnaký ako hlavičky sekcií), tu sa neprepisuje */
+.site .veh-hero .hero-tx p{max-width:56ch;}
+
+/* ---- body s ikonami priamo v hero (sklenené karty, ikona aj text v boxe) ---- */
+.site .veh-hero-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;align-self:center;}
+.site .veh-hero-points li{display:flex;align-items:center;gap:16px;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:15px 18px;
+  backdrop-filter:blur(8px);box-shadow:0 12px 30px -22px rgba(0,0,0,.6);transition:.2s var(--ease,ease);}
+.site .veh-hero-points li:hover{border-color:rgba(255,255,255,.42);background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(255,255,255,.08));}
+.site .veh-hp-ic{flex:none;color:#fff;display:flex;align-items:center;justify-content:center;}
+.site .veh-hp-tx{display:flex;flex-direction:column;}
+.site .veh-hp-tx b{font-family:var(--display);font-weight:700;color:#fff;font-size:var(--fs-body);line-height:1.25;}
+.site .veh-hp-tx small{color:rgba(255,255,255,.74);font-size:var(--fs-label);margin-top:3px;line-height:1.4;}
+
+/* ============ ZÁLOŽKY ============ */
+/* Rad záložiek produktov je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) –
+   ten istý prepínač nesú aj modelové situácie v profile klienta. */
+
+/* panel */
+.site .veh-panel{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;
+  background:var(--box);border:1px solid var(--l);border-radius:20px;
+  padding:clamp(20px,3.5vw,32px);box-shadow:0 1px 3px rgba(13,31,91,.04);}
+.site .veh-panel-tx{display:flex;flex-direction:column;align-items:flex-start;}
+.site .veh-pill{display:inline-flex;align-items:center;background:var(--blue-50);color:var(--blue);
+  border-radius:999px;padding:5px 12px;font-size:var(--fs-label);font-weight:700;letter-spacing:.02em;}
+.site .veh-panel-tx h3{font-size:var(--fs-h3);margin:14px 0 0;color:var(--ink);}
+.site .veh-panel-tx > p{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:50ch;}
+.site .veh-cov-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--mut);margin:22px 0 4px;}
+.site .veh-cov{list-style:none;margin:0;padding:0;width:100%;max-width:520px;}
+.site .veh-cov li{display:flex;align-items:flex-start;gap:11px;padding:12px 0;
+  border-bottom:1px solid var(--l2);font-size:var(--fs-body);color:var(--ink);font-weight:500;}
+.site .veh-cov li:last-child{border-bottom:0;}
+.site .veh-cov li svg{color:var(--green);flex:none;margin-top:1px;}
+
+/* aside karta vedľa panela – full svetlomodré pozadie, ikona bez rámčeka */
+.site .veh-aside{background:var(--blue-50);border:1px solid var(--blue-100);
+  border-radius:16px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;}
+.site .veh-aside-ic{display:flex;align-items:center;justify-content:center;color:var(--blue);margin-bottom:10px;}
+.site .veh-aside-t{font-family:var(--display);font-weight:700;color:var(--ink);font-size:var(--fs-card);}
+.site .veh-aside p{color:var(--g600);font-size:var(--fs-sm);line-height:1.55;margin-top:6px;}
+.site .veh-aside-div{height:1px;background:var(--blue-100);width:100%;margin:18px 0;}
+.site .veh-aside-row{display:flex;align-items:center;gap:9px;font-size:var(--fs-sm);color:var(--g700);
+  font-weight:500;padding:5px 0;}
+.site .veh-aside-row svg{color:var(--blue);flex:none;}
+
+/* ---- kategorie vozidel: malé karty vedľa textu (v 1. riadku systému) ---- */
+.site .veh-cats-mini{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.site .veh-cats-mini li{display:flex;align-items:center;gap:10px;background:var(--box);border:1px solid var(--l);
+  border-radius:11px;padding:9px 11px;}
+.site .veh-cat-ic{width:34px;height:34px;border-radius:9px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;flex:none;}
+.site .veh-cm-tx b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-sm);color:var(--ink);line-height:1.2;}
+.site .veh-cm-tx small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:1px;}
+
+/* ============ JEDINEČNÝ INKASNÍ SYSTÉM – 2 riadky 50/50 (text + foto) ============ */
+.site .veh-feat{display:grid;grid-template-columns:1fr;gap:22px;align-items:stretch;margin-bottom:26px;}
+.site .veh-feat:last-child{margin-bottom:0;}
+.site .veh-feat-tx{display:flex;flex-direction:column;justify-content:center;gap:24px;}
+.site .veh-feat-block h3{font-size:var(--fs-card);color:var(--ink);margin-bottom:8px;}
+.site .veh-feat-block p{color:var(--g600);font-size:var(--fs-body);line-height:1.7;}
+.site .veh-feat-block a{color:var(--blue);font-weight:600;text-decoration:underline;text-underline-offset:2px;}
+.site .veh-feat-img{border-radius:18px;overflow:hidden;border:1px solid var(--l);min-height:220px;
+  box-shadow:0 22px 46px -28px rgba(13,31,91,.45);}
+.site .veh-feat-img img{width:100%;height:100%;object-fit:cover;display:block;}
+
+/* anchor ciele z hero buttonov – odsadenie pod sticky header */
+#veh-produkty,#veh-modely{scroll-margin-top:80px;}
+
+/* ============ MODELOVÉ SITUACE — 3 modely na preklik ============ */
+/* mobil: vodorovne posuvateľný rad kartičiek (swipe + snap), kúsok ďalšej vykúka */
+/* prepínač 3 vodičov – vodorovný rad navrchu, samostatný nad kartou detailu */
+.site .veh-models{display:flex;gap:14px;margin-bottom:16px;overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+  margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;}
+.site .veh-models::-webkit-scrollbar{display:none;}
+.site .veh-model-tab{flex:0 0 78%;scroll-snap-align:start;display:flex;flex-direction:column;text-align:left;background:var(--box);
+  border:1px solid var(--l);border-radius:16px;overflow:hidden;padding:0;transition:.18s;cursor:pointer;}
+.site .veh-model-tab:hover{border-color:var(--blue-200);transform:translateY(-2px);box-shadow:0 16px 30px -20px rgba(13,31,91,.35);}
+.site .veh-model-tab.on{border-color:var(--blue);box-shadow:0 16px 32px -16px rgba(13,31,91,.42);}
+.site .veh-model-photo{display:block;aspect-ratio:16/10;overflow:hidden;
+  background:linear-gradient(to right,var(--blue-50),#fff);border-bottom:1px solid var(--l2);}
+.site .veh-model-photo img{width:100%;height:100%;object-fit:contain;display:block;padding:20px 24px;
+  transition:transform .35s var(--ease,ease);}
+.site .veh-model-tab:hover .veh-model-photo img{transform:scale(1.03);}
+.site .veh-model-meta{display:flex;align-items:center;gap:11px;padding:13px 15px;}
+.site .veh-model-ic{width:38px;height:38px;border-radius:10px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;flex:none;transition:.18s;}
+.site .veh-model-tab.on .veh-model-ic{background:var(--blue);color:#fff;}
+.site .veh-model-tx b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);}
+.site .veh-model-tx small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:1px;}
+
+.site .veh-model-card{background:var(--box);border:1px solid var(--l);border-radius:20px;
+  padding:clamp(22px,3.4vw,32px);box-shadow:0 1px 3px rgba(13,31,91,.04);}
+.site .veh-model-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.site .veh-model-head h3{font-size:var(--fs-h3);color:var(--ink);}
+.site .veh-model-engine{flex:none;background:var(--blue-50);color:var(--blue);font-weight:700;font-size:var(--fs-label);
+  border-radius:999px;padding:7px 13px;white-space:nowrap;}
+.site .veh-model-usage{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:64ch;}
+.site .veh-params{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;}
+.site .veh-param{background:var(--g50);border:1px solid var(--l2);border-radius:12px;padding:12px 14px;}
+.site .veh-param small{display:block;font-size:var(--fs-label);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);}
+.site .veh-param b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);margin-top:4px;}
+.site .veh-model-head h3 span{color:var(--g400);font-weight:500;}
+.site .veh-model-spec{color:var(--g500);font-size:var(--fs-sm);margin-top:7px;}
+.site .veh-model-cols{display:grid;grid-template-columns:1fr;gap:26px;margin-top:24px;}
+.site .veh-comp-list{list-style:none;margin:8px 0 0;padding:0;}
+.site .veh-comp-list li{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--l2);}
+.site .veh-comp-list li:last-child{border-bottom:0;}
+.site .veh-comp-list .nm{display:flex;flex-direction:column;font-size:var(--fs-body);font-weight:600;color:var(--ink);}
+.site .veh-comp-list .nm small{font-weight:400;font-size:var(--fs-label);color:var(--g500);margin-top:2px;line-height:1.4;}
+.site .veh-comp-list li.base i{color:var(--g400);font-style:normal;font-size:var(--fs-label);font-weight:600;margin-left:8px;
+  text-transform:uppercase;letter-spacing:.06em;}
+.site .veh-comp-list .pr{flex:none;font-weight:700;color:var(--g600);white-space:nowrap;font-size:var(--fs-body);}
+.site .veh-comp-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;
+  padding-top:14px;border-top:2px solid var(--l);}
+.site .veh-comp-total > span:first-child{font-size:var(--fs-label);color:var(--g500);font-weight:700;text-transform:uppercase;letter-spacing:.1em;}
+.site .veh-comp-total .big{font-family:var(--display);font-weight:800;font-size:26px;color:var(--blue);}
+.site .veh-comp-total .big small{font-size:var(--fs-sm);color:var(--g400);font-weight:600;margin-left:2px;}
+.site .veh-perks{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:11px;}
+.site .veh-perks li{display:flex;align-items:flex-start;gap:10px;font-size:var(--fs-body);color:var(--ink);line-height:1.45;}
+.site .veh-perks li svg{color:var(--green);flex:none;margin-top:1px;}
+.site .veh-model-why{display:flex;gap:10px;margin-top:18px;background:var(--blue-50);border-radius:12px;
+  padding:14px;color:var(--g700);font-size:var(--fs-sm);line-height:1.55;}
+.site .veh-model-why svg{color:var(--blue);flex:none;margin-top:1px;}
+
+/* ---- overenie na vlastnú situáciu ---- */
+.site .veh-verify{margin-top:22px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;
+  background:var(--blue-50);border:1px solid var(--blue-100);border-radius:18px;padding:clamp(20px,3vw,28px);}
+.site .veh-verify-tx h3{font-size:var(--fs-h3);color:var(--ink);}
+.site .veh-verify-tx p{color:var(--g600);font-size:var(--fs-body);margin-top:8px;max-width:62ch;line-height:1.6;}
+
+/* ============ (staré) MODELOVÉ PŘÍKLADY — hlavička + přepínač ============ */
+.site .veh-ex-top{display:flex;flex-direction:column;gap:18px;margin-bottom:26px;}
+.site .veh-viewswitch{display:inline-flex;align-self:flex-start;gap:4px;background:var(--g100);
+  border:1px solid var(--l);border-radius:999px;padding:4px;}
+.site .veh-viewswitch button{border:0;background:transparent;border-radius:999px;padding:8px 18px;
+  font-size:var(--fs-sm);font-weight:600;color:var(--g600);transition:.18s;}
+.site .veh-viewswitch button.on{background:#fff;color:var(--blue);box-shadow:0 2px 8px -2px rgba(13,31,91,.2);}
+
+/* ---- profily (3 situace) ---- */
+.site .veh-profiles{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;}
+.site .veh-prof{display:flex;align-items:center;gap:12px;text-align:left;background:var(--box);
+  border:1px solid var(--l);border-radius:14px;padding:13px 15px;transition:.18s;}
+.site .veh-prof:hover{border-color:var(--blue-200);}
+.site .veh-prof.on{border-color:var(--blue);background:var(--blue-50);box-shadow:0 10px 22px -14px rgba(13,31,91,.34);}
+.site .veh-prof-ic{width:40px;height:40px;border-radius:11px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;flex:none;transition:.18s;}
+.site .veh-prof.on .veh-prof-ic{background:var(--blue);color:#fff;}
+.site .veh-prof-tx b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);}
+.site .veh-prof-tx small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:1px;}
+
+/* ---- skladačka: moduly + výpis ---- */
+.site .veh-build{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;}
+.site .veh-mods-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:12px;}
+.site .veh-mods-grid{display:grid;grid-template-columns:1fr;gap:9px;}
+.site .veh-mod{display:flex;align-items:center;gap:12px;text-align:left;width:100%;background:var(--box);
+  border:1px solid var(--l);border-radius:13px;padding:12px 14px;transition:.16s;}
+.site .veh-mod:not(.base):hover{border-color:var(--blue-200);transform:translateY(-1px);}
+.site .veh-mod.on{border-color:var(--blue);background:var(--blue-50);}
+.site .veh-mod.base{background:var(--g50);cursor:default;}
+.site .veh-mod-ic{width:40px;height:40px;border-radius:11px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;flex:none;transition:.16s;}
+.site .veh-mod.on .veh-mod-ic{background:var(--blue);color:#fff;}
+.site .veh-mod.base .veh-mod-ic{background:#fff;border:1px solid var(--l);color:var(--g600);}
+.site .veh-mod-tx{flex:1;min-width:0;}
+.site .veh-mod-tx b{display:block;font-size:var(--fs-sm);color:var(--ink);font-weight:600;}
+.site .veh-mod-tx small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.site .veh-mod-meta{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none;}
+.site .veh-mod-price{font-size:var(--fs-label);font-weight:700;color:var(--g500);white-space:nowrap;}
+.site .veh-mod.on .veh-mod-price{color:var(--blue);}
+.site .veh-mod.base .veh-mod-price{color:var(--green);}
+.site .veh-mod-state{color:var(--g300);display:flex;}
+.site .veh-mod.on .veh-mod-state{color:var(--blue);}
+.site .veh-mod.base .veh-mod-state{display:none;}
+
+/* ---- výpis proč/kolik/zač ---- */
+.site .veh-sum{background:var(--box);border:1px solid var(--l);border-radius:18px;padding:22px;
+  box-shadow:0 14px 34px -22px rgba(13,31,91,.3);position:sticky;top:84px;}
+.site .veh-sum-car{display:flex;align-items:center;gap:13px;padding-bottom:16px;border-bottom:1px solid var(--l2);}
+.site .veh-sum-photo{width:60px;height:46px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(to right,var(--blue-50),#fff);border:1px solid var(--l);color:var(--blue);}
+.site .veh-sum-car b{display:block;font-family:var(--display);font-weight:700;color:var(--ink);font-size:var(--fs-body);}
+.site .veh-sum-car small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:2px;}
+.site .veh-sum-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin:16px 0 8px;}
+.site .veh-sum-list{list-style:none;margin:0;padding:0;}
+.site .veh-sum-list li{display:flex;justify-content:space-between;gap:10px;font-size:var(--fs-sm);color:var(--g700);padding:7px 0;border-bottom:1px dashed var(--l2);}
+.site .veh-sum-list li span:last-child{font-weight:600;color:var(--ink);white-space:nowrap;}
+.site .veh-sum-list li.baserow{color:var(--g500);}
+.site .veh-sum-list li.baserow i{font-style:normal;color:var(--mut);font-size:var(--fs-label);}
+.site .veh-sum-total{display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--l);}
+.site .veh-sum-total > span:first-child{font-size:var(--fs-sm);color:var(--g500);font-weight:600;}
+.site .veh-sum-total .big{font-family:var(--display);font-weight:800;color:var(--ink);font-size:30px;line-height:1;
+  animation:vzpop .28s var(--ease);}
+.site .veh-sum-total .big small{font-size:var(--fs-sm);font-weight:600;color:var(--g500);margin-left:3px;}
+@keyframes vzpop{from{transform:scale(.92);opacity:.4;}to{transform:scale(1);opacity:1;}}
+.site .veh-sum-why{display:flex;gap:9px;align-items:flex-start;margin-top:16px;background:var(--blue-50);
+  border-radius:12px;padding:13px;font-size:var(--fs-sm);color:var(--blue-800);line-height:1.5;}
+.site .veh-sum-why svg{color:var(--blue);flex:none;margin-top:1px;}
+.site .veh-sum-cta{display:flex;align-items:center;gap:10px;margin-top:16px;}
+.site .veh-sum-cta .btn{flex:1;justify-content:center;}
+.site .veh-reset{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--l);background:#fff;
+  border-radius:12px;padding:0 14px;height:50px;font-size:var(--fs-sm);font-weight:600;color:var(--g600);transition:.18s;flex:none;}
+.site .veh-reset:hover{border-color:var(--blue-200);color:var(--blue);}
+.site .veh-sum-note{font-size:var(--fs-label);color:var(--mut);margin-top:12px;line-height:1.5;}
+
+/* ============ MODELOVÉ PŘÍKLADY — původní karty ============ */
+.site .veh-examples{display:grid;grid-template-columns:1fr;gap:16px;}
+.site .veh-ex{display:flex;flex-direction:column;background:var(--box);border:1px solid var(--l);
+  border-radius:16px;padding:22px;box-shadow:0 1px 3px rgba(13,31,91,.04);transition:.2s;}
+.site .veh-ex:hover{border-color:var(--blue-200);box-shadow:0 16px 32px -20px rgba(13,31,91,.34);transform:translateY(-3px);}
+.site .veh-ex-head{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+.site .veh-ex-ic{width:42px;height:42px;border-radius:12px;background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;flex:none;}
+.site .veh-ex-tag{font-size:var(--fs-label);font-weight:700;color:var(--blue);background:var(--blue-50);
+  border-radius:999px;padding:5px 11px;}
+.site .veh-ex h3{font-size:var(--fs-card);color:var(--ink);}
+.site .veh-ex-sit{color:var(--g500);font-size:var(--fs-sm);margin-top:6px;line-height:1.5;}
+.site .veh-ex-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:9px;}
+.site .veh-ex-list li{display:flex;align-items:center;gap:9px;font-size:var(--fs-sm);color:var(--g700);font-weight:500;}
+.site .veh-ex-list li svg{color:var(--green);flex:none;}
+.site .veh-ex-foot{display:flex;align-items:center;justify-content:space-between;
+  margin-top:20px;padding-top:16px;border-top:1px solid var(--l2);}
+.site .veh-ex-price{font-family:var(--display);font-weight:800;color:var(--ink);font-size:var(--fs-card);}
+.site .veh-ex-go{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);font-weight:700;color:var(--blue);}
+
+/* ============ FORM ============ */
+.site .veh-form-grid{display:grid;grid-template-columns:1fr;gap:13px;}
+.site .veh-field{display:flex;flex-direction:column;gap:6px;}
+.site .veh-field span{font-size:var(--fs-label);font-weight:600;color:var(--g700);}
+.site .veh-field input,.site .veh-field textarea{width:100%;border:1px solid var(--g300);border-radius:11px;
+  background:#fff;padding:12px 14px;font:inherit;font-size:var(--fs-body);color:var(--ink);transition:.18s;resize:vertical;}
+.site .veh-field input::placeholder,.site .veh-field textarea::placeholder{color:var(--g500);}
+.site .veh-field input:focus,.site .veh-field textarea:focus{outline:0;border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blue-50);}
+.site .veh-check{display:flex;align-items:center;gap:9px;font-size:var(--fs-sm);color:var(--g600);}
+.site .veh-check input{width:17px;height:17px;accent-color:var(--blue);}
+.site .veh-why{display:flex;align-items:center;gap:9px;font-size:var(--fs-sm);color:var(--g700);font-weight:500;padding:4px 0;}
+.site .veh-why svg{color:var(--blue);flex:none;}
+
+/* ============ DESKTOP ============ */
+@media(min-width:980px){
+  /* hero: text vľavo, body s ikonami vpravo. align-items zámerne nie – zarovnanie na
+     začiatok drží medzeru pod breadcrumbom, body sa centrujú samy (.veh-hero-points) */
+  .site .veh-hero .hero-in{grid-template-columns:1.1fr .9fr;}
+  .site .veh-hero-bg{background-position:center;}
+  /* inkasný systém: 50/50 text + foto */
+  .site .veh-feat{grid-template-columns:1fr 1fr;gap:44px;}
+  /* desktop: prepínač profilov je rad kariet na celú šírku, situácia pod ním.
+     auto-fit, lebo počet profilov k produktu nie je fixný (iný produkt ich má menej) */
+  .site .veh-models{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:14px;overflow:visible;margin-inline:0;padding:0;margin-bottom:0;}
+  .site .veh-model-tab{flex:initial;width:100%;}
+  /* pravá karta vyplní výšku ľavého stĺpca; súhrn s cenou dole */
+  .site .veh-model-card{display:flex;flex-direction:column;height:100%;}
+  .site .veh-model-cols{flex:1;}
+  .site .veh-model-comp{display:flex;flex-direction:column;}
+  .site .veh-comp-total{margin-top:auto;}
+  .site .veh-model-cols{grid-template-columns:1fr 1fr;}
+  /* súhrn (skladba ceny) napravo, dôvody naľavo */
+  .site .veh-model-perks{order:1;}
+  .site .veh-model-comp{order:2;}
+  .site .veh-verify{flex-direction:row;align-items:center;justify-content:space-between;gap:28px;}
+  .site .veh-verify .btn{flex:none;}
+  .site .veh-panel{grid-template-columns:1.45fr .85fr;gap:36px;}
+  .site .veh-examples{grid-template-columns:repeat(3,1fr);}
+  .site .veh-form-grid{grid-template-columns:1fr 1fr;}
+  .site .veh-ex-top{flex-direction:row;align-items:flex-end;justify-content:space-between;}
+  .site .veh-profiles{grid-template-columns:repeat(3,1fr);}
+  .site .veh-build{grid-template-columns:1.35fr .9fr;gap:26px;}
+  .site .veh-mods-grid{grid-template-columns:1fr 1fr;}
+}

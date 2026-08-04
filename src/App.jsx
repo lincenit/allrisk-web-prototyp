@@ -1,28 +1,33 @@
 import { Routes, Route } from 'react-router-dom'
 import SiteHeader from './components/SiteHeader.jsx'
 import ScrollTop from './components/ScrollTop.jsx'
-import Test from './pages/Test.jsx'
 import Wireframe from './pages/Wireframe.jsx'
-import Vozidla from './pages/Vozidla.jsx'
-import Kontakt from './pages/Kontakt.jsx'
-import Pobocky from './pages/Pobocky.jsx'
-import PobockaDetail from './pages/PobockaDetail.jsx'
-import PoradceDetail from './pages/PoradceDetail.jsx'
+import Home from './pages/Home.jsx'
+import Vehicles from './pages/Vehicles.jsx'
+import Contact from './pages/Contact.jsx'
+import Branches from './pages/Branches.jsx'
+import BranchDetail from './pages/BranchDetail.jsx'
+import AdvisorDetail from './pages/AdvisorDetail.jsx'
+import ProfileDetail from './pages/ProfileDetail.jsx'
+import References from './pages/References.jsx'
 
 export default function App() {
   // Jeden spoločný header pre celý prototyp.
+  // URL zostávajú v češtine (user-facing + SEO), názvy komponentov sú anglické.
   return (
     <>
       <ScrollTop />
       <SiteHeader />
       <Routes>
         <Route path="/" element={<Wireframe />} />
-        <Route path="/vozidla" element={<Vozidla />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/kontakt" element={<Kontakt />} />
-        <Route path="/pobocky" element={<Pobocky />} />
-        <Route path="/pobocky/:slug" element={<PobockaDetail />} />
-        <Route path="/poradce/:slug" element={<PoradceDetail />} />
+        <Route path="/uvod" element={<Home />} />
+        <Route path="/vozidla" element={<Vehicles />} />
+        <Route path="/kontakt" element={<Contact />} />
+        <Route path="/pobocky" element={<Branches />} />
+        <Route path="/pobocky/:slug" element={<BranchDetail />} />
+        <Route path="/poradce/:slug" element={<AdvisorDetail />} />
+        <Route path="/profil/:slug" element={<ProfileDetail />} />
+        <Route path="/reference" element={<References />} />
       </Routes>
     </>
   )

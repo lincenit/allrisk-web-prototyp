@@ -1,0 +1,215 @@
+/* Klientské profily – detail archetypu (/profil/:slug), dlaždice na landingu
+   a zdieľaný blok situácie, ktorý sa renderuje aj na produktových stránkach.
+   Preto tento súbor importuje aj Vehicles.jsx – trieda .sit* musí byť dostupná v oboch kontextoch. */
+
+/* ============ 1 · HERO ARCHETYPU (rovnaká kostra ako veh-hero na /vozidla) ============ */
+/* foto klienta pod hero + modrý overlay – fallback je značkový gradient (--grad-blue) na .hero.
+   Hero presahuje pod sticky header (margin -64 / padding +64), takže foto vidno aj za hlavičkou. */
+/* blokové odsadenie pásu na jednom mieste – zhodné s .veh-hero (viď vehicles.css) */
+.site .prof-hero{position:relative;isolation:isolate;margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+/* dve vrstvy pozadia: profilové foto navrchu, spoločné foto ako záloha, kým profilové chýba */
+.site .prof-hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+  background-repeat:no-repeat;filter:grayscale(100%);}
+/* modrý overlay je samostatná vrstva nad fotkou, takže ho grayscale neovplyvní */
+.site .prof-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
+
+.site .prof-crumb-wrap{position:relative;z-index:2;}
+.site .prof-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);}
+.site .prof-crumb a{color:rgba(255,255,255,.7);transition:.2s;}
+.site .prof-crumb a:hover{color:#fff;}
+.site .prof-crumb b{color:#fff;font-weight:600;}
+.site .prof-crumb svg{opacity:.55;}
+
+/* rytmika zhodná s /vozidla: breadcrumbs → 16 → title → 16 → text → 32 → buttons.
+   align-items:start drží tú prvú medzeru rovnakú bez ohľadu na výšku ilustrácie vpravo –
+   pri centrovaní bola na /profil 64 px a na /vozidla 35 px. Ilustrácia si centrovanie
+   pýta sama (.prof-hero-illus{align-self:center}).
+   Selektor cez .prof-hero, nech má o triedu vyššiu váhu než základné .site .hero-in
+   a nezávisí od poradia importov CSS. */
+.site .prof-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
+  padding-block:16px 0;align-items:start;}
+.site .prof-hero .hero-tx{max-width:640px;gap:0;}
+/* veľkosť titulku drží spoločný token --fs-title (rovnaký ako hlavičky sekcií), tu sa neprepisuje */
+.site .prof-hero .hero-tx>p{margin-top:16px;}
+.site .prof-hero .hero-tx p{max-width:56ch;}
+.site .prof-hero .hero-tx>.hero-cta{margin-top:32px;}
+
+/* tabler.io ilustrácia vpravo – bez rámu, aby dýchala nad fotkou */
+.site .prof-hero-illus{display:flex;align-items:center;justify-content:center;align-self:center;}
+.site .prof-hero-illus .story-ill{width:100%;height:clamp(200px,26vw,320px);
+  display:flex;align-items:center;justify-content:center;}
+.site .prof-hero-illus .story-ill img{max-width:100%;max-height:100%;object-fit:contain;
+  filter:drop-shadow(0 24px 44px rgba(0,16,54,.45));}
+/* fallback, kým ilustrácia nie je exportovaná – sklenená dlaždica ako body v hero na /vozidla */
+.site .prof-hero-illus .ni{width:clamp(96px,12vw,128px);height:clamp(96px,12vw,128px);
+  border-radius:var(--r-band);color:#fff;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);
+  box-shadow:0 12px 30px -22px rgba(0,0,0,.6);}
+.site .prof-hero-illus .ni svg{width:44px;height:44px;}
+
+/* ============ 2 · DLAŽDICE PROFILOV NA LANDINGU ============ */
+/* Vychádza z .story (wireframe.css) – tu mriežka, obrázkový blok a stav odkazu namiesto tabu. */
+.site .prof-cards{display:grid;grid-template-columns:1fr;gap:18px;}
+/* obrázkový blok ide edge-to-edge ako foto modelu na produktovej stránke (.veh-model-photo),
+   preto dlaždica sama nemá padding ani gap – odsadenie nesie až .prof-card-tx */
+.site .prof-card{text-decoration:none;padding:0;gap:0;overflow:hidden;}
+/* tabler.io ilustrácia nesie dlaždicu – tónovaný blok, aby aj ikonový fallback pôsobil zámerne */
+.site .prof-card .story-ill{aspect-ratio:16/10;height:auto;width:100%;margin:0;border-radius:0;
+  border-bottom:1px solid var(--l2);
+  background:linear-gradient(160deg,var(--blue-50),#F4F8FF);
+  display:flex;align-items:center;justify-content:center;padding:18px 22px;transition:.2s;}
+.site .prof-card:hover .story-ill{background:linear-gradient(160deg,var(--blue-100),var(--blue-50));}
+.site .prof-card .story-ill img{max-width:100%;max-height:100%;object-fit:contain;
+  transition:transform .35s var(--ease);}
+.site .prof-card:hover .story-ill img{transform:scale(1.03);}
+.site .prof-card .ni{width:100%;aspect-ratio:16/10;height:auto;margin:0;border-radius:0;
+  border-bottom:1px solid var(--l2);
+  background:linear-gradient(160deg,var(--blue-50),#F4F8FF);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;transition:.2s;}
+.site .prof-card:hover .ni{background:linear-gradient(160deg,var(--blue-100),var(--blue-50));}
+.site .prof-card .ni svg{width:40px;height:40px;}
+/* text pod obrázkom – prevezme rytmus, ktorý mala pôvodne dlaždica (.story padding 22px) */
+.site .prof-card-tx{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+  width:100%;padding:18px 20px 20px;}
+/* meno profilu je Inter, nie Magistral – v malej dlaždici pôsobil display font ťažko */
+.site .prof-card b{font-family:var(--sans);font-weight:700;letter-spacing:-.015em;}
+/* eyebrow bol kedysi dvojriadkový („Rodina v nejlepších letech") a rezervoval si dva riadky,
+   aby si mená naprieč dlaždicami sadli na jednu linku. Dnešné popisky sa zmestia na riadok
+   aj v najužšej dlaždici (4 stĺpce, 218 px), takže rezerva len tlačila meno dole. */
+.site .prof-card .ey{display:flex;align-items:flex-start;}
+.site .prof-card .story-pick{display:inline-flex;align-items:center;gap:6px;}
+.site .prof-card .story-pick svg{transition:transform .18s var(--ease);}
+.site .prof-card:hover .story-pick svg{transform:translateX(4px);}
+
+/* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============ */
+/* jeden stĺpec na všetkých šírkach – zoznam je zoradený podľa naliehavosti
+   (nutnost → doporučujeme → zvážit), takže poradie zhora nadol musí byť čitateľné */
+.site .solved{display:grid;grid-template-columns:1fr;gap:12px;}
+.site .solved-item{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px;
+  background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);padding:16px 18px;
+  text-decoration:none;color:inherit;transition:.2s;box-shadow:0 1px 3px rgba(13,31,91,.04);}
+.site .solved-item:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-lift);}
+.site .solved-item:focus-visible{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
+/* ikona sedí hore vľavo, na linke názvu – vycentrovaná na celú kartu plávala pri dlhších
+   popisoch kdesi v strede textu a riadky položiek sa opticky rozpadli */
+.site .solved-ic{align-self:start;width:44px;height:44px;flex:none;border-radius:var(--r-btn);background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;transition:.2s;}
+.site .solved-item:hover .solved-ic{background:var(--blue);color:#fff;}
+.site .solved-tx{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.site .solved-tx b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.25;}
+.site .solved-tx small{font-size:var(--fs-sm);color:var(--g600);line-height:1.55;text-wrap:pretty;}
+.site .solved-need{grid-column:2;justify-self:start;order:3;display:inline-flex;align-items:center;
+  border-radius:var(--r-pill);padding:5px 12px;font-size:var(--fs-label);font-weight:600;white-space:nowrap;}
+.site .solved-need.nutnost{background:var(--blue);color:#fff;}
+.site .solved-need.doporuceno{background:var(--blue-50);color:var(--blue);}
+.site .solved-need.zvazit{background:var(--g100);color:var(--g600);}
+
+/* ============ 4 · SITUÁCIA (zdieľaná s produktovými stránkami) ============ */
+/* Rad záložiek situácií je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) –
+   ten istý prepínač nesú aj produkty na /vozidla. */
+
+/* kostra karty zhodná s .veh-panel na /vozidla (rádius, padding, tieň) */
+.site .sit{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;
+  background:var(--box);border:1px solid var(--l);border-radius:20px;
+  padding:clamp(20px,3.5vw,32px);box-shadow:0 1px 3px rgba(13,31,91,.04);animation:sitIn .28s var(--ease) both;}
+@keyframes sitIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@media(prefers-reduced-motion:reduce){.site .sit{animation:none;}}
+
+.site .sit-main{display:flex;flex-direction:column;align-items:flex-start;min-width:0;}
+.site .sit-badge{display:inline-flex;align-items:center;gap:7px;border-radius:var(--r-pill);
+  background:#FBEAEA;color:var(--red);padding:5px 12px;font-size:var(--fs-label);font-weight:600;}
+/* typografia panelu = .veh-panel-tx na /vozidla: h3 clamp(23–32), lede 16/1.6, popisok 11px */
+.site .sit-main h3{font-family:var(--display);font-weight:700;font-size:var(--fs-h3);
+  line-height:1.22;color:var(--ink);margin:14px 0 0;text-wrap:balance;}
+.site .sit-story{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:52ch;text-wrap:pretty;}
+
+.site .sit-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--mut);margin:22px 0 4px;}
+.site .sit-fix{width:100%;}
+.site .sit-fix ul{list-style:none;margin:0;padding:0;max-width:60ch;}
+.site .sit-fix li{display:flex;align-items:flex-start;gap:11px;padding:12px 0;
+  border-bottom:1px solid var(--l2);font-size:var(--fs-body);line-height:1.55;color:var(--ink);font-weight:500;}
+.site .sit-fix li:last-child{border-bottom:0;}
+.site .sit-fix li svg{color:var(--green);flex:none;margin-top:2px;}
+
+.site .sit-outcome{display:flex;align-items:flex-start;gap:11px;margin-top:20px;width:100%;
+  background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--r-card);
+  padding:14px 16px;font-size:var(--fs-body);line-height:1.55;color:var(--ink);font-weight:500;}
+.site .sit-outcome svg{color:var(--blue);flex:none;margin-top:2px;}
+
+/* preklik na produkt/profil – kartička v pravom stĺpci.
+   Popisok je hlavička karty, pod ňou ikona a až pod ňou názov (ako .veh-aside „Dobré vědět"
+   o sekciu vyššie), potom vysvetlenie a tlačidlo na plnú šírku dole. */
+.site .sit-aside{background:var(--blue-50);border:1px solid var(--blue-100);
+  border-radius:var(--r-card);padding:18px 20px 20px;display:flex;flex-direction:column;gap:14px;}
+.site .sit-aside-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);}
+/* ikona stojí voľne na modrom podklade – biely štvorec pôsobil ako ďalšia karta v karte */
+.site .sit-aside-ic{align-self:flex-start;color:var(--blue);display:flex;align-items:center;justify-content:center;
+  margin:-2px 0 -6px;}
+.site .sit-aside-t{font-family:var(--display);font-weight:700;color:var(--ink);font-size:var(--fs-card);line-height:1.25;}
+.site .sit-aside p{color:var(--g600);font-size:var(--fs-sm);line-height:1.55;margin:0;}
+.site .sit-aside .btn{width:100%;margin-top:auto;}
+
+/* situácia pod modelovou kartou na produktovej stránke */
+.site .veh-sit{margin-top:18px;}
+
+/* ============ 5 · OSTATNÉ PROFILY ============ */
+/* Zoznam „Nejste to úplně vy?" používa ProfileCards – tie isté dlaždice ako landing.
+   Jediný rozdiel je počet stĺpcov na desktope (3 profily namiesto 4), viď media query. */
+
+/* ============ RESPONZÍVNE ============ */
+/* Prepínač na produktovej stránke: pod desktopom je vodorovný posuvný rad so snapom
+   (rovnaká mechanika ako .tabbar). Štyri dlaždice pod sebou zaberú na mobile celú
+   obrazovku, než sa človek vôbec dostane k situácii, ktorú prepínajú.
+   Časť ďalšej dlaždice zámerne vykúka – je to jediný signál, že sa rad posúva. */
+@media(max-width:979px){
+  .site .prof-tabs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;}
+  .site .prof-tabs::-webkit-scrollbar{display:none;}
+  .site .prof-tabs .prof-card{flex:0 0 74%;scroll-snap-align:start;}
+  /* v rade je dlaždica nižšia – ilustrácia dostane plochší pomer a text menej vzduchu */
+  .site .prof-tabs .prof-card .story-ill,
+  .site .prof-tabs .prof-card .ni{aspect-ratio:16/7;padding:12px 18px;}
+  .site .prof-tabs .prof-card-tx{gap:5px;padding:14px 16px 16px;}
+}
+/* Pomer 16/10 rastie so šírkou dlaždice, a keďže stĺpcov je pod desktopom málo, dlaždica
+   je široká: tesne pred zlomom na dva stĺpce (≈600 px) mala ilustrácia cez 340 px, v dvoch
+   stĺpcoch pri 979 px cez 280 px. Jedna dlaždica tak bola vyššia než pol obrazovky a štyri
+   profily znamenali cez 2 000 px scrollu. Strop výšky to zrovná; na telefóne sa nemení nič,
+   tam pomer na strop ani nedosiahne. Na desktope (4 stĺpce) je dlaždica úzka a strop netreba. */
+@media(max-width:979px){
+  .site .prof-cards .prof-card .story-ill,
+  .site .prof-cards .prof-card .ni{max-height:240px;}
+}
+/* na tablete sa do rovnakého radu zmestia dve dlaždice a kúsok tretej */
+@media(min-width:620px) and (max-width:979px){
+  .site .prof-tabs .prof-card{flex:0 0 44%;}
+}
+@media(min-width:620px){
+  .site .prof-cards{grid-template-columns:repeat(2,1fr);}
+  .site .solved-item{grid-template-columns:auto 1fr auto;}
+  .site .solved-need{grid-column:auto;order:0;justify-self:end;}
+}
+@media(min-width:980px){
+  /* align-items zámerne nie: zarovnanie na začiatok drží medzeru pod breadcrumbom,
+     ilustrácia sa centruje sama (.prof-hero-illus) */
+  .site .prof-hero .hero-in{grid-template-columns:1.1fr .9fr;}
+  /* výšku riadku určuje text, nie ilustrácia – inak pod tlačidlami ostal prázdny pás,
+     lebo obrázok si na šírku stĺpca pýtal cez 320 px. height:0 + min-height:100% je na to
+     obvyklý grid trik: nulová výška do výpočtu riadku nevstúpi, percento sa potom počíta
+     z výšky riadku, ktorú určil text vedľa. */
+  .site .prof-hero-illus{align-self:stretch;}
+  .site .prof-hero-illus .story-ill{height:0;min-height:100%;max-height:320px;}
+  .site .prof-cards{grid-template-columns:repeat(4,1fr);}
+  .site .prof-cards-3{grid-template-columns:repeat(3,1fr);}
+  /* prepínač na produktovej stránke – počet profilov k produktu nie je fixný,
+     preto auto-fit namiesto pevných štyroch stĺpcov */
+  .site .prof-tabs{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  /* rovnaký pomer stĺpcov a medzera ako .veh-panel na /vozidla */
+  .site .sit{grid-template-columns:1.45fr .85fr;gap:36px;}
+  .site .sit-aside{position:sticky;top:88px;}
+}

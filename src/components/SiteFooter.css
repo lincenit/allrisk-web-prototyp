@@ -3,17 +3,28 @@
    Self-contained (vlastné .sfoot triedy + :root premenné),
    funguje aj mimo .site stránok (napr. Test).
    ============================================================ */
+/* Bez značkovej linky na hornej hrane — rozhodnuté 2026-08-04. DESIGN.md ju
+   v „The Gradient-Is-The-Line Rule" preto už nemenuje; --grad-core zostáva
+   eyebrow, progres cesty a hero ťah. */
 .sfoot{background:#091633;color:rgba(255,255,255,.6);}
-.sfoot-wrap{max-width:1180px;margin:0 auto;padding-inline:clamp(18px,5vw,32px);}
+/* Rovnaká mriežka ako obsah stránky (.site .wrap): footer si predtým písal
+   vlastnú šírku aj vlastný clamp, takže jeho stĺpce stáli o 4px inde než
+   všetko nad nimi. */
+.sfoot-wrap{max-width:var(--maxw,1180px);margin:0 auto;padding-inline:clamp(16px,4vw,28px);}
 .sfoot-top{display:grid;grid-template-columns:1fr;gap:30px;padding-block:clamp(40px,6vw,64px);}
 .sfoot-brand .fl{height:30px;width:auto;display:block;}
-.sfoot-brand p{margin-top:14px;font-size:14px;max-width:32ch;line-height:1.6;color:rgba(255,255,255,.6);}
+.sfoot-brand p{margin-top:14px;font-size:var(--fs-sm);max-width:32ch;line-height:1.6;color:rgba(255,255,255,.6);}
 .sfoot-brand .soc{display:flex;gap:10px;margin-top:18px;}
-.sfoot-brand .soc a{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.2s;}
+/* 10px nie je na dokumentovanej škále — sú to tlačidlové dlaždice, teda --r-btn */
+.sfoot-brand .soc a{width:38px;height:38px;border-radius:var(--r-btn,12px);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.2s;}
 .sfoot-brand .soc a:hover{background:var(--blue);}
-.sfoot-col h4{color:#fff;font-family:var(--display);font-size:14px;letter-spacing:.03em;margin-bottom:14px;}
-.sfoot-col a{display:block;font-size:14px;padding:6px 0;color:rgba(255,255,255,.6);transition:.2s;text-decoration:none;}
+.sfoot-col h4{color:#fff;font-family:var(--display);font-size:var(--fs-sm);letter-spacing:.03em;margin-bottom:14px;}
+.sfoot-col a{display:block;font-size:var(--fs-sm);padding:6px 0;color:rgba(255,255,255,.6);transition:.2s;text-decoration:none;}
 .sfoot-col a:hover{color:#fff;}
-.sfoot-bot{border-top:1px solid rgba(255,255,255,.1);padding-block:20px;display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;font-size:12.5px;color:rgba(255,255,255,.4);}
-.sfoot-bot a{color:rgba(255,255,255,.4);text-decoration:none;} .sfoot-bot a:hover{color:#fff;}
+/* .5 biela, nie .4: DESIGN.md §2 „The Muted-Floor Rule" nepustí pod čitateľný
+   prah ani stlmený text. Na footer-navy dáva .4 iba 3,76:1 (a je to 12px),
+   .5 dáva 5,22:1. Spodný riadok tak zostáva tichší než odkazy vyššie (6,99:1),
+   ale už sa dá prečítať. */
+.sfoot-bot{border-top:1px solid rgba(255,255,255,.1);padding-block:20px;display:flex;flex-wrap:wrap;gap:10px 20px;justify-content:space-between;font-size:var(--fs-label);color:rgba(255,255,255,.5);}
+.sfoot-bot a{color:rgba(255,255,255,.5);text-decoration:none;} .sfoot-bot a:hover{color:#fff;}
 @media(min-width:760px){.sfoot-top{grid-template-columns:1.7fr 1fr 1fr 1fr;}}

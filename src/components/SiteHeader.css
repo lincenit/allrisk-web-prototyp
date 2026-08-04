@@ -10,38 +10,22 @@
    Stránka pridá .hero-hdr na <html> (hook useHeroHeader), .hero-hdr-solid sa prepne pri scrolle. ===== */
 .hero-hdr .hdr{background:transparent;box-shadow:none;transition:background .3s var(--ease,ease),box-shadow .3s;}
 .hero-hdr.hero-hdr-solid .hdr{background:var(--grad-blue);}
-.header-light.hero-hdr .hdr{background:transparent;border-bottom:0;}
-.header-light.hero-hdr .hdr-logo img{filter:none;}
-.header-light.hero-hdr:not(.hero-hdr-solid) .hdr-nav button,
-.header-light.hero-hdr:not(.hero-hdr-solid) .hdr-nav a,
-.header-light.hero-hdr:not(.hero-hdr-solid) .hdr-iconbtn{color:rgba(255,255,255,.9);}
-.header-light.hero-hdr:not(.hero-hdr-solid) .hdr-burger i{background:#fff;}
-.header-light.hero-hdr.hero-hdr-solid .hdr{background:var(--grad-blue);}
-
-/* ===== svetlá varianta headera (prepínač v „Ladění stylu") ===== */
-.header-light .hdr{background:#fff;border-bottom:1px solid var(--l);}
-.header-light .hdr-logo img{filter:brightness(0);}
-.header-light .hdr-nav button,.header-light .hdr-nav a{color:var(--g700);}
-.header-light .hdr-nav button:hover,.header-light .hdr-nav a:hover{background:var(--blue-50);color:var(--blue);}
-.header-light .hdr-nav button.on,.header-light .hdr-nav a.active{background:var(--blue-50);color:var(--blue);}
-.header-light .hdr-divider{background:var(--l);}
-.header-light .hdr-iconbtn{color:var(--g700);}
-.header-light .hdr-iconbtn:hover,.header-light .hdr-iconbtn.on{background:var(--blue-50);color:var(--blue);}
-.header-light .hdr-mua{color:var(--ink);border-color:var(--g300);}
-.header-light .hdr-mua:hover{background:var(--blue-50);}
-.header-light .hdr-burger i{background:var(--ink);}
+/* Kontrast bieleho loga a navigácie na svetlých snímkach hero videa rieši horný
+   závoj v .wf-hero::after (wireframe.css) — leží na videu, nie na hlavičke. */
 
 .hdr-bar{display:flex;align-items:center;gap:10px;height:64px;max-width:var(--maxw);margin:0 auto;padding-inline:clamp(14px,4vw,28px);}
 .hdr-logo{display:inline-flex;align-items:center;text-decoration:none;}
 .hdr-logo img{height:26px;width:auto;display:block;}
 .hdr-spacer{flex:1;}
-.hdr-burger{display:flex;flex-direction:column;gap:4px;background:none;border:0;padding:6px;margin-left:6px;}
+/* prúžky ostávajú 20px, ale zásah je 44×44 (na 390px to bolo 26×32) */
+.hdr-burger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  width:44px;height:44px;background:none;border:0;padding:0;margin-left:2px;}
 .hdr-burger i{width:20px;height:2px;background:#fff;border-radius:2px;transition:.25s;}
 .hdr-burger.on i:nth-child(1){transform:translateY(6px) rotate(45deg);}
 .hdr-burger.on i:nth-child(2){opacity:0;}
 .hdr-burger.on i:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
 .hdr-nav{display:none;align-items:center;gap:8px;}
-.hdr-nav button,.hdr-nav a{border:0;background:none;padding:9px 12px;border-radius:9px;font-size:14.5px;font-weight:500;color:rgba(255,255,255,.85);position:relative;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit;}
+.hdr-nav button,.hdr-nav a{border:0;background:none;padding:9px 12px;border-radius:9px;font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.85);position:relative;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit;}
 .hdr-nav button:hover,.hdr-nav a:hover{background:rgba(255,255,255,.12);color:#fff;}
 .hdr-nav button.on,.hdr-nav a.active{color:#fff;background:rgba(255,255,255,.12);}
 .hdr-divider{display:none;width:1px;height:24px;background:rgba(255,255,255,.22);margin:0 6px;}
@@ -49,14 +33,14 @@
 /* malý dropdown v navigácii (Společnost) */
 .hdr-dd-wrap{position:relative;display:inline-flex;}
 .hdr-dd{position:absolute;top:calc(100% + 10px);left:0;min-width:210px;background:var(--box);border:1px solid var(--l);border-radius:14px;box-shadow:0 24px 48px -24px rgba(13,31,91,.42);padding:10px;display:flex;flex-direction:column;gap:6px;z-index:120;}
-.hdr-nav .hdr-dd a{display:flex;align-items:center;padding:12px 14px;border-radius:10px;font-size:14.5px;font-weight:500;color:var(--g700);background:none;text-decoration:none;transition:.15s;}
+.hdr-nav .hdr-dd a{display:flex;align-items:center;padding:12px 14px;border-radius:10px;font-size:var(--fs-body);font-weight:500;color:var(--g700);background:none;text-decoration:none;transition:.15s;}
 .hdr-nav .hdr-dd a:hover{background:var(--blue-50);color:var(--blue);}
 .hdr-actions{display:flex;align-items:center;gap:8px;}
 .hdr-iconbtn{display:none;width:40px;height:40px;border-radius:10px;border:0;background:transparent;color:#fff;align-items:center;justify-content:center;transition:.2s;cursor:pointer;}
 .hdr-iconbtn:hover,.hdr-iconbtn.on{background:rgba(255,255,255,.14);}
-.hdr-mua{display:none;align-items:center;gap:7px;height:40px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:0 15px;font-size:13.5px;font-weight:600;color:#fff;background:transparent;cursor:pointer;text-decoration:none;}
+.hdr-mua{display:none;align-items:center;gap:7px;height:40px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:0 15px;font-size:var(--fs-sm);font-weight:600;color:#fff;background:transparent;cursor:pointer;text-decoration:none;}
 .hdr-mua:hover{background:rgba(255,255,255,.12);}
-.hdr-claim{display:inline-flex;align-items:center;gap:7px;height:40px;background:var(--red);color:#fff;border:0;border-radius:10px;padding:0 15px;font-size:13.5px;font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;text-decoration:none;}
+.hdr-claim{display:inline-flex;align-items:center;gap:7px;height:40px;background:var(--red);color:#fff;border:0;border-radius:10px;padding:0 15px;font-size:var(--fs-sm);font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;text-decoration:none;}
 .hdr-claim:hover{filter:brightness(1.08);}
 
 /* ikonka v mega položkách */
@@ -66,69 +50,71 @@
 /* PRODUKTY mega */
 .hdr-mega-wrap{position:absolute;top:calc(100% + 10px);left:0;right:0;display:flex;justify-content:center;z-index:110;pointer-events:none;}
 .hdr-mega{pointer-events:auto;width:min(980px,calc(100vw - 32px));background:var(--box);border:1px solid var(--l);border-radius:18px;box-shadow:0 30px 60px -28px rgba(13,31,91,.45);overflow:hidden;}
-.hdr-mega-body{display:grid;grid-template-columns:240px 1fr;}
-.hdr-rail{background:#f7f9fc;border-right:1px solid var(--l2);padding:12px;display:flex;flex-direction:column;}
-.hdr-rail-cats{display:flex;flex-direction:column;gap:3px;}
-.hdr-rail-cats button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:none;border-radius:9px;padding:11px 10px;font-size:14px;font-weight:600;color:var(--g700);transition:.15s;}
-.hdr-rail-cats button .ch{margin-left:auto;color:var(--g300);display:inline-flex;}
-.hdr-rail-cats button:hover{background:#eef2f7;}
-.hdr-rail-cats button.on{background:var(--blue-50);color:var(--blue);}
-.hdr-rail-cats button.on .ch{color:var(--blue);}
-
-/* segment switch „Pro koho" — taby v jednom riadku nad produktami */
-.hdr-seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.hdr-seg button{border:1px solid var(--l);background:#fff;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;color:var(--g700);transition:.15s;}
-.hdr-seg button:hover{border-color:var(--blue);color:var(--blue);}
-.hdr-seg button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
-.hdr-panel{padding:18px;}
-.hdr-search-lbl{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:13px;}
+/* .hdr-mega je teraz len rámec pre hľadanie — panel Produkty kreslí MegaMenu */
+.hdr-search-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:13px;}
 .hdr-mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
 .hdr-item{display:flex;gap:11px;align-items:center;border:1px solid transparent;border-radius:10px;padding:10px 11px;background:var(--box);cursor:pointer;transition:.15s;text-decoration:none;}
 .hdr-item:hover{background:var(--blue-50);}
 .hdr-item .hdr-ic{width:auto;height:auto;background:transparent;border-radius:0;}
 .hdr-item .hdr-ic svg{width:22px;height:22px;}
-.hdr-item b{display:block;font-size:13.5px;color:var(--ink);font-weight:600;font-family:var(--sans);}
-.hdr-item small{display:block;font-size:11.5px;color:var(--g500);margin-top:2px;}
-
-/* helper karta — posledná dlaždica v gride */
-.hdr-item--help{background:var(--blue-50);border-color:var(--blue-100);}
-.hdr-item--help:hover{background:#dbeafe;border-color:var(--blue);}
-.hdr-item--help .hdr-ic svg{stroke:var(--blue);}
-.hdr-item--help b{color:var(--blue);}
+.hdr-item b{display:block;font-size:var(--fs-sm);color:var(--ink);font-weight:600;font-family:var(--sans);}
+.hdr-item small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:2px;}
 
 /* SEARCH dropdown (rovnaký rámec ako mega) */
 .hdr-search{width:min(620px,calc(100vw - 32px));}
 .hdr-search-bar{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid var(--l2);color:var(--blue);}
-.hdr-search-bar input{flex:1;border:0;outline:0;background:none;font-family:var(--sans);font-size:16px;color:var(--ink);}
+.hdr-search-bar input{flex:1;border:0;outline:0;background:none;font-family:var(--sans);font-size:var(--fs-body);color:var(--ink);}
 .hdr-search-bar input::placeholder{color:var(--mut);}
-.hdr-search-clear{flex:none;width:26px;height:26px;border:0;border-radius:8px;background:var(--g100);color:var(--g500);font-size:12px;cursor:pointer;transition:.15s;}
+.hdr-search-clear{flex:none;width:26px;height:26px;border:0;border-radius:8px;background:var(--g100);color:var(--g500);font-size:var(--fs-label);cursor:pointer;transition:.15s;}
 .hdr-search-clear:hover{background:var(--g200);color:var(--ink);}
 .hdr-search-body{padding:16px;max-height:min(60vh,420px);overflow-y:auto;}
-.hdr-search-empty{padding:18px 4px;color:var(--g500);font-size:14px;}
+.hdr-search-empty{padding:18px 4px;color:var(--g500);font-size:var(--fs-sm);}
 .hdr-search-chips{display:flex;flex-wrap:wrap;gap:8px;}
-.hdr-search-chips button{border:1px solid var(--l);background:var(--box);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--g700);cursor:pointer;transition:.15s;}
+.hdr-search-chips button{border:1px solid var(--l);background:var(--box);border-radius:999px;padding:8px 14px;font-size:var(--fs-sm);font-weight:600;color:var(--g700);cursor:pointer;transition:.15s;}
 .hdr-search-chips button:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-50);}
 
 /* MOBILE DRAWER */
 .hdr-drawer{position:fixed;left:0;right:0;top:64px;bottom:0;z-index:190;background:var(--box);overflow-y:auto;transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);}
 .hdr-drawer.open{transform:none;}
-.hdr-drawer-in{padding:16px clamp(14px,4vw,28px) 40px;display:flex;flex-direction:column;gap:14px;}
-.hdr-mfield{height:44px;border:1px solid var(--g300);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--mut);font-size:14px;background:none;width:100%;}
-.hdr-segtabs{display:flex;gap:6px;padding:12px 4px;}
-.hdr-segtabs button{flex:1;border:1px solid var(--g300);background:var(--box);border-radius:10px;padding:11px 4px;font-size:12.5px;font-weight:600;color:var(--g700);}
-.hdr-segtabs button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+/* bez spoločného gap — odsadenie nesú jednotlivé bloky. Zoznam kategórií
+   a zoznam odkazov na seba musia nadviazať flush, aby ich deliace linky
+   držali jeden rytmus; spoločný gap medzi ne vkladal medzeru navyše. */
+.hdr-drawer-in{padding:16px clamp(14px,4vw,28px) 40px;display:flex;flex-direction:column;}
+.hdr-mfield{height:44px;border:1px solid var(--g300);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--mut);font-size:var(--fs-sm);background:none;width:100%;margin-bottom:14px;}
+/* výber segmentu — raz nad zoznamom kategórií, rovnaká reč ako modrý panel
+   v desktopovom mega-menu: biele tlačidlo neaktívne, plná modrá aktívne */
+.hdr-mseg{background:var(--blue-50);border-radius:var(--r-card);padding:14px;margin-bottom:14px;}
+/* rovnaký rez ako .mm-side-h v desktopovom paneli – jeden titulok, jedna reč */
+.hdr-mseg-h{font-family:var(--sans);font-size:var(--fs-h3);font-weight:700;line-height:1.15;
+  letter-spacing:-.025em;color:var(--ink);margin:0 0 6px;}
+.hdr-mseg-tx{margin:0 0 12px;font-size:var(--fs-sm);line-height:1.5;color:var(--g600);}
+.hdr-segtabs{display:flex;gap:6px;}
+.hdr-segtabs button{flex:1;min-height:44px;border:0;background:#fff;border-radius:var(--r-btn);
+  padding:10px 4px;font-family:inherit;font-size:var(--fs-label);font-weight:600;color:var(--g700);cursor:pointer;
+  transition:background .18s,color .18s;}
+.hdr-segtabs button.on{background:var(--blue);color:#fff;}
+
 .hdr-acc{display:flex;flex-direction:column;}
-.hdr-acc-row{display:flex;align-items:center;width:100%;border:0;background:none;padding:13px 4px;font-size:15px;font-weight:600;color:var(--ink);font-family:inherit;border-bottom:1px solid var(--l2);text-align:left;}
-.hdr-acc-row::after{content:"▾";margin-left:auto;color:var(--g400);font-weight:400;font-size:13px;}
+.hdr-acc-row{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:14px 4px;
+  font-size:var(--fs-body);font-weight:600;color:var(--ink);font-family:inherit;border-bottom:1px solid var(--l2);
+  text-align:left;cursor:pointer;}
+/* chevron je ikona, nie znak „▾" z fontu — ten sa kreslil v inej mierke
+   než zvyšok ikon a pôsobil ako preklep */
+.hdr-acc-ch{margin-left:auto;flex:none;color:var(--g400);transition:transform .25s var(--ease),color .18s;}
 .hdr-acc-row.open{color:var(--blue);}
-.hdr-acc-row.open::after{content:"▴";color:var(--blue);}
-.hdr-acc-sub{border-bottom:1px solid var(--l2);}
+.hdr-acc-row.open .hdr-acc-ch{transform:rotate(180deg);color:var(--blue);}
+/* produkty idú pod sebou na plnú šírku — v drawri nie je na mriežku miesto */
+.hdr-acc-sub{display:flex;flex-direction:column;border-bottom:1px solid var(--l2);padding:4px 0 12px;}
+.hdr-acc-sub .hdr-item{min-height:48px;}
 /* produkty v akordeóne = rovnaké karty ako v desktop mega (.hdr-item) */
-.hdr-acc-sub .hdr-mega-grid{padding:2px 2px 16px;}
 .hdr-mlinks{display:flex;flex-direction:column;}
-.hdr-mlinks a{padding:13px 4px;font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--l2);text-decoration:none;}
-.hdr-mfoot{display:flex;flex-direction:column;gap:9px;margin-top:4px;}
-.hdr-mfoot .hdr-claim{justify-content:center;height:46px;}
+.hdr-mlinks a{padding:13px 4px;font-size:var(--fs-body);font-weight:600;color:var(--ink);border-bottom:1px solid var(--l2);text-decoration:none;}
+.hdr-mfoot{display:flex;flex-direction:column;gap:9px;margin-top:18px;}
+/* „Nahlásit škodu" je v lište len na desktope. Na mobile žije v drawri (nižšie),
+   nech úzka lišta nesúperí o miesto s logom a burgerom — a nech nad videom
+   na úvode nevisí červená plocha, keď je hlavička zámerne bez pozadia. */
+.hdr-actions .hdr-claim{display:none;}
+.hdr-mfoot .hdr-claim{display:inline-flex;justify-content:center;height:46px;}
 .hdr-mfoot .hdr-mua{display:flex;justify-content:center;height:46px;border-color:var(--g300);color:var(--ink);}
 
 /* ============ DESKTOP ============ */
@@ -137,7 +123,20 @@
   .hdr-nav{display:flex;}
   .hdr-divider{display:block;}
   .hdr-mua{display:inline-flex;}
+  .hdr-actions .hdr-claim{display:inline-flex;}
   .hdr-iconbtn{display:inline-flex;}
   .hdr-drawer{display:none;}
   .hdr-mega-grid{grid-template-columns:repeat(3,1fr);}
+}
+
+/* ============ DOTYK ============
+   DESIGN.md dokumentuje claim button na 40px — to platí pre myš. Kde sa ovláda prstom,
+   dvíhame zásah na 44px, bez zmeny dokumentovanej desktopovej mierky. */
+@media(pointer:coarse){
+  .hdr-logo{min-height:44px;}   /* logo je odkaz na domov — 26px vysoký obrázok, zásah musí byť 44 */
+  .hdr-claim,.hdr-mua{height:44px;}
+  .hdr-iconbtn{width:44px;height:44px;}
+  .hdr-search-clear{width:44px;height:44px;}
+  .hdr-nav button,.hdr-nav a{min-height:44px;}
+  .hdr-nav .hdr-dd a{min-height:44px;}
 }

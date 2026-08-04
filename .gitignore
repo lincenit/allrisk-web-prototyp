@@ -2,3 +2,13 @@ node_modules
 dist
 .DS_Store
 *.log
+
+# Nástroje a dočasné artefakty
+.playwright-cli/
+.playwright-mcp/
+.impeccable/
+.vite/
+bun.lock
+
+# Figma exporty – lokálna referencia, nie súčasť projektu
+figma-export/
