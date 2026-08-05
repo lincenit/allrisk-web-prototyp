@@ -138,7 +138,18 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
         {/* popisok je hlavička karty, pod ňou ikona a až pod ňou názov – ako „Dobré vědět“ vyššie */}
         <div className="sit-aside-lbl">{toProduct ? 'Řeší produkt' : 'Profil klienta'}</div>
         <span className="sit-aside-ic"><Icon name={linkIcon} size={38} stroke={1.5} /></span>
-        <div className="sit-aside-t">{toProduct ? productLabel(situation.product) : profile.t}</div>
+        {/* Z profilu ukazujeme PODPRODUKT, ktorý škodu reálne kryl („Havarijní pojištění“),
+            a pod ním produkt, na ktorého stránke býva – to je tá istá dvojica, akú človek
+            uvidí na /vozidla ako záložku. Samotné „Pojištění vozidel“ mu nepovie, čo z toho
+            zafungovalo. Ak situácia podprodukt nemá, karta spadne späť na názov produktu. */}
+        <div className="sit-aside-h">
+          <div className="sit-aside-t">
+            {!toProduct ? profile.t : situation.sub || productLabel(situation.product)}
+          </div>
+          {toProduct && situation.sub && (
+            <div className="sit-aside-parent">{productLabel(situation.product)}</div>
+          )}
+        </div>
         <p>
           {toProduct
             ? 'Co přesně kryje a jak si ho poskládat na míru.'

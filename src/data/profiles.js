@@ -5,6 +5,11 @@
 //
 // Kľúčová myšlienka: SITUÁCIA je zdieľaná entita s väzbou (profil × produkt).
 // Z profilu ju čítaš cez `p.situations`, z produktu cez `situationsFor(productKey)`.
+// `product` je stránka, na ktorú situácia vedie; `sub` je konkrétne krytie, ktoré tú
+// škodu reálne zaplatilo („Havarijní pojištění“ na stránke „Pojištění vozidel“) – to je
+// to, čo karta v profile ukazuje ako názov. U vozidiel `sub` doslova kopíruje label
+// záložky z vehicles.js PRODUCTS, nech obe stránky hovoria to isté; ostatné produkty
+// vlastný katalóg podproduktov zatiaľ nemajú, takže je to voľný text.
 // Ikony sú KĽÚČE (rovnako ako v menu.js), komponenty k nim mapuje ProfileParts.jsx.
 //
 // Rovnakú väzbu (profil × produkt) má aj MODEL – konkrétne zadanie, na ktorom produktová
@@ -76,7 +81,7 @@ export const PROFILES = [
     situations: [
       {
         key: 'singl-nehoda', ic: 'crash',
-        product: 'vozidla',
+        product: 'vozidla', sub: 'Havarijní pojištění',
         tab: 'Stala se nehoda',
         title: 'Na parkovišti u práce mu někdo urazil zrcátko a ujel',
         story: 'Škoda 14 000 Kč, viník nezjištěn, kamery na parkovišti nic nezachytily. Lukáš má auto z druhé ruky a na opravu z vlastní kapsy nemá.',
@@ -89,7 +94,7 @@ export const PROFILES = [
       },
       {
         key: 'singl-skoda', ic: 'claim',
-        product: 'odpovednost',
+        product: 'odpovednost', sub: 'Odpovědnost za škodu v běžném životě',
         tab: 'Způsobil škodu',
         title: 'Při stěhování upustil kamarádovi televizi',
         story: 'Nová 65" OLED za 38 000 Kč, rozbitá při nesení do výtahu. Kamarád nic nechtěl, ale Lukášovi to nedalo – a byla to skoro celá jeho rezerva.',
@@ -102,7 +107,7 @@ export const PROFILES = [
       },
       {
         key: 'singl-vypadek', ic: 'injury',
-        product: 'prijem',
+        product: 'prijem', sub: 'Denní dávka při pracovní neschopnosti',
         tab: 'Vypadl příjem',
         title: 'Natržené vazy v koleni po pádu na kole a deset týdnů doma',
         story: 'Nemocenská mu pokryla necelou polovinu čisté mzdy. Nájem 15 500 Kč, splátka auta a energie ale běžely dál a rodiče vypomáhat nemohli.',
@@ -115,7 +120,7 @@ export const PROFILES = [
       },
       {
         key: 'singl-cesty', ic: 'firstaid',
-        product: 'cesty',
+        product: 'cesty', sub: 'Připojištění zimních sportů',
         tab: 'Úraz v zahraničí',
         title: 'Zlomený kotník na sjezdovce v Rakousku',
         story: 'Svoz z kopce, rentgen, operace a převoz domů sanitkou. Rakouská klinika vyčíslila péči na 4 200 eur a chtěla zálohu kartou na místě.',
@@ -180,7 +185,7 @@ export const PROFILES = [
     situations: [
       {
         key: 'rodina-nehoda', ic: 'crash',
-        product: 'vozidla',
+        product: 'vozidla', sub: 'Technické asistence',
         tab: 'Stala se nehoda',
         title: 'Na kruhovém objezdu do nich zezadu naboural dodávkař',
         story: 'Jana vezla malou z kontroly. Škoda na zadní části vozu 78 000 Kč, auto nepojízdné, viník uznal zavinění na místě. Rodina má jedno auto a Tomáš jím jezdí do práce 40 km denně.',
@@ -193,7 +198,7 @@ export const PROFILES = [
       },
       {
         key: 'rodina-vytopeni', ic: 'water',
-        product: 'domacnost',
+        product: 'domacnost', sub: 'Škoda vodou z vodovodního zařízení',
         tab: 'Vytopili sousedy',
         title: 'Praskla přívodní hadička u pračky, když nikdo nebyl doma',
         story: 'Voda tekla šest hodin. Zničená plovoucí podlaha v novém bytě a promáčený strop u sousedů pod nimi, kteří měli rok starou rekonstrukci koupelny.',
@@ -206,7 +211,7 @@ export const PROFILES = [
       },
       {
         key: 'rodina-vypadek', ic: 'injury',
-        product: 'zivot',
+        product: 'zivot', sub: 'Trvalé následky úrazu',
         tab: 'Vypadl příjem',
         title: 'Tomáš si při pádu ze žebříku zlomil nohu na třech místech',
         story: 'Pět měsíců na neschopence. Nemocenská pokryla necelou polovinu jeho čisté mzdy, splátka hypotéky 21 400 Kč přitom běžela dál a Jana pracuje na zkrácený úvazek.',
@@ -219,7 +224,7 @@ export const PROFILES = [
       },
       {
         key: 'rodina-hypoteka', ic: 'newhome',
-        product: 'hypoteka',
+        product: 'hypoteka', sub: 'Zprostředkování hypotéky',
         tab: 'Kupovali byt',
         title: 'První nabídka z banky nebyla ta, kterou nakonec podepsali',
         story: 'Vlastní banka jim schválila sazbu o 0,4 p. b. vyšší a odhad nemovitosti chtěla za 6 900 Kč. K tomu tlačila balíček pojištění, který se splátkou vůbec nesouvisel.',
@@ -232,7 +237,7 @@ export const PROFILES = [
       },
       {
         key: 'rodina-vichrice', ic: 'storm',
-        product: 'nemovitost',
+        product: 'nemovitost', sub: 'Živelní pojištění stavby',
         tab: 'Přišla vichřice',
         title: 'Orkán vytrhl okna v posledním patře a voda zatekla až do bytu',
         story: 'Škoda 340 000 Kč na oknech, podlahách a rozvodech. Byt byl po rekonstrukci za 1,4 milionu, ale pojistka pořád běžela na částku z původní smlouvy – 2,6 milionu místo reálných 5 milionů.',
@@ -245,7 +250,7 @@ export const PROFILES = [
       },
       {
         key: 'rodina-studium', ic: 'school',
-        product: 'investice',
+        product: 'investice', sub: 'Pravidelné investování',
         tab: 'Děti půjdou na vysokou',
         title: 'Za osm let Praha, podnájem a pět let studia',
         story: 'Podnájem, jídlo a doprava dnes vycházejí na 14 000 Kč měsíčně. Za pět let studia je to zhruba 840 000 Kč na dítě – a doma jsou děti dvě, s odstupem tří let.',
@@ -306,7 +311,7 @@ export const PROFILES = [
     situations: [
       {
         key: 'podnikatel-nehoda', ic: 'crash',
-        product: 'vozidla',
+        product: 'vozidla', sub: 'Havarijní pojištění',
         tab: 'Stala se nehoda',
         title: 'Zaměstnanec naboural firemní dodávku plnou materiálu',
         story: 'Na výjezdu z dvora přehlédl sloup. Škoda na dodávce 143 000 Kč, poškozený materiál na zakázku za 60 000 Kč a montáž u klienta naplánovaná na další den.',
@@ -319,7 +324,7 @@ export const PROFILES = [
       },
       {
         key: 'podnikatel-sklad', ic: 'water',
-        product: 'firma',
+        product: 'firma', sub: 'Připojištění přerušení provozu',
         tab: 'Vytopilo sklad',
         title: 'V noci prasklo stoupačkové potrubí nad skladem',
         story: 'Ráno našli půl skladu pod vodou. Zničené zásoby za 640 000 Kč, poškozená regálová technika a devět dní, kdy se nedalo expedovat.',
@@ -332,7 +337,7 @@ export const PROFILES = [
       },
       {
         key: 'podnikatel-reklamace', ic: 'claim',
-        product: 'odpovednostFirmy',
+        product: 'odpovednostFirmy', sub: 'Odpovědnost za vadné plnění',
         tab: 'Klient chce náhradu',
         title: 'Vadná montáž způsobila škodu na majetku odběratele',
         story: 'Špatně dotažený spoj podmáčel klientovi novou podlahu v provozovně. Klient vyčíslil škodu na 410 000 Kč včetně dvou dnů zavřeného provozu a poslal předžalobní výzvu.',
@@ -345,7 +350,7 @@ export const PROFILES = [
       },
       {
         key: 'podnikatel-vypadek', ic: 'hospital',
-        product: 'prijem',
+        product: 'prijem', sub: 'Denní dávka pro OSVČ',
         tab: 'Majitel skončil v nemocnici',
         title: 'Akutní operace a sedm týdnů, kdy firmu nikdo neřídil',
         story: 'Martin je jediný, kdo shání zakázky a schvaluje nabídky. Tržby spadly o 60 %, ale mzdy, leasingy a nájem běžely dál.',
@@ -404,7 +409,7 @@ export const PROFILES = [
     situations: [
       {
         key: 'penze-nemoc', ic: 'illness',
-        product: 'zivot',
+        product: 'zivot', sub: 'Připojištění vážných onemocnění',
         tab: 'Přišla vážná nemoc',
         title: 'Diagnóza, operace a půl roku léčby v 63 letech',
         story: 'Onkologická diagnóza při preventivní prohlídce. Léčba, doplatky na léky, doprava do fakultní nemocnice a osm měsíců mimo práci dva roky před penzí.',
@@ -417,7 +422,7 @@ export const PROFILES = [
       },
       {
         key: 'penze-prijem', ic: 'income',
-        product: 'penze',
+        product: 'penze', sub: 'Renta z penzijního spoření',
         tab: 'Skončil příjem z práce',
         title: 'Ze 48 000 Kč čistého na státní důchod 21 300 Kč',
         story: 'Rozdíl 27 000 Kč měsíčně. Náklady na dům přitom zůstaly stejné a Pavel chtěl vědět, jestli si může dovolit zůstat bydlet tam, kde je.',
@@ -430,7 +435,7 @@ export const PROFILES = [
       },
       {
         key: 'penze-kotelna', ic: 'frost',
-        product: 'nemovitost',
+        product: 'nemovitost', sub: 'Škoda vodou z prasklého potrubí',
         tab: 'Zamrzla voda v domě',
         title: 'Prasklé rozvody a vytopený suterén po lednových mrazech',
         story: 'Byli u dcery přes svátky. Zamrzlo a prasklo potrubí v nevytápěné části domu, voda tekla několik dní. Škoda 380 000 Kč na rozvodech, podlaze a technice v suterénu.',
@@ -443,7 +448,7 @@ export const PROFILES = [
       },
       {
         key: 'penze-auto', ic: 'garage',
-        product: 'vozidla',
+        product: 'vozidla', sub: 'Technické asistence',
         tab: 'Stará auta a nízký nájezd',
         title: 'Platil havarijku na patnáct let starý vůz',
         story: 'Golf z roku 2012 s nájezdem 8 000 km ročně. Havarijní pojištění stálo 420 Kč měsíčně, přitom obecná cena vozu klesla pod 90 000 Kč.',

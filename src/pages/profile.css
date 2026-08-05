@@ -155,7 +155,13 @@
 /* ikona stojí voľne na modrom podklade – biely štvorec pôsobil ako ďalšia karta v karte */
 .site .sit-aside-ic{align-self:flex-start;color:var(--blue);display:flex;align-items:center;justify-content:center;
   margin:-2px 0 -6px;}
+/* názov podproduktu a produkt pod ním sú jedna dvojica – vlastný tesný gap,
+   nech ich 14px medzera karty od seba neodtrhne ako dva samostatné riadky */
+.site .sit-aside-h{display:flex;flex-direction:column;gap:4px;}
 .site .sit-aside-t{font-family:var(--display);font-weight:700;color:var(--ink);font-size:var(--fs-card);line-height:1.25;}
+/* zámerne NIE modrá – nie je to odkaz, klikateľné je až tlačidlo dole;
+   od popisu pod ňou ju odlíši váha, nie farba */
+.site .sit-aside-parent{font-size:var(--fs-sm);line-height:1.4;color:var(--g600);font-weight:600;}
 .site .sit-aside p{color:var(--g600);font-size:var(--fs-sm);line-height:1.55;margin:0;}
 .site .sit-aside .btn{width:100%;margin-top:auto;}
 

@@ -67,13 +67,13 @@ export default function ProfileDetail() {
             {/* rovnaká dvojica ako v hero na /vozidla: obe tlačidlá vedú do stránky,
                 nie preč z nej. Hlavné na modelové situácie – to je dôvod, prečo si
                 človek profil otvoril; kontakt drží spodný pás. */}
-            {/* labely hovoria o tomto človeku, nie o štruktúre webu – „modelové situace"
-                je názov sekcie v CMS, nie to, čo si návštevník chce prečítať */}
+            {/* labely sú doslova nadpisy sekcií, na ktoré kotvia – nevymýšľať tu
+                druhé znenie, inak človek po kliknutí nevie, či je tam, kam mieril */}
             <div className="hero-cta">
               <a href="#prof-situace" className="btn fill">
-                Co se jim stalo <IconArrowRight size={18} stroke={2.2} />
+                Proč je to dobré mít <IconArrowRight size={18} stroke={2.2} />
               </a>
-              <a href="#prof-reseni" className="btn">Co potřebují pojistit</a>
+              <a href="#prof-reseni" className="btn">Co je dobré mít vyřešeno</a>
             </div>
           </div>
           {/* tabler.io ilustrácia profilu – rovnaká, akú nesie dlaždica na landingu */}
@@ -81,31 +81,31 @@ export default function ProfileDetail() {
         </div>
       </section>
 
-      {/* ============ 2 · CO POTŘEBUJÍ POJISTIT ============ */}
+      {/* ============ 2 · CO JE DOBRÉ MÍT VYŘEŠENO ============ */}
       {/* nadpis sekcie = label tlačidla v hero, ktoré sem kotví – musia znieť rovnako,
           inak človek po kliknutí nevie, či je tam, kam mieril */}
       <section id="prof-reseni" className="sec wrap">
         {/* zámerne bez skloňovania názvu profilu – „u podnikatel“ česky nedáva zmysel */}
         <SecHead
-          title={<>Co potřebují <b>pojistit</b></>}
+          title={<>Co je dobré mít <b>vyřešeno</b></>}
           lead="Pro tenhle profil dává smysl tohle – seřazeno podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje."
         />
         <SolvedList items={p.solved} />
       </section>
 
-      {/* ============ 3 · CO SE JIM STALO ============ */}
+      {/* ============ 3 · PROČ JE TO DOBRÉ MÍT ============ */}
       <section id="prof-situace" className="sec wrap">
         {/* počet situácií je per profil – rodina ich má víc než ostatní.
             Nadpis = label druhého tlačidla v hero, z rovnakého dôvodu ako pri sekcii vyššie. */}
         <SecHead
-          title={<>Co se jim <b>stalo</b></>}
+          title={<>Proč je to <b>dobré mít</b></>}
           lead={<>Dokud se nic nestane, je to jen položka v rozpočtu. {situationCount(p.situations.length)}, které tenhle profil potkávají nejčastěji – a co v nich pojištění reálně udělalo.</>}
         />
 
         {/* rovnaký rad záložiek ako produkty na /vozidla – jeden komponent */}
         <TabBar
           items={tabItems} value={active.key} onChange={setSit}
-          variant={tabStyle} label="Co se jim stalo"
+          variant={tabStyle} label="Proč je to dobré mít"
         />
 
         <div role="tabpanel" className="sit-wrap" key={active.key}>
