@@ -9,12 +9,9 @@
 /* ===== HERO sekundárnych stránok ===== */
 /* presahuje pod sticky header (margin -64 / padding +64), aby gradient aj foto
    pokračovali za hlavičkou */
-.site .phero{position:relative;overflow:hidden;color:#fff;background:var(--grad-blue);isolation:isolate;
-  margin-top:calc(-1 * var(--hdr-h));padding-top:var(--hdr-h);}
-.site .phero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
-  background-repeat:no-repeat;filter:grayscale(100%);}
-.site .phero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
+/* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
+   tu zostáva len geometria pásu */
+.site .phero{overflow:hidden;color:#fff;margin-top:calc(-1 * var(--hdr-h));padding-top:var(--hdr-h);}
 .site .phero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(55% 60% at 92% 0,rgba(92,200,255,.22),transparent 60%),
              radial-gradient(50% 60% at -4% 110%,rgba(136,6,228,.18),transparent 60%);}
@@ -115,9 +112,14 @@
 .site .branch-row .loc svg{flex:none;}
 .site .branch-empty{padding:30px 4px;color:var(--g500);font-size:var(--fs-body);}
 
-/* štylizovaná mapa (bez tile providera) */
+/* štylizovaná mapa (bez tile providera).
+   --cmap-gap je medzera, ktorá mape ostane nad ňou aj pod ňou, keď je pripnutá:
+   hore ju odsadí od sticky hlavičky, dole od spodnej hrany okna. Preto vstupuje
+   do výpočtu dvakrát (výška) aj raz do `top` – keby sa rozišli, mapa by sa
+   o spodnú hranu orezala. 20 px sedí s doterajším `top:84px` (64 hlavička + 20). */
+.site .contact-layout{--cmap-gap:20px;--cmap-min:340px;}
 .site .cmap-wrap{width:100%;}
-.site .cmap{position:relative;height:340px;border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
+.site .cmap{position:relative;height:var(--cmap-min);border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
   background:linear-gradient(135deg,#e8eef7,#dbe6f5);}
 .site .cmap::before{content:"";position:absolute;inset:0;
   background-image:linear-gradient(rgba(0,70,200,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,70,200,.06) 1px,transparent 1px);
@@ -127,8 +129,35 @@
 .site .cmap-pin:hover{color:var(--blue-800);transform:translate(-50%,-100%) scale(1.18);}
 @media(min-width:980px){
   .site .contact-layout{flex-direction:row;align-items:flex-start;gap:30px;}
-  .site .cmap-wrap{width:400px;flex:none;position:sticky;top:84px;}
-  .site .cmap{height:600px;}
+
+  /* Sticky sedí na SAMOTNEJ MAPE, nie na stĺpci – a stĺpec sa naťahuje na výšku
+     riadku (align-self:stretch). Znie to zbytočne, ale je to jediné usporiadanie,
+     kde mapa nikdy neprerastie zoznam:
+
+       stĺpec sticky + mapa 100dvh   → pri vysokom okne je mapa vyššia než zoznam,
+                                       riadok narastie na ňu a sticky nemá kam ísť
+                                       (namerané: okno 1300 px → mapa 1196 > zoznam 1054)
+       stĺpec stretch + mapa sticky  → výška riadku ostáva daná zoznamom a mapa sa
+                                       oň stropuje cez min(100%, …)
+
+     Kľúčové je, že `min()` má percentuálnu vetvu: tá robí výšku stĺpca pre výpočet
+     riadku neurčitou, takže mapa doň nezapočíta svojich 100dvh a riadok si drží
+     výšku zoznamu. Keby tu stálo len calc(100dvh − …), sme späť pri prvom prípade. */
+  /* min-height musí poznať aj stĺpec, nielen mapa: inak by pri vyfiltrovanom zozname
+     riadok ostal na výške tej jednej kartičky (186 px) a mapa by z neho vytiekla na
+     sekciu pod sebou. Takto riadok narastie s ňou. Výšku okna stĺpec zámerne nepozná –
+     tú nesie až mapa cez min(100%, …), aby riadok neprerástol zoznam. */
+  .site .cmap-wrap{width:400px;flex:none;align-self:stretch;min-height:var(--cmap-min);}
+  /* --cmap-min je podlaha: pri vyfiltrovanom zozname by sa mapa inak stiahla na výšku
+     jednej kartičky a ostal by z nej prúžok. */
+  .site .cmap{position:sticky;top:calc(var(--hdr-h) + var(--cmap-gap));
+    height:max(var(--cmap-min), min(100%, calc(100vh - var(--hdr-h) - 2 * var(--cmap-gap))));}
+  /* dvh počíta so zaťahovacími lištami prehliadača, vh nie – s vh by mapa na
+     prehliadači s plávajúcou lištou presiahla pod spodnú hranu okna. Cez @supports,
+     nech to na starších prehliadačoch spadne späť na vh. */
+  @supports (height:100dvh){
+    .site .cmap{height:max(var(--cmap-min), min(100%, calc(100dvh - var(--hdr-h) - 2 * var(--cmap-gap))));}
+  }
 }
 
 /* ===== DETAIL POBOČKY ===== */
