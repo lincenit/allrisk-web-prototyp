@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { IconStarFilled, IconStar, IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
+import { useDragScroll } from '../dragScroll.js'
 
 // Jedna kartička reference – zdieľaná medzi carouselom na úvode a stránkou /reference.
 export function ReferenceCard({ r }) {
@@ -25,10 +26,12 @@ export function ReferenceCard({ r }) {
 }
 
 // Vodorovný posuvný rad referencií. Na mobile sa swipuje prstom (scroll-snap),
-// na desktope k tomu pribudnú šípky – natívny scroll nechávame vždy funkčný.
+// myšou sa dá rad chytiť a potiahnuť, na desktope k tomu pribudnú šípky –
+// natívny scroll nechávame vždy funkčný.
 export function ReferenceCarousel({ items, allTo = '/reference' }) {
   const track = useRef(null)
   const [nav, setNav] = useState({ start: true, end: true })
+  useDragScroll(track)
 
   const sync = useCallback(() => {
     const el = track.current
