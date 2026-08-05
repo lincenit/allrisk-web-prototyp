@@ -45,10 +45,10 @@ export default function ProfileDetail() {
   return (
     <div className="site">
       {/* ============ 1 · HERO ARCHETYPU (rovnaká kostra ako /vozidla) ============ */}
-      <section className="hero prof-hero">
-        {/* foto klienta pod hero + modrý overlay; kým foto chýba, presvitá spoločný gradient */}
+      <section className="hero prof-hero photo-hero">
+        {/* foto klienta v modrom duotóne; kým foto chýba, ostane čistý modrý podklad */}
         <div
-          className="prof-hero-bg"
+          className="photo-hero-bg"
           style={{ backgroundImage: `url(${asset(p.photo)}), url(${asset('/kontakt/hero.jpg')})` }}
           aria-hidden="true"
         />

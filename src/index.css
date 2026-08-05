@@ -27,6 +27,30 @@
   --grad-core:linear-gradient(to right,#0021E5 0%,#01C7FF 35%,#8806E4 70%,#571483 100%);
   --grad-blue:linear-gradient(to right,#0046C8,#002366);
   --cyan:#46D3FF;
+  /* ===== FOTO-HERO: fotka + modrý gradient nad ňou ===================================
+     Jeden recept pre KAŽDÝ hero s fotkou (/vozidla, /profil/:slug, /kontakt, pobočky,
+     poradcovia). Mechanizmus je v .photo-hero (wireframe.css), tu sú len štyri gombíky.
+
+     Tri vrstvy zdola nahor:
+       1. --hero-base   podklad, keď fotka chýba alebo sa ešte načítava
+       2. --hero-photo  filter na samotnú fotku (predvolene žiadny – fotka je taká, aká je)
+       3. --hero-tint   modrý gradient NAD fotkou; jeho alfa rozhoduje, koľko fotky vidno
+       4. --hero-blend  režim miešania gradientu (normal / multiply / color / overlay…)
+
+     Ladí sa hlavne alfa v --hero-tint: nižšia = viac fotky, vyššia = viac modrej.
+
+     POZOR na kontrast bieleho textu. Najhorší prípad je biele miesto vo fotke (odlesk,
+     biely notebook) – tam sa alfa počíta proti bielej, nie proti priemeru fotky:
+       alfa .68 → 3,9:1  (padá pod AA pre bežný text)
+       alfa .75 → 4,55:1 (tesne prejde)
+       alfa .85 → 5,75:1 (pohodlne)
+     Preto svetlý koniec gradientu začína na .78. Veľké nadpisy majú AA na 3:1, takže
+     tie znesú aj menej – ale odstavec pod nimi nie. Ak pôjdeš nižšie, over si to na
+     fotke s bielym miestom, nie na tmavej. */
+  --hero-base:linear-gradient(to right,#0046C8 0%,#0039A3 100%);
+  --hero-photo:none;
+  --hero-tint:linear-gradient(100deg,rgba(0,70,200,.78) 0%,rgba(0,48,150,.86) 45%,rgba(0,24,84,.94) 100%);
+  --hero-blend:normal;
   /* type */
   --display:"Magistral","Inter",system-ui,sans-serif;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;

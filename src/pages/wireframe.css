@@ -152,6 +152,29 @@
    Podstránky, ktoré hero podsúvajú pod priehľadný header, si hore pripočítajú --hdr-h
    (výška hlavičky nie je odsadenie obsahu, ale miesto pre samotnú lištu). */
 .site .hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1fr;gap:28px;align-items:center;padding-block:var(--sec-pad);}
+
+/* ---- FOTO-HERO: jediný mechanizmus pre všetky heroy s fotkou ----
+   Hero, ktorý má pod sebou fotku, dostane dvojicu tried:
+     <section class="hero photo-hero">  +  <div class="photo-hero-bg" style=backgroundImage>
+   Stránka si potom rieši len geometriu (odsadenie, mriežku) – farba ani spracovanie
+   fotky sa v page-CSS neopakujú. Gombíky sú v --hero-base / --hero-photo /
+   --hero-tint / --hero-blend (index.css).
+
+   Vrstvenie:
+     z0  .photo-hero-bg   fotka, v plnej farbe (filter --hero-photo je predvolene none)
+     z1  ::before         modrý gradient nad ňou – toto je to, čo dáva pásu značku
+     z2  obsah            .hero-in / .phero-in už majú z-index:2
+
+   Gradient sedí na ::before, nie na ::after: ::after už na .phero nesie značkové
+   žiary a jeden prvok ho má len jeden. Poradie sa tým nekazí – v tej istej vrstve
+   sa ::before kreslí pod ::after, takže žiary ostávajú navrchu.
+   isolation:isolate drží prípadné mix-blend-mode vnútri pásu, nech nepretečie
+   na sekciu pod ním. */
+.site .photo-hero{position:relative;isolation:isolate;background:var(--hero-base);}
+.site .photo-hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
+  background-repeat:no-repeat;filter:var(--hero-photo);}
+.site .photo-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:var(--hero-tint);mix-blend-mode:var(--hero-blend);}
 .site .hero-tx{display:flex;flex-direction:column;gap:0;align-items:flex-start;}
 /* dýchateľná vertikálna rytmika hera (platí pre všetky varianty) */
 .site .hero-tx>p{margin-top:clamp(16px,2vw,22px);}

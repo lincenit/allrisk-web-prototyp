@@ -57,9 +57,9 @@ export default function Vehicles() {
   return (
     <div className="site">
       {/* ============ 1 · ÚVODNÍ SEKCE – kompaktní záhlaví kategorie ============ */}
-      <section className="hero veh-hero">
-        {/* foto vozu pod hero + modrý overlay (foto vloží klient do public/vozidla/hero.jpg) */}
-        <div className="veh-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
+      <section className="hero veh-hero photo-hero">
+        {/* foto vozu v modrom duotóne (foto vloží klient do public/vozidla/hero.jpg) */}
+        <div className="photo-hero-bg veh-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
         <div className="wrap hero-in veh-hero-in">
           {/* breadcrumb je súčasťou textového stĺpca, nie pás nad ním – rovnako ako na /profil */}
           <div className="hero-tx">

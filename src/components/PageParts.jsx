@@ -11,9 +11,9 @@ import { asset } from '../asset.js'
 // aj podkladová fotka vidno aj za hlavičkou.
 export function PageHero({ back, backLabel, title, subtitle, photo, media, children }) {
   return (
-    <section className="phero">
+    <section className="phero photo-hero">
       {photo && (
-        <div className="phero-bg" style={{ backgroundImage: `url(${asset(photo)})` }} aria-hidden="true" />
+        <div className="photo-hero-bg" style={{ backgroundImage: `url(${asset(photo)})` }} aria-hidden="true" />
       )}
       <div className="wrap phero-in">
         {back && (

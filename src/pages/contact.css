@@ -9,8 +9,8 @@
 /* ===== HERO sekundárnych stránok ===== */
 /* presahuje pod sticky header (margin -64 / padding +64), aby gradient aj foto
    pokračovali za hlavičkou */
-/* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
-   tu zostáva len geometria pásu */
+/* fotku aj modrý gradient nad ňou nesie spoločná .photo-hero z wireframe.css;
+   tu zostáva len geometria pásu a značkové žiary na ::after */
 .site .phero{overflow:hidden;color:#fff;margin-top:calc(-1 * var(--hdr-h));padding-top:var(--hdr-h);}
 .site .phero::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:radial-gradient(55% 60% at 92% 0,rgba(92,200,255,.22),transparent 60%),

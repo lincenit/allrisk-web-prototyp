@@ -19,14 +19,10 @@
 /* Celý pás má odsadenie na jednom mieste: hore aj dole rovnaká rytmická jednotka
    (--sec-pad), hore navyše výška hlavičky, pod ktorú hero podlieza. Deti (breadcrumb,
    .hero-in) už žiadny blokový padding nepridávajú – nesú len vnútorné medzery. */
-.site .veh-hero{position:relative;isolation:isolate;margin-top:calc(-1 * var(--hdr-h));
+/* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
+   tu zostáva len geometria pásu */
+.site .veh-hero{margin-top:calc(-1 * var(--hdr-h));
   padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
-/* foto je čiernobiele (filter len na obrázku) */
-.site .veh-hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
-  background-repeat:no-repeat;filter:grayscale(100%);}
-/* modrý overlay je samostatná vrstva nad fotkou, takže ho grayscale neovplyvní */
-.site .veh-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
 
 /* header priehľadný nad foto-hero rieši spoločný hook useHeroHeader + .hero-hdr v SiteHeader.css */
 

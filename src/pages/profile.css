@@ -6,14 +6,10 @@
 /* foto klienta pod hero + modrý overlay – fallback je značkový gradient (--grad-blue) na .hero.
    Hero presahuje pod sticky header (margin -64 / padding +64), takže foto vidno aj za hlavičkou. */
 /* blokové odsadenie pásu na jednom mieste – zhodné s .veh-hero (viď vehicles.css) */
-.site .prof-hero{position:relative;isolation:isolate;margin-top:calc(-1 * var(--hdr-h));
+/* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
+   tu zostáva len geometria pásu */
+.site .prof-hero{margin-top:calc(-1 * var(--hdr-h));
   padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
-/* dve vrstvy pozadia: profilové foto navrchu, spoločné foto ako záloha, kým profilové chýba */
-.site .prof-hero-bg{position:absolute;inset:0;z-index:0;background-size:cover;background-position:center;
-  background-repeat:no-repeat;filter:grayscale(100%);}
-/* modrý overlay je samostatná vrstva nad fotkou, takže ho grayscale neovplyvní */
-.site .prof-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
 
 /* anchor ciele z hero buttonov – odsadenie pod sticky header (zhodné s /vozidla) */
 #prof-reseni,#prof-situace{scroll-margin-top:80px;}

@@ -271,6 +271,17 @@ A band that slides under the transparent header adds `--hdr-h` on top of its pad
 - **Mega-menu ("Produkty"):** a 980px floating panel (18px radius, deep navy shadow) with a 240px category rail, a "Pro koho" segment switcher, and a 2–3 column product grid of icon + title + subtitle items. Escapes the header stacking context via fixed/absolute positioning so it never clips.
 - **Mobile:** hamburger → full-height left drawer with segment tabs and an accordion of the same product cards.
 
+### Photo Hero — Photograph under a Blue Gradient
+Every hero that carries a photograph (`/vozidla`, `/profil/:slug`, `/kontakt`, branch and advisor details) uses one recipe: the photo stays a photo, and a blue gradient lies over it. The picture has to read as a picture — a duotone that crushes it into flat brand blue was tried and rejected. The homepage video is the reference: you see the scene *and* the blue.
+
+- **Base** — `--hero-base`, a left-to-right `#0046C8 → #0039A3`. Only shows through where there is no photo yet.
+- **Photo** — `--hero-photo`, a filter on the source. Default `none`: full colour, untouched. Reach for `saturate()` or `brightness()` only if a specific shot fights the tint.
+- **Tint** — `--hero-tint`, the gradient laid over the photo. Its **alpha is the one real knob**: lower shows more photograph, higher shows more blue.
+- **Blend** — `--hero-blend`, the tint's blend mode. Default `normal`; `multiply` deepens, `color` pushes toward a true duotone.
+- **Markup** — `<section class="hero photo-hero">` + `<div class="photo-hero-bg">`; the mechanism lives in `.photo-hero` (`wireframe.css`), page CSS contributes geometry only. The tint renders on `::before`, because `.phero::after` already carries the brand glows.
+
+**Contrast floor.** The worst case is a white area inside the photo — a highlight, a white laptop — where the tint's alpha is measured against white, not against the photo's average. Over `#0046C8`: alpha `.68` gives 3.9:1 (fails AA for body text), `.75` gives 4.55:1, `.85` gives 5.75:1. The default gradient therefore starts at `.78` on its light end. Large headings only need 3:1, but the paragraph beneath them does not — so check any lower value against a photo with a blown-out highlight, never against a dark one.
+
 ### Signature — The Line
 The brand's continuous gradient brushstroke, rendered as an inline SVG stroke that *draws* on load (`@keyframes draw` / `shimmer`, stroke-dashoffset animation) and respects `prefers-reduced-motion`. It appears once per composition as a hero/accent — the client's life journey — plus its miniature echoes: the eyebrow lead-rule and the footer's top edge. One line per view; it is never tiled or repeated as texture.
 
