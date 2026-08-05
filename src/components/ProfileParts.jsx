@@ -15,7 +15,7 @@ import {
   IconFileText, IconSparkles,
   IconDroplet, IconHomePlus, IconGavel, IconBuildingHospital,
   IconWind, IconPaw, IconSchool, IconFirstAidKit, IconHeartbeat, IconWallet,
-  IconSnowflake, IconGauge, IconTrendingDown,
+  IconSnowflake, IconGauge, IconTrendingDown, IconTrendingUp, IconLock,
 } from '@tabler/icons-react'
 
 // Kľúč ikony (z dát) -> tabler komponent. Dáta zostávajú bez Reactu.
@@ -31,7 +31,7 @@ export const PROFILE_ICONS = {
   crash: IconCar, water: IconDroplet, injury: IconTrendingDown, newhome: IconHomePlus,
   claim: IconGavel, hospital: IconBuildingHospital, storm: IconWind, animal: IconPaw,
   school: IconSchool, firstaid: IconFirstAidKit, illness: IconHeartbeat, income: IconWallet,
-  frost: IconSnowflake, garage: IconGauge,
+  frost: IconSnowflake, garage: IconGauge, theft: IconLock, growth: IconTrendingUp,
 }
 export const iconFor = (key) => PROFILE_ICONS[key] || IconFileText
 

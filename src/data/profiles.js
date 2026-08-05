@@ -131,6 +131,32 @@ export const PROFILES = [
         ],
         outcome: 'Uhrazeno 4 200 eur (cca 105 000 Kč) za pojistné 890 Kč na celý rok.',
       },
+      {
+        key: 'singl-vykradeni', ic: 'theft',
+        product: 'domacnost', sub: 'Krádež vloupáním',
+        tab: 'Vykradli mu byt',
+        title: 'Vypáčené dveře v pronajatém bytě, když byl týden na horách',
+        story: 'Zmizel notebook, fotoaparát a kolo ze sklepa – dohromady za 74 000 Kč. Majitel bytu má pojištěné zdi, na Lukášovy věci se jeho smlouva nevztahuje.',
+        fix: [
+          'Pojištění domácnosti krylo vybavení bytu i věci ve sklepě, který k bytu patří.',
+          'Elektronika byla pojištěná na novou cenu, ne na tu odepsanou po třech letech používání.',
+          'Výměnu zámku a provizorní zabezpečení dveří zaplatila asistenční služba ještě týž den.',
+        ],
+        outcome: 'Plnění 71 000 Kč. Lukáš doplatil spoluúčast 3 000 Kč a techniku měl zpátky do týdne.',
+      },
+      {
+        key: 'singl-rezerva', ic: 'growth',
+        product: 'investice', sub: 'Pravidelné investování',
+        tab: 'Začal odkládat',
+        title: 'Poprvé mu na konci měsíce zbývalo a nevěděl, kam s tím',
+        story: 'Zbývalo kolem 4 000 Kč měsíčně, které se rok a půl vršily na běžném účtu. Nastřádalo se 70 000 Kč, ze kterých inflace tiše ukrajovala.',
+        fix: [
+          'Tři platy jsme nechali stranou na spořicím účtu – rezerva má být po ruce, ne ve fondech.',
+          'Zbytek jde pravidelnou měsíční platbou do dynamického portfolia, horizont je přes dvacet let.',
+          'Platba odchází den po výplatě, takže se z rozpočtu neztratí a Lukáš na ni nemusí myslet.',
+        ],
+        outcome: 'Rezerva 60 000 Kč po ruce a 3 000 Kč měsíčně, které pracují. U složeného úročení je nejdražší chyba začít o pět let později.',
+      },
     ],
     // ---- modely pre produktové stránky (kľúč = produkt) ----
     models: {
@@ -175,6 +201,7 @@ export const PROFILES = [
     // ---- „Co je dobré mít vyřešeno" ----
     solved: [
       { product: 'zivot', need: 'nutnost', note: 'Výplata sjednané částky při úrazu, vážné nemoci nebo úmrtí. Pojistnou částku navážeme na zůstatek hypotéky.' },
+      { product: 'hypoteka', need: 'nutnost', note: 'Sazba a podmínky napříč trhem, ne jen u vlastní banky. Refinancování řešíme včas před koncem fixace, ne až když přijde nabídka na prodloužení.' },
       { product: 'nemovitost', need: 'nutnost', note: 'Stavba bytu či domu proti požáru, vodě a živlu – včetně sklepa a garáže. Po rekonstrukci částku přepíšeme na novou cenu.' },
       { product: 'domacnost', need: 'nutnost', note: 'Vybavení, elektronika a osobní věci uvnitř. Kryje i krádež, vytopení a poškozené spotřebiče.' },
       { product: 'vozidla', need: 'nutnost', note: 'Povinné ručení i havarijní pojištění. Všechna auta v rodině na jednom vyúčtování, bonus lze mezi nimi převádět.' },
@@ -261,6 +288,19 @@ export const PROFILES = [
         ],
         outcome: 'Při dnešní platbě 3 500 Kč měsíčně pokryjí studium obou dětí, aniž by sahali na hypotéku nebo rezervu.',
       },
+      {
+        key: 'rodina-odpovednost', ic: 'claim',
+        product: 'odpovednost', sub: 'Odpovědnost členů domácnosti',
+        tab: 'Dítě způsobilo škodu',
+        title: 'Syn při fotbale na hřišti rozbil zaparkované auto souseda',
+        story: 'Míč trefil čelní sklo a promáčkl bok vozu, oprava 46 000 Kč. Soused chtěl škodu uhradit do měsíce v hotovosti, jinak že to předá právníkovi.',
+        fix: [
+          'Pojištění odpovědnosti kryje i škody způsobené dětmi – ty za sebe právně neodpovídají, platí rodiče.',
+          'Stačilo nahlásit škodu a doložit fotky, s pojišťovnou i se sousedem jednalo oddělení Allrisk.',
+          'Rodinná varianta pokrývá oba rodiče, obě děti i psa na jedné smlouvě.',
+        ],
+        outcome: 'Pojišťovna vyplatila 45 000 Kč, rodina doplatila spoluúčast 1 000 Kč. Se sousedem se nesoudili.',
+      },
     ],
     // ---- modely pre produktové stránky (kľúč = produkt) ----
     models: {
@@ -303,7 +343,11 @@ export const PROFILES = [
     solved: [
       { product: 'odpovednostFirmy', need: 'nutnost', note: 'Škoda způsobená vaší činností klientovi nebo třetí straně. Kryje i následné škody, nejen tu přímou.' },
       { product: 'firma', need: 'nutnost', note: 'Budovy, zásoby a technika. Součástí je přerušení provozu, které platí režii, když nemůžete vyrábět.' },
-      { product: 'flotila', need: 'nutnost', note: 'Všechna firemní auta na jedné smlouvě a jednom vyúčtování. Přidání vozu bez nové smlouvy.' },
+      // Zámerne `vozidla`, nie `flotila`: flotila vlastnú stránku nemá, kým ju nedostane,
+      // firemné vozy žijú na /vozidla (tam je aj Martinov model – dodávka, viac vodičov).
+      // Keby tu stálo `flotila`, prípad „naboural dodávku" by ukazoval na produkt, ktorý
+      // nikam nevedie, a Martin by vypadol z prepínača profilov na /vozidla.
+      { product: 'vozidla', need: 'nutnost', note: 'Všechna firemní auta na jedné smlouvě a jednom vyúčtování. Přidání vozu bez nové smlouvy.' },
       { product: 'prijem', need: 'doporuceno', note: 'Denní dávka a měsíční renta při pracovní neschopnosti či invaliditě. Příjem běží dál, i když vy nemůžete.' },
       { product: 'pravni', need: 'doporuceno', note: 'Právník, soudní poplatky i náklady protistrany. Spory s odběrateli, dodavateli i zaměstnanci.' },
       { product: 'investice', need: 'zvazit', note: 'Zhodnocení volných prostředků firmy. Provozní rezervu držíme zvlášť od dlouhodobých peněz.' },
@@ -360,6 +404,32 @@ export const PROFILES = [
           'Firemní smlouvy jsme na dva měsíce převedli na režim, kde nebylo nutné nic řešit.',
         ],
         outcome: 'Plnění 240 000 Kč. Firma přežila kvartál bez úvěru a bez propouštění.',
+      },
+      {
+        key: 'podnikatel-spor', ic: 'scale',
+        product: 'pravni', sub: 'Právní ochrana v podnikání',
+        tab: 'Odběratel nezaplatil',
+        title: 'Faktura za 380 000 Kč devět měsíců po splatnosti',
+        story: 'Odběratel dílo převzal bez výhrad, pak přestal zvedat telefon. Martin měl na výběr odepsat to, nebo jít k soudu a platit advokáta z vlastního.',
+        fix: [
+          'Právní ochrana zaplatila advokáta, soudní poplatek i znalecký posudek – Martin nedal ze svého nic.',
+          'Předžalobní výzva z advokátní kanceláře vyřešila dvě menší faktury ještě před podáním žaloby.',
+          'Kdyby spor prohrál, krytí zahrnuje i náklady protistrany – to je ta část, která podnikatele obvykle položí.',
+        ],
+        outcome: 'Soud přiznal 380 000 Kč i s úroky. Právní náklady 92 000 Kč šly z pojištění, ne ze zisku.',
+      },
+      {
+        key: 'podnikatel-rezerva', ic: 'growth',
+        product: 'investice', sub: 'Zhodnocení volných prostředků firmy',
+        tab: 'Firmě ležely peníze',
+        title: 'Milion na běžném účtu, který jen čekal na daně',
+        story: 'Na firemním účtu trvale leželo kolem 1 200 000 Kč – provozní rezerva a peníze odložené na DPH a daň z příjmu. Banka je úročila prakticky nulou.',
+        fix: [
+          'Provozní rezervu na tři měsíce nákladů jsme nechali okamžitě dostupnou, ne v investicích.',
+          'Peníze s pevným termínem (daně, leasing) jdou do konzervativních nástrojů se splatností přesně na ten termín.',
+          'Až zbytek má horizont nad pět let a snese dynamičtější složení.',
+        ],
+        outcome: 'Firma má stejnou likviditu jako dřív a peníze, které předtím jen ležely, konečně něco nesou.',
       },
     ],
     models: {
@@ -458,6 +528,32 @@ export const PROFILES = [
           'Bonus za bezeškodní průběh jsme převedli, takže povinné ručení kleslo ještě víc.',
         ],
         outcome: 'Úspora 4 100 Kč ročně a lepší krytí přesně tam, kde ho starší vůz opravdu potřebuje.',
+      },
+      {
+        key: 'penze-portfolio', ic: 'growth',
+        product: 'investice', sub: 'Výplatní fáze portfolia',
+        tab: 'Trhy spadly před penzí',
+        title: 'Propad o 22 % rok a půl před plánovaným odchodem do penze',
+        story: 'V portfoliu měl 3,4 milionu a chystal se z nich vyplácet. Prodávat v propadu hned v prvních letech výběru je přesně to, po čem peníze nevydrží tak dlouho, jak mají.',
+        fix: [
+          'Dva roky výběrů jsme drželi mimo trh, takže Pavel nemusel prodat ani jednu akcii v propadu.',
+          'Portfolio jsme překlápěli do konzervativního podle plánu, ne podle nálady na trhu.',
+          'Rebalancování po propadu nakoupilo levněji – bez něj by se návrat protáhl o roky.',
+        ],
+        outcome: 'Portfolio se vrátilo na původní hodnotu za 14 měsíců a výplatní plán se nemusel měnit ani o korunu.',
+      },
+      {
+        key: 'penze-prevod', ic: 'scale',
+        product: 'pravni', sub: 'Právní ochrana v rodinných vztazích',
+        tab: 'Převáděl dům na dceru',
+        title: 'Dům na dceru, ale s právem dožití pro sebe i manželku',
+        story: 'Chtěl to vyřešit za života, ne nechat dědické řízení na dětech. Zároveň potřeboval jistotu, že v domě oba dožijí, i kdyby se dceřina situace změnila.',
+        fix: [
+          'Darovací smlouvu i věcné břemeno dožití sepsal advokát z krytí právní ochrany.',
+          'Návrh na vklad do katastru a poplatky šly z pojištění, ne z jejich úspor.',
+          'Ošetřili jsme i případ rozvodu dcery, aby dům nespadl do vypořádání společného jmění.',
+        ],
+        outcome: 'Převod je hotový, právo dožití zapsané v katastru. Právní služby za 34 000 Kč zaplatilo pojištění.',
       },
     ],
     models: {
