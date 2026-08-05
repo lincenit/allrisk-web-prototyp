@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom'
 import SiteHeader from './components/SiteHeader.jsx'
 import ScrollTop from './components/ScrollTop.jsx'
 import Wireframe from './pages/Wireframe.jsx'
-import Home from './pages/Home.jsx'
 import Vehicles from './pages/Vehicles.jsx'
 import Contact from './pages/Contact.jsx'
 import Branches from './pages/Branches.jsx'
@@ -20,7 +19,6 @@ export default function App() {
       <SiteHeader />
       <Routes>
         <Route path="/" element={<Wireframe />} />
-        <Route path="/uvod" element={<Home />} />
         <Route path="/vozidla" element={<Vehicles />} />
         <Route path="/kontakt" element={<Contact />} />
         <Route path="/pobocky" element={<Branches />} />

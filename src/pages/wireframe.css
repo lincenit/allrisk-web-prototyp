@@ -135,19 +135,10 @@
 .site .tabs-card .tab.on::after{content:"";position:absolute;bottom:-5px;left:24px;width:12px;height:12px;
   background:var(--blue);border-radius:2px;transform:rotate(45deg);}
 
-/* Pod desktopom sa rad nezmestí a musí byť na prvý pohľad vidno, že pokračuje:
-   lišta preto vpravo vyteká až na okraj obrazovky (záporná margin ruší padding .wrap),
-   takže ďalšia záložka je odrezaná hranou displeja. Skrytý scrollbar nič neprezradí,
-   odrezaná záložka áno. Vpravo preto ide padding na nulu: aj na konci scrollu končí
-   rad presne na hrane displeja, nie odsadený od nej. */
-@media(max-width:979px){
-  .site .tabbar{margin-right:calc(-1 * clamp(16px,4vw,28px));}
-  .site .tabbar-track{padding-right:0;}
-  /* schránka segmentu vyteká s ňou – vpravo nemá hranu, oblúk ani padding, lebo tam nekončí */
-  .site .tabs-seg .tabbar-track{width:auto;max-width:none;margin-right:0;
-    padding-right:0;border-right:0;
-    border-top-right-radius:0;border-bottom-right-radius:0;}
-}
+/* Pod desktopom sa rad nezmestí a scrolluje sa prstom. Skúšané bolo aj vytekanie
+   na hranu displeja (odrezaná záložka ako signál, že rad pokračuje), lenže tým sa
+   lišta rozišla s pravým okrajom stránky – teraz končí v tom istom stĺpci ako text
+   a nadpisy nad ňou, vrátane schránky segmentu s celým rámom a oblúkom. */
 @media(min-width:980px){
   /* dlaždice si na desktope rozdelia riadok rovným dielom – rad potom čítaš ako celok */
   .site .tabs-card .tabbar-track{overflow:visible;}
@@ -189,7 +180,10 @@
 .site .hero-stat .c{color:rgba(255,255,255,.72);font-size:var(--fs-label);margin-top:3px;}
 
 /* font-family je nutná: <button class="btn"> by inak zdedil systémové písmo, nie Inter */
-.site .btn{height:50px;border-radius:12px;padding:0 24px;display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:var(--fs-body);font-weight:600;border:1.5px solid var(--blue);background:#fff;color:var(--blue);transition:.2s;cursor:pointer;}
+/* Rozmery drží design systém (DESIGN.md → Buttons): 48 px, padding 0 22, --r-btn.
+   Tento selektor mení iba farebnú schému (obrysové tlačidlo stránky), nie veľkosť –
+   inak sa rad tlačidiel v obsahu rozíde s .btn v hlavičke aj s .btn-sm. */
+.site .btn{height:48px;border-radius:var(--r-btn);padding:0 22px;display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:var(--fs-body);font-weight:600;border:1.5px solid var(--blue);background:#fff;color:var(--blue);transition:.2s;cursor:pointer;}
 .site .btn:hover{background:var(--blue-50);}
 .site .btn.fill{background:var(--blue);border-color:var(--blue);color:#fff;} .site .btn.fill:hover{background:var(--blue-800);}
 .site .hero .btn.fill{background:#fff;border-color:#fff;color:var(--blue);}
@@ -265,9 +259,9 @@
 }
 
 /* ============ FILOZOFIA — centrované, scroll highlight ============ */
-/* zámerne dvojnásobná dávka rytmu – citát má okolo seba dýchať viac než bežná sekcia,
-   ale stále na tej istej mriežke (nie vlastná clamp hodnota) */
-.site .phil{background:#fff;padding-block:calc(var(--sec-pad) * 2);text-align:center;}
+/* jeden rytmus ako každá iná sekcia – citát mal predtým dvojnásobnú dávku, ale žiadny
+   pás na webe nemá výnimku v hornom a spodnom paddingu */
+.site .phil{background:#fff;padding-block:var(--sec-pad);text-align:center;}
 .site .phil .ey{display:block;margin-bottom:30px;}
 .site .phil-text{font-family:var(--display);font-weight:700;font-size:var(--fs-title);line-height:1.26;letter-spacing:-.02em;color:var(--g300);max-width:22ch;margin:0 auto;}
 .site .phil-text .w{display:inline-block;transition:color .2s linear;}
@@ -302,7 +296,7 @@
 .site .ey + h1,
 .site .ey + h2{margin-top:22px;}
 
-/* kotva z hero CTA nesmie skončiť pod sticky headerom (64px) — rovnaká hodnota ako v home.css */
+/* kotva z hero CTA nesmie skončiť pod sticky headerom (64px) */
 #rozcestnik{scroll-margin-top:80px;}
 
 /* ============================================================
@@ -495,8 +489,12 @@
 /* ============ REFERENCE ============
    Na úvode vodorovný posuvný rad (swipe + šípky), na /reference plná mriežka.
    Kartička .ref je pre obe rovnaká. */
+/* Rad vyteká na obe hrany displeja (záporná margin ruší padding .wrap) a odsadenie od
+   hrany si drží vlastným paddingom. scroll-padding musí sedieť s ním – bez neho mandatory
+   snap dosadne kartu na hranu výrezu a ľavý padding v pokojovej polohe zmizne. */
 .site .refs-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none;margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;}
+  scrollbar-width:none;margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;
+  scroll-padding-inline:clamp(16px,4vw,28px);}
 .site .refs-track::-webkit-scrollbar{display:none;}
 .site .refs-track>.ref{flex:0 0 84%;scroll-snap-align:start;}
 .site .refs-grid{display:grid;grid-template-columns:1fr;gap:14px;}
@@ -511,13 +509,14 @@
 .site .ref p{font-size:var(--fs-body);color:var(--g700);line-height:1.62;}
 
 /* šípky carouselu + odkaz na všetky reference v hlavičke sekcie
-   (na mobile hlavička ostáva jednostĺpcová a odkaz stojí pod radom – .refs-all-m) */
+   (na mobile hlavička ostáva jednostĺpcová a odkaz so šípkami stojí pod radom – .refs-foot-m) */
 .site .sec-h-act{display:none;align-items:center;gap:18px;}
 .site .carou-nav{display:flex;gap:8px;}
 /* šípky sú .btn – tu ich len zoštvorcujeme (výšku aj rádius drží .btn) */
-.site .carou-nav .btn{width:50px;padding:0;justify-content:center;}
+.site .carou-nav .btn{width:48px;padding:0;justify-content:center;}
 .site .carou-nav .btn:disabled{border-color:var(--l);background:var(--box);color:var(--g300);cursor:default;}
-.site .refs-all-m{margin-top:16px;}
+/* mobilná päta radu: odkaz vľavo, šípky vpravo – jeden riadok v šírke sekcie */
+.site .refs-foot-m{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;}
 
 /* ============ HLAVIČKA PODSTRÁNKY (/reference) ============ */
 /* modrá hlavička nesie ten istý blokový padding ako hero aj ako sekcia pod ňou */
@@ -532,7 +531,8 @@
 /* .phero (PageHero) má vlastný blok v contact.css – tiež stavia na --fs-title */
 .site .page-head .sec-h p{color:rgba(255,255,255,.82);}
 .site .page-head .ey{color:var(--blue-200);}
-.site .page-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);margin-bottom:18px;}
+/* medzera pod breadcrumbom je na celom webe rovnaká – 28px (viď .veh-hero / .prof-hero) */
+.site .page-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);margin-bottom:28px;}
 .site .page-crumb a{color:rgba(255,255,255,.7);transition:.2s;} .site .page-crumb a:hover{color:#fff;}
 .site .page-crumb b{color:#fff;font-weight:600;} .site .page-crumb svg{opacity:.55;}
 /* čísla nie sú pokračovanie vety, ale samostatný riadok údajov – väčší odstup než
@@ -636,13 +636,13 @@
   .site .illus{min-height:320px;}
   /* na desktope presne 3 karty a nič nepresahuje – rad sa už neroztiahne k okrajom
      viewportu (to je mobilný swipe trik), takže štvrtá kartička nevykúka */
-  .site .refs-track{margin-inline:0;padding:2px 0 6px;}
+  .site .refs-track{margin-inline:0;padding:2px 0 6px;scroll-padding-inline:0;}
   .site .refs-track>.ref{flex:0 0 calc(33.333% - 9.34px);}
   .site .refs-grid{grid-template-columns:repeat(3,1fr);}
   /* šípky a odkaz idú do hlavičky sekcie až tam, kde sa nescrolluje prstom */
   .site .sec-h-row{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:24px;}
   .site .sec-h-act{display:flex;}
-  .site .refs-all-m{display:none;}
+  .site .refs-foot-m{display:none;}
   .site .contact{grid-template-columns:1.3fr 1fr;gap:26px;}
   .site .contact-band{grid-template-columns:1fr 1.05fr;align-items:start;gap:44px;}
 }

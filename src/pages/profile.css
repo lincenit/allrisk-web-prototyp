@@ -15,21 +15,27 @@
 .site .prof-hero::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
   background:linear-gradient(to right,rgba(0,68,200,.70) 0%,rgba(0,48,140,.86) 52%,rgba(0,28,86,.97) 100%);}
 
-.site .prof-crumb-wrap{position:relative;z-index:2;}
-.site .prof-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);}
+/* anchor ciele z hero buttonov – odsadenie pod sticky header (zhodné s /vozidla) */
+#prof-reseni,#prof-situace{scroll-margin-top:80px;}
+
+/* breadcrumb je prvý riadok textového stĺpca (viď ProfileDetail.jsx), medzera pod ním
+   je tých istých 28 px ako všade inde a centrovanie stĺpca ju nemení */
+.site .prof-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);
+  margin-bottom:28px;}
 .site .prof-crumb a{color:rgba(255,255,255,.7);transition:.2s;}
 .site .prof-crumb a:hover{color:#fff;}
 .site .prof-crumb b{color:#fff;font-weight:600;}
 .site .prof-crumb svg{opacity:.55;}
 
-/* rytmika zhodná s /vozidla: breadcrumbs → 16 → title → 16 → text → 32 → buttons.
-   align-items:start drží tú prvú medzeru rovnakú bez ohľadu na výšku ilustrácie vpravo –
-   pri centrovaní bola na /profil 64 px a na /vozidla 35 px. Ilustrácia si centrovanie
-   pýta sama (.prof-hero-illus{align-self:center}).
+/* rytmika zhodná s /vozidla: breadcrumbs → 28 → title → 16 → text → 32 → buttons.
+   Celá rytmika žije vnútri textového stĺpca (breadcrumb je jeho prvý riadok), takže
+   je nezávislá od výšky ilustrácie vedľa. Textový stĺpec je zarovnaný na začiatok, aby
+   breadcrumb stál presne --sec-pad pod hlavičkou – rovnako ďaleko ako titulok každej
+   sekcie od jej hrany. Ilustrácia sa centruje sama (.prof-hero-illus{align-self:center}).
    Selektor cez .prof-hero, nech má o triedu vyššiu váhu než základné .site .hero-in
    a nezávisí od poradia importov CSS. */
 .site .prof-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
-  padding-block:16px 0;align-items:start;}
+  padding-block:0;align-items:start;}
 .site .prof-hero .hero-tx{max-width:640px;gap:0;}
 /* veľkosť titulku drží spoločný token --fs-title (rovnaký ako hlavičky sekcií), tu sa neprepisuje */
 .site .prof-hero .hero-tx>p{margin-top:16px;}
@@ -38,7 +44,7 @@
 
 /* tabler.io ilustrácia vpravo – bez rámu, aby dýchala nad fotkou */
 .site .prof-hero-illus{display:flex;align-items:center;justify-content:center;align-self:center;}
-.site .prof-hero-illus .story-ill{width:100%;height:clamp(200px,26vw,320px);
+.site .prof-hero-illus .story-ill{width:100%;height:var(--hero-illus);
   display:flex;align-items:center;justify-content:center;}
 .site .prof-hero-illus .story-ill img{max-width:100%;max-height:100%;object-fit:contain;
   filter:drop-shadow(0 24px 44px rgba(0,16,54,.45));}
@@ -166,9 +172,12 @@
    obrazovku, než sa človek vôbec dostane k situácii, ktorú prepínajú.
    Časť ďalšej dlaždice zámerne vykúka – je to jediný signál, že sa rad posúva. */
 @media(max-width:979px){
+  /* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) – bez neho
+     mandatory snap dosadne prvú dlaždicu na hranu výrezu a ľavé odsadenie v pokoji zmizne */
   .site .prof-tabs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;
-    margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;}
+    margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;
+    scroll-padding-inline:clamp(16px,4vw,28px);}
   .site .prof-tabs::-webkit-scrollbar{display:none;}
   .site .prof-tabs .prof-card{flex:0 0 74%;scroll-snap-align:start;}
   /* v rade je dlaždica nižšia – ilustrácia dostane plochší pomer a text menej vzduchu */
@@ -198,12 +207,9 @@
   /* align-items zámerne nie: zarovnanie na začiatok drží medzeru pod breadcrumbom,
      ilustrácia sa centruje sama (.prof-hero-illus) */
   .site .prof-hero .hero-in{grid-template-columns:1.1fr .9fr;}
-  /* výšku riadku určuje text, nie ilustrácia – inak pod tlačidlami ostal prázdny pás,
-     lebo obrázok si na šírku stĺpca pýtal cez 320 px. height:0 + min-height:100% je na to
-     obvyklý grid trik: nulová výška do výpočtu riadku nevstúpi, percento sa potom počíta
-     z výšky riadku, ktorú určil text vedľa. */
-  .site .prof-hero-illus{align-self:stretch;}
-  .site .prof-hero-illus .story-ill{height:0;min-height:100%;max-height:320px;}
+  /* Výšku drží token --hero-illus rovnako ako pod desktopom – tu netreba nič meniť.
+     (Skúšaný bol aj grid trik height:0 + min-height:100%, ktorý ilustráciu zrovnal na
+     výšku textu vedľa; pri krátkom texte z nej ostal drobec – na /profil/rodina 228 px.) */
   .site .prof-cards{grid-template-columns:repeat(4,1fr);}
   .site .prof-cards-3{grid-template-columns:repeat(3,1fr);}
   /* prepínač na produktovej stránke – počet profilov k produktu nie je fixný,

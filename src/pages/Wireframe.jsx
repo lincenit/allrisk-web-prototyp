@@ -56,7 +56,7 @@ const HERO_VIDEO = '/hero.mp4'
 
 // Banner „revize smluv" – nahrádza zrušený test pojištění.
 // Nadpis je len háčik („Věděli jste, že…?"), celé tvrdenie aj vysvetlenie ide do textu,
-// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero na /uvod) – zámerne
+// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero) – zámerne
 // väčšia než banner, presah oreže overflow:hidden na .banner.
 // TODO(obchod): doplniť reálnu priemernú úsporu z dát Allrisku (zatiaľ placeholder).
 const AVG_SAVING = 'XY 000'

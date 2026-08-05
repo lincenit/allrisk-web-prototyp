@@ -52,6 +52,19 @@ export function ReferenceCarousel({ items, allTo = '/reference' }) {
     el.scrollBy({ left: dir * (card.getBoundingClientRect().width + gap), behavior: 'smooth' })
   }
 
+  // šípky sú bežné tlačidlá (.btn), len v štvorcovom formáte – nie krúžky.
+  // Tá istá dvojica sa kreslí na desktope v hlavičke sekcie a na mobile pod radom.
+  const arrows = (
+    <div className="carou-nav">
+      <button type="button" className="btn" onClick={() => go(-1)} disabled={nav.start} aria-label="Předchozí reference">
+        <IconChevronLeft size={20} stroke={2.2} />
+      </button>
+      <button type="button" className="btn" onClick={() => go(1)} disabled={nav.end} aria-label="Další reference">
+        <IconChevronRight size={20} stroke={2.2} />
+      </button>
+    </div>
+  )
+
   return (
     <>
       <div className="sec-h sec-h-row">
@@ -61,15 +74,7 @@ export function ReferenceCarousel({ items, allTo = '/reference' }) {
         </div>
         <div className="sec-h-act">
           <Link to={allTo} className="arrow-link">Všechny reference</Link>
-          {/* šípky sú bežné tlačidlá (.btn), len v štvorcovom formáte – nie krúžky */}
-          <div className="carou-nav">
-            <button type="button" className="btn" onClick={() => go(-1)} disabled={nav.start} aria-label="Předchozí reference">
-              <IconChevronLeft size={20} stroke={2.2} />
-            </button>
-            <button type="button" className="btn" onClick={() => go(1)} disabled={nav.end} aria-label="Další reference">
-              <IconChevronRight size={20} stroke={2.2} />
-            </button>
-          </div>
+          {arrows}
         </div>
       </div>
 
@@ -77,8 +82,12 @@ export function ReferenceCarousel({ items, allTo = '/reference' }) {
         {items.map((r) => <ReferenceCard key={r.name} r={r} />)}
       </div>
 
-      {/* na mobile sú šípky skryté – odkaz na všetky reference musí ostať dostupný */}
-      <Link to={allTo} className="arrow-link refs-all-m">Všechny reference</Link>
+      {/* na mobile sa hlavička nerozdelí na dva stĺpce – odkaz aj šípky preto stoja
+          v jednom riadku pod radom: odkaz vľavo, ovládanie vpravo */}
+      <div className="refs-foot-m">
+        <Link to={allTo} className="arrow-link">Všechny reference</Link>
+        {arrows}
+      </div>
     </>
   )
 }

@@ -5,7 +5,7 @@ import { useHeroHeader } from '../useHeroHeader.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { PageHero, HeroChip } from '../components/PageParts.jsx'
-import { BRANCHES, regionLabel } from '../data/branches.js'
+import { BRANCHES } from '../data/branches.js'
 import { IconPhone, IconMail, IconSearch, IconMapPin } from '@tabler/icons-react'
 
 // Poradie sekcií podľa reality webu (/contacts): hero → [zoznam pobočiek | sticky mapa]
@@ -23,9 +23,9 @@ export default function Contact() {
     return BRANCHES.filter((b) => [b.city, b.cityFull, b.street, b.zip].some((s) => s.toLowerCase().includes(needle)))
   }, [q])
 
-  const groups = REGION_ORDER
-    .map((rk) => ({ rk, label: regionLabel(rk), items: filtered.filter((b) => b.region === rk) }))
-    .filter((g) => g.items.length)
+  // Zoznam je jeden súvislý rad kariet – regióny už nie sú medzititulky, len poradie,
+  // nech Praha nestojí medzi moravskými mestami.
+  const ordered = REGION_ORDER.flatMap((rk) => filtered.filter((b) => b.region === rk))
 
   return (
     <div className="site">
@@ -49,22 +49,17 @@ export default function Contact() {
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Hledat město, ulici nebo PSČ…" />
             </div>
 
-            {groups.length ? (
+            {ordered.length ? (
               <div className="branch-list">
-                {groups.map((g) => (
-                  <section className="branch-group" key={g.rk}>
-                    <h3 className="branch-group-h">{g.label}</h3>
-                    {/* karta ako na reality webe: foto, názov, adresa – nič viac */}
-                    {g.items.map((b) => (
-                      <Link className="branch-row" key={b.slug} to={`/pobocky/${b.slug}`}>
-                        <img src={b.img} alt={b.name} loading="lazy" />
-                        <span className="tx">
-                          <span className="nm">{b.name}{b.hq && <span className="hq">Centrála</span>}</span>
-                          <span className="loc"><IconMapPin size={16} stroke={1.8} />{b.street}, {b.zip} {b.cityFull}</span>
-                        </span>
-                      </Link>
-                    ))}
-                  </section>
+                {/* karta ako na reality webe: foto, názov, adresa – nič viac */}
+                {ordered.map((b) => (
+                  <Link className="branch-row" key={b.slug} to={`/pobocky/${b.slug}`}>
+                    <img src={b.img} alt={b.name} loading="lazy" />
+                    <span className="tx">
+                      <span className="nm">{b.name}{b.hq && <span className="hq">Centrála</span>}</span>
+                      <span className="loc"><IconMapPin size={16} stroke={1.8} />{b.street}, {b.zip} {b.cityFull}</span>
+                    </span>
+                  </Link>
                 ))}
               </div>
             ) : (

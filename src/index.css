@@ -55,8 +55,16 @@
      nevzniknú dve rôzne škály; predtým tu bolo --sec 56–104 a v .site --sec-pad 44–84).
      Každý pás (hero, hlavička podstránky, sekcia) nesie tento padding hore aj dole,
      takže medzera medzi ľubovoľnými dvoma pásmi je vždy 2× táto hodnota — aj na
-     rozhraní farieb. --hdr-h je výška sticky hlavičky, nie odsadenie obsahu. */
-  --sec-pad:clamp(44px,7vw,84px); --hdr-h:64px;
+     rozhraní farieb. --hdr-h je výška sticky hlavičky, nie odsadenie obsahu.
+     Menilo sa tu, nie po jednotlivých pásoch – hero sa nesmie odtrhnúť od sekcií pod
+     ním, inak prestane platiť, že medzera medzi pásmi je 2× jednotka. Strop 80 px platí
+     rovnako pre hero, hlavičku podstránky aj každú .sec – žiadny pás nemá výnimku. */
+  --sec-pad:clamp(48px,6.5vw,80px); --hdr-h:64px;
+  /* Výška ilustrácie v hero profilu. Drží sa blízko výšky textového stĺpca vedľa:
+     keby ju prerástla, riadok by sa roztiahol a pod tlačidlami by ostalo prázdno –
+     a naopak min-height na celom riadku (skúšané ako --hero-sub) pridával vôľu nad
+     breadcrumb, takže hero opticky dostalo väčší horný padding než sekcie pod ním. */
+  --hero-illus:clamp(260px,23vw,320px);
   --ease:cubic-bezier(.22,1,.36,1);
 }
 *{box-sizing:border-box;}

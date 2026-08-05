@@ -1,5 +1,5 @@
 // Klientské profily (archetypy) – JEDEN zdroj pravdy pre tri kontexty:
-//   1. landing (/ aj /uvod)   – dlaždica profilu + preklik na detail
+//   1. landing (/)            – dlaždica profilu + preklik na detail
 //   2. /profil/:slug          – archetyp, „Co je dobré mít vyřešeno", situácie ako taby
 //   3. produktová stránka     – tá istá situácia, len vstup je produkt a taby sú profily
 //

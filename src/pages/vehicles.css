@@ -5,8 +5,9 @@
 /* ---- breadcrumb v hero ----
    Bez vlastného paddingu: blokové odsadenie celého hera nesie .veh-hero (jedno miesto),
    breadcrumb je jeho súčasťou rovnako ako nadpis. */
-.site .veh-crumb-wrap{position:relative;z-index:2;}
-.site .veh-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);}
+/* breadcrumb je prvý riadok textového stĺpca (viď Vehicles.jsx) – rovnako ako na /profil */
+.site .veh-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);
+  margin-bottom:28px;}
 .site .veh-crumb a{color:rgba(255,255,255,.7);transition:.2s;}
 .site .veh-crumb a:hover{color:#fff;}
 .site .veh-crumb b{color:#fff;font-weight:600;}
@@ -29,13 +30,13 @@
 
 /* header priehľadný nad foto-hero rieši spoločný hook useHeroHeader + .hero-hdr v SiteHeader.css */
 
-/* rytmika so zalomkami: breadcrumbs → 16 → title → 16 → text → 32 → buttons.
-   Blokový padding pásu drží .veh-hero, tu ostáva len medzera pod breadcrumbom. */
-/* align-items:start je časť tej rytmiky: pri centrovaní (default .hero-in) závisela medzera
-   pod breadcrumbom od výšky pravého stĺpca, takže na každej stránke vyšla iná. Pravý stĺpec
-   si centrovanie pýta sám (.veh-hero-points{align-self:center}). */
+/* rytmika so zalomkami: breadcrumbs → 28 → title → 16 → text → 32 → buttons.
+   Celá žije vnútri textového stĺpca (breadcrumb je jeho prvý riadok), takže nezávisí od
+   výšky pravého stĺpca. Textový stĺpec je zarovnaný na začiatok, aby breadcrumb stál
+   presne --sec-pad pod hlavičkou – rovnako ako titulok každej sekcie od svojej hrany.
+   Body s ikonami sa centrujú samy (.veh-hero-points{align-self:center}). */
 .site .veh-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
-  padding-block:16px 0;align-items:start;}
+  padding-block:0;align-items:start;}
 .site .veh-hero .hero-tx{max-width:640px;gap:0;}
 .site .veh-hero .hero-tx>p{margin-top:16px;}
 .site .veh-hero .hero-tx>.hero-cta{margin-top:32px;}
@@ -112,9 +113,12 @@
 /* ============ MODELOVÉ SITUACE — 3 modely na preklik ============ */
 /* mobil: vodorovne posuvateľný rad kartičiek (swipe + snap), kúsok ďalšej vykúka */
 /* prepínač 3 vodičov – vodorovný rad navrchu, samostatný nad kartou detailu */
+/* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) – bez neho
+   mandatory snap dosadne prvú kartu na hranu výrezu a ľavé odsadenie v pokoji zmizne */
 .site .veh-models{display:flex;gap:14px;margin-bottom:16px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
-  margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;}
+  margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;
+  scroll-padding-inline:clamp(16px,4vw,28px);}
 .site .veh-models::-webkit-scrollbar{display:none;}
 .site .veh-model-tab{flex:0 0 78%;scroll-snap-align:start;display:flex;flex-direction:column;text-align:left;background:var(--box);
   border:1px solid var(--l);border-radius:16px;overflow:hidden;padding:0;transition:.18s;cursor:pointer;}
@@ -243,7 +247,7 @@
 .site .veh-sum-cta{display:flex;align-items:center;gap:10px;margin-top:16px;}
 .site .veh-sum-cta .btn{flex:1;justify-content:center;}
 .site .veh-reset{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--l);background:#fff;
-  border-radius:12px;padding:0 14px;height:50px;font-size:var(--fs-sm);font-weight:600;color:var(--g600);transition:.18s;flex:none;}
+  border-radius:var(--r-btn);padding:0 14px;height:48px;font-size:var(--fs-sm);font-weight:600;color:var(--g600);transition:.18s;flex:none;}
 .site .veh-reset:hover{border-color:var(--blue-200);color:var(--blue);}
 .site .veh-sum-note{font-size:var(--fs-label);color:var(--mut);margin-top:12px;line-height:1.5;}
 
@@ -283,8 +287,7 @@
 
 /* ============ DESKTOP ============ */
 @media(min-width:980px){
-  /* hero: text vľavo, body s ikonami vpravo. align-items zámerne nie – zarovnanie na
-     začiatok drží medzeru pod breadcrumbom, body sa centrujú samy (.veh-hero-points) */
+  /* hero: text vľavo, body s ikonami vpravo – oba stĺpce centrované (viď .veh-hero .hero-in) */
   .site .veh-hero .hero-in{grid-template-columns:1.1fr .9fr;}
   .site .veh-hero-bg{background-position:center;}
   /* inkasný systém: 50/50 text + foto */

@@ -60,19 +60,20 @@ export default function Vehicles() {
       <section className="hero veh-hero">
         {/* foto vozu pod hero + modrý overlay (foto vloží klient do public/vozidla/hero.jpg) */}
         <div className="veh-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
-        <div className="wrap veh-crumb-wrap">
-          <nav className="veh-crumb">
-            <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} />
-            <span>Pojištění</span><IconChevronRight size={14} stroke={2} />
-            <b>Pojištění vozidel</b>
-          </nav>
-        </div>
         <div className="wrap hero-in veh-hero-in">
+          {/* breadcrumb je súčasťou textového stĺpca, nie pás nad ním – rovnako ako na /profil */}
           <div className="hero-tx">
+            <nav className="veh-crumb">
+              <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} />
+              <span>Pojištění</span><IconChevronRight size={14} stroke={2} />
+              <b>Pojištění vozidel</b>
+            </nav>
             <h1>Pojištění <b>vozidel</b></h1>
             <p>Povinné ručení, havarijní pojištění i asistence – poskládané na míru tomu, jak a kde jezdíte.</p>
             <div className="hero-cta">
-              <a href="#veh-produkty" className="btn fill">Prohlédnout nabídku <IconArrowRight size={18} stroke={2.2} /></a>
+              {/* na produkte sa hovorí o produktoch – „Co se jim stalo“ patrí profilu klienta,
+                  kde je ten človek konkrétny; tu sú modelové situace prehľadom viacerých profilov */}
+              <a href="#veh-produkty" className="btn fill">Prohlédnout produkty <IconArrowRight size={18} stroke={2.2} /></a>
               <a href="#veh-modely" className="btn">Modelové situace</a>
             </div>
           </div>

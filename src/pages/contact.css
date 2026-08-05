@@ -96,9 +96,8 @@
 .site .branch-search input{width:100%;height:52px;border:1px solid var(--g300);border-radius:var(--r-card);background:#fff;
   padding:0 16px 0 46px;font:inherit;font-size:var(--fs-body);color:var(--ink);}
 .site .branch-search input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
-.site .branch-list{display:flex;flex-direction:column;gap:clamp(26px,4vw,40px);}
-.site .branch-group{display:flex;flex-direction:column;gap:12px;}
-.site .branch-group-h{font-family:var(--display);font-weight:600;color:var(--ink);font-size:var(--fs-h3);}
+/* jeden súvislý rad kariet – bez medzititulkov regiónov (poradie ich stále rešpektuje) */
+.site .branch-list{display:flex;flex-direction:column;gap:12px;}
 /* karta pobočky ako na reality webe: biela plocha bez rámu a bez tieňa, foto 80 px,
    názov a pod ním adresa. Hover preleje kartu do modrej a názov na AllBlue. */
 .site .branch-row{display:flex;align-items:center;gap:24px;border-radius:var(--r-btn);
