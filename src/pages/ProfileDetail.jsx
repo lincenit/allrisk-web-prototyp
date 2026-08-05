@@ -9,10 +9,15 @@ import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
 import { TAB_VARIANTS, TAB_VARIANT_DEFAULT } from '../tabVariants.js'
+import {
+  SOLVED_VARIANTS, SOLVED_VARIANT_DEFAULT, SOLVED_COLORS, SOLVED_COLOR_DEFAULT,
+} from '../solvedVariants.js'
 import { PROFILES, profileBySlug, situationCount } from '../data/profiles.js'
 import { ProfileIllus, ProfileCards, SituationPanel, SolvedList, iconFor } from '../components/ProfileParts.jsx'
 import { SecHead } from '../components/PageParts.jsx'
-import { IconArrowRight, IconChevronRight, IconLayoutNavbar } from '@tabler/icons-react'
+import {
+  IconArrowRight, IconChevronRight, IconLayoutNavbar, IconLayoutColumns, IconPalette,
+} from '@tabler/icons-react'
 
 export default function ProfileDetail() {
   const { slug } = useParams()
@@ -23,6 +28,12 @@ export default function ProfileDetail() {
   const [sit, setSit] = useState('')
   // vzhľad radu záložiek – rozpracovaná voľba, drží sa naprieč stránkami (aj na /vozidla)
   const [tabStyle, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
+  // rozloženie bloku „Co je dobré mít vyřešeno" – tiež rozpracované, drží sa medzi profilmi,
+  // lebo varianty sa dajú posúdiť až porovnaním rodiny (5 : 2 : 0) proti ostatným
+  const [solvedStyle, setSolvedStyle] = useDebugOption('solved', SOLVED_VARIANT_DEFAULT)
+  // farebná škála úrovní je zámerne SAMOSTATNÁ os od rozloženia – inak sa nedá povedať,
+  // či za dojmom stojí rozloženie alebo farba (semafor je zatiaľ návrh, viď profile.css)
+  const [solvedColors, setSolvedColors] = useDebugOption('solvedColors', SOLVED_COLOR_DEFAULT)
 
   if (!p) {
     return (
@@ -88,9 +99,9 @@ export default function ProfileDetail() {
         {/* zámerne bez skloňovania názvu profilu – „u podnikatel“ česky nedáva zmysel */}
         <SecHead
           title={<>Co je dobré mít <b>vyřešeno</b></>}
-          lead="Pro tenhle profil dává smysl tohle – seřazeno podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje."
+          lead="Pro tenhle profil dává smysl tohle – rozdělené podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje."
         />
-        <SolvedList items={p.solved} />
+        <SolvedList items={p.solved} variant={solvedStyle} colors={solvedColors} />
       </section>
 
       {/* ============ 3 · PROČ JE TO DOBRÉ MÍT ============ */}
@@ -128,6 +139,14 @@ export default function ProfileDetail() {
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}
+        />
+        <DebugGroup
+          icon={IconLayoutColumns} label="Co mít vyřešeno" value={solvedStyle} onChange={setSolvedStyle} wrap
+          options={SOLVED_VARIANTS}
+        />
+        <DebugGroup
+          icon={IconPalette} label="Barvy úrovní" value={solvedColors} onChange={setSolvedColors} wrap
+          options={SOLVED_COLORS}
         />
       </DebugPanel>
     </div>

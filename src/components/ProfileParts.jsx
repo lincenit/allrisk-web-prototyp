@@ -7,7 +7,11 @@ import { createElement, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { asset } from '../asset.js'
 import { useTabBar } from '../useTabBar.js'
-import { productHref, productLabel, productHasPage, PRODUCTS_META, NEED_LABEL, needRank } from '../data/profiles.js'
+import {
+  productHref, productLabel, productHasPage, PRODUCTS_META,
+  NEED_LABEL, NEED_META, needRank, groupByNeed,
+} from '../data/profiles.js'
+import { SOLVED_VARIANT_DEFAULT, SOLVED_COLOR_DEFAULT } from '../solvedVariants.js'
 import {
   IconHome, IconSofa, IconUmbrella, IconHeart, IconStethoscope, IconKey, IconPlane,
   IconChartLine, IconCoin, IconBuildingWarehouse, IconTruck, IconLicense, IconScale,
@@ -16,6 +20,7 @@ import {
   IconDroplet, IconHomePlus, IconGavel, IconBuildingHospital,
   IconWind, IconPaw, IconSchool, IconFirstAidKit, IconHeartbeat, IconWallet,
   IconSnowflake, IconGauge, IconTrendingDown, IconTrendingUp, IconLock,
+  IconShieldCheck, IconThumbUp, IconBulb,
 } from '@tabler/icons-react'
 
 // Kľúč ikony (z dát) -> tabler komponent. Dáta zostávajú bez Reactu.
@@ -32,6 +37,9 @@ export const PROFILE_ICONS = {
   claim: IconGavel, hospital: IconBuildingHospital, storm: IconWind, animal: IconPaw,
   school: IconSchool, firstaid: IconFirstAidKit, illness: IconHeartbeat, income: IconWallet,
   frost: IconSnowflake, garage: IconGauge, theft: IconLock, growth: IconTrendingUp,
+  // úrovne naliehavosti v „Co je dobré mít vyřešeno" (NEED_META v profiles.js).
+  // Štít zámerne u nutnosti – je to jediná úroveň, ktorá kryje, nie zlepšuje.
+  'need-must': IconShieldCheck, 'need-rec': IconThumbUp, 'need-opt': IconBulb,
 }
 export const iconFor = (key) => PROFILE_ICONS[key] || IconFileText
 
@@ -172,13 +180,55 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
 }
 
 // Zoznam „Co je dobré mít vyřešeno" – produkt + prečo ho tento archetyp potrebuje.
-// Jeden stĺpec, zoradený od nutností po „zvážit"; v rámci rovnakej naliehavosti
-// ostáva poradie z dát (stabilné triedenie), lebo to je poradie podľa dôležitosti.
-export function SolvedList({ items }) {
+// Pôvodne jeden stĺpec so štítkom naliehavosti na každom riadku; naliehavosť sa tak
+// dala prečítať až po položkách a rovnaké úrovne držala pri sebe len zhoda triedenia.
+// Dnes je delenie samotné rozloženie: úroveň je hlavička skupiny, položka pod ňu patrí.
+// Preto na karte NIE JE štítok – v skupine „Nutnost" by bol na každej karte ten istý.
+export function SolvedList({ items, variant = SOLVED_VARIANT_DEFAULT, colors = SOLVED_COLOR_DEFAULT }) {
   const sorted = [...items].sort((a, b) => needRank(a.need) - needRank(b.need))
+  if (variant === 'puvodni') return <SolvedFlat items={sorted} />
+
+  const groups = groupByNeed(sorted)
+  return (
+    // počet skupín ide do CSS ako premenná – stĺpcový variant sa podľa nej rozloží
+    // na 3 alebo 2 stĺpce podľa toho, či profil vôbec nejaké „Zvážit" má
+    <div className={`solved-m solved-${variant} solved-c-${colors}`} style={{ '--sgrp-n': groups.length }}>
+      {/* Hlavička nesie IBA ikonu, názov úrovne a preklad do bežnej reči.
+          Počet položiek ani poradové číslo tu zámerne nie sú – poradie aj množstvo
+          človek vidí priamo z toho, čo je pod hlavičkou, a v troch hlavičkách nad sebou
+          to boli tri čísla, ktoré ťahali oko preč od názvov produktov. */}
+      {groups.map((g) => (
+        <section key={g.need} className={`sgrp ${g.need}`}>
+          <header className="sgrp-h">
+            <span className="sgrp-ic"><Icon name={NEED_META[g.need].ic} size={24} stroke={1.8} /></span>
+            <span className="sgrp-t">
+              <b>{NEED_META[g.need].label}</b>
+              <small>{NEED_META[g.need].hint}</small>
+            </span>
+          </header>
+          <div className="sgrp-list">
+            {g.items.map((it) => (
+              <Link key={it.product} to={productHref(it.product)} className="scard">
+                <span className="scard-ic"><Icon name={PRODUCTS_META[it.product]?.icon} size={20} stroke={1.6} /></span>
+                <span className="scard-tx">
+                  <b>{productLabel(it.product)}</b>
+                  <small>{it.note}</small>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+// Pôvodný jednostĺpcový zoznam so štítkom naliehavosti na riadku – ostáva ako
+// porovnávacia hladina v ladiacom paneli, aby sa maticové varianty mali proti čomu merať.
+function SolvedFlat({ items }) {
   return (
     <div className="solved">
-      {sorted.map((it) => (
+      {items.map((it) => (
         <Link key={it.product} to={productHref(it.product)} className="solved-item">
           <span className="solved-ic"><Icon name={PRODUCTS_META[it.product]?.icon} size={22} stroke={1.6} /></span>
           <span className="solved-tx">

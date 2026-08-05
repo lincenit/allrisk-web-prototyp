@@ -619,9 +619,26 @@ export const NEED_LABEL = {
   doporuceno: 'Doporučujeme',
   zvazit: 'Zvážit',
 }
+// Hlavička úrovne v maticovom rozložení. `hint` je jednoveršový preklad štítku do
+// bežnej reči – samotné „Zvážit" nepovie, podľa čoho sa má človek rozhodnúť.
+// Ikony sú KĽÚČE, komponenty k nim mapuje ProfileParts.jsx (rovnako ako pri produktoch).
+export const NEED_META = {
+  nutnost: { label: 'Nutnost', hint: 'Bez tohohle to nedává smysl', ic: 'need-must' },
+  doporuceno: { label: 'Doporučujeme', hint: 'Chybí to nejčastěji ze všeho', ic: 'need-rec' },
+  zvazit: { label: 'Zvážit', hint: 'Podle toho, jak na tom jste', ic: 'need-opt' },
+}
 // Poradie naliehavosti – zoznam sa ním triedi, nutnosti idú navrch.
 export const NEED_ORDER = ['nutnost', 'doporuceno', 'zvazit']
 export const needRank = (need) => {
   const i = NEED_ORDER.indexOf(need)
   return i === -1 ? NEED_ORDER.length : i
 }
+
+// Položky zoskupené po úrovniach pre maticové rozloženie.
+// Prázdne úrovne VYPADNÚ – rodina nemá ani jedno „Zvážit" a pevné tri stĺpce by
+// tam nechali prázdne miesto, ktoré vyzerá ako chyba. Počet skupín preto určuje
+// aj počet stĺpcov (viď --sgrp-n v profile.css).
+export const groupByNeed = (items) =>
+  NEED_ORDER
+    .map((need) => ({ need, items: items.filter((it) => it.need === need) }))
+    .filter((g) => g.items.length)

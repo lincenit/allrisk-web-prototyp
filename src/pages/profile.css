@@ -87,8 +87,123 @@
 .site .prof-card:hover .story-pick svg{transform:translateX(4px);}
 
 /* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============ */
-/* jeden stĺpec na všetkých šírkach – zoznam je zoradený podľa naliehavosti
-   (nutnost → doporučujeme → zvážit), takže poradie zhora nadol musí byť čitateľné */
+/* Naliehavosť nesie ROZLOŽENIE, nie štítok na položke: úroveň je hlavička skupiny
+   a položka pod ňu patrí. Preto v maticových variantoch karta štítok nemá – v skupine
+   „Nutnost" by bol na každej karte ten istý.
+   Dva varianty (viď solvedVariants.js) zdieľajú markup a líšia sa len tu:
+     .solved-sloupce – úroveň = stĺpec (najviac „maticové", ale najužšia karta)
+     .solved-pasy    – úroveň = vodorovný pás s popiskom vľavo (znesie 5 : 2 : 0)
+   Prázdne úrovne sa nevykresľujú (groupByNeed) – rodina nemá ani jedno „Zvážit". */
+
+/* Farebná škála úrovní. Jediné miesto, kde sa úroveň prekladá do farby – zvyšok berie
+   premenné, takže sa dá vymeniť celá škála jednou triedou na obale (.solved-c-*).
+     --nbg       SLABÝ farebný podklad hlavičky úrovne
+     --nstroke   silný obrys hlavičky, čip ikony a zvislá os v „Ose" – nositeľ odtieňa
+     --nfg       text a ikona v hlavičke (tmavý variant odtieňa, kvôli kontrastu)
+     --nline     rám karty v tejto úrovni (váhová os vnútri mriežky)
+   Plné farebné výplne bili do očí – celý pás svietil sýtou farbou a ťahal oko viac než
+   názvy produktov pod ním. Odtieň teraz nesie OBRYS, nie plocha: podklad je len tint,
+   obrys 2 px v plnej farbe. Signál ostáva rovnako jasný, ale plocha je tichá. */
+/* A · váha v značkovej modrej – nepridáva do palety žiadnu novú farbu */
+.site .solved-c-modra .sgrp{--nbg:var(--blue-50);--nstroke:var(--blue);--nfg:var(--blue);--nline:var(--blue-200);}
+.site .solved-c-modra .sgrp.doporuceno{--nbg:var(--blue-50);--nstroke:var(--blue-200);--nfg:var(--blue);--nline:var(--l);}
+.site .solved-c-modra .sgrp.zvazit{--nbg:var(--g50);--nstroke:var(--g300);--nfg:var(--g600);--nline:var(--l2);}
+
+/* B · klasický semafor červená → žlutá → zelená.
+   Mapovanie je RIZIKOVÉ, nie „stavové": červená = Nutnost (bez toho to nedáva zmysel),
+   zelená = Zvážit (ste v pohode aj bez toho). Opačné poradie by dalo červenú najmenej
+   dôležitej úrovni. Prehodiť sa dá výmenou --nbg/--nstroke/--nfg medzi 1. a 3. riadkom.
+   POZOR, ide proti DESIGN.md: AllRed #BF0D0D je tam vyhradená VÝHRADNE pre „Nahlásit
+   událost" („its rarity is the point") a tu ju nesie hlavička úrovne na každom profile.
+   Vedomé rozhodnutie používateľa z 2026-08-05, nie prehliadnutie.
+   Text NIE JE v plnej farbe pásu: #F59E0B ani #10B981 nemajú na svojom tinte dosť
+   kontrastu, preto ide do tmavého odtieňa (#8A5A00 dáva 5,5 : 1, #0A7A52 5,4 : 1). */
+.site .solved-c-semafor .sgrp{--nbg:#FDF1F1;--nstroke:var(--red);--nfg:var(--red);--nline:#F2C9C9;}
+.site .solved-c-semafor .sgrp.doporuceno{--nbg:#FEF8EC;--nstroke:var(--orange);--nfg:#8A5A00;--nline:#F5DFB0;}
+.site .solved-c-semafor .sgrp.zvazit{--nbg:#EDFAF4;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B9E7D4;}
+/* odtieň musí dôjsť aj na kartu, inak modrý čip ikony popiera hlavičku nad ním */
+.site .solved-c-semafor .sgrp .scard-ic{background:#FBEAEA;color:var(--red);}
+.site .solved-c-semafor .sgrp .scard:hover .scard-ic{background:var(--red);color:#fff;}
+.site .solved-c-semafor .sgrp.doporuceno .scard-ic{background:#FEF3D6;color:#8A5A00;}
+.site .solved-c-semafor .sgrp.doporuceno .scard:hover .scard-ic{background:#8A5A00;color:#fff;}
+.site .solved-c-semafor .sgrp.zvazit .scard-ic{background:#E8F7F0;color:#0A7A52;}
+.site .solved-c-semafor .sgrp.zvazit .scard:hover .scard-ic{background:#0A7A52;color:#fff;}
+
+/* C · zelená → amber → šedá (predchádzajúci návrh, ponechaný na porovnanie).
+   Stojí dva odtiene mimo palety: #10B981 dáva s bielym textom len 2,5 : 1 a #F59E0B
+   ešte menej, takže ako výplň sa použiť nedajú – tmavá zelená je odvodená od
+   existujúcej .tag-green (index.css), tmavý amber je nový. Tretí odtieň tu nie je
+   zámerne: „Zvážit" ostáva šedé, aby škála klesala. */
+.site .solved-c-zelena .sgrp{--nbg:#EAF8F1;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B7E4D0;}
+.site .solved-c-zelena .sgrp.doporuceno{--nbg:#FEF8EC;--nstroke:var(--orange);--nfg:#8A5A00;--nline:#F2DFBA;}
+.site .solved-c-zelena .sgrp.zvazit{--nbg:var(--g50);--nstroke:var(--g300);--nfg:var(--g600);--nline:var(--l2);}
+.site .solved-c-zelena .sgrp .scard-ic{background:#E8F7F0;color:#0A7A52;}
+.site .solved-c-zelena .sgrp .scard:hover .scard-ic{background:#0A7A52;color:#fff;}
+.site .solved-c-zelena .sgrp.doporuceno .scard-ic{background:#FEF6E7;color:#8A5A00;}
+.site .solved-c-zelena .sgrp.doporuceno .scard:hover .scard-ic{background:#8A5A00;color:#fff;}
+.site .solved-c-zelena .sgrp.zvazit .scard-ic{background:var(--g100);color:var(--g600);}
+.site .solved-c-zelena .sgrp.zvazit .scard:hover .scard-ic{background:var(--g600);color:#fff;}
+
+/* --- hlavička úrovne (spoločná pre všetky varianty) --- */
+/* Nesie len ikonu a názov s prekladom do bežnej reči. Počet položiek ani poradové
+   číslo tu nie sú: v troch hlavičkách nad sebou to boli tri čísla, ktoré ťahali oko
+   preč od názvov produktov, a poradie aj množstvo vidno priamo z toho, čo je pod nimi. */
+.site .sgrp-h{display:flex;align-items:center;gap:10px;}
+.site .sgrp-ic{flex:none;display:flex;}
+.site .sgrp-t{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.site .sgrp-t b{font-family:var(--display);font-weight:700;font-size:var(--fs-card);line-height:1.2;}
+/* preklad štítku do bežnej reči – samotné „Zvážit" nepovie, podľa čoho sa rozhodnúť */
+.site .sgrp-t small{font-size:var(--fs-sm);line-height:1.35;opacity:.78;text-wrap:pretty;}
+
+/* --- karta položky (spoločná pre všetky varianty) --- */
+/* Bez šípky: celá karta je odkaz a chová sa ako odkaz (hover, kurzor, focus), takže
+   šípka v rohu len opakovala to isté a v troch úrovniach pod sebou tvorila štvrtý
+   zvislý rad drobných značiek. */
+.site .scard{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px;
+  background:var(--box);border:1px solid var(--nline,var(--l));border-radius:var(--r-card);padding:14px 16px;
+  text-decoration:none;color:inherit;transition:.2s;}
+/* hover aj focus berú farbu úrovne, nie natvrdo modrú – v semafore by modrý rám
+   na červenej skupine popieral hlavičku nad ňou */
+.site .scard:hover{border-color:var(--nstroke,var(--blue));transform:translateY(-2px);box-shadow:var(--shadow-lift);}
+.site .scard:focus-visible{outline:0;border-color:var(--nstroke,var(--blue));box-shadow:0 0 0 3px var(--nbg,var(--blue-50));}
+.site .scard-ic{width:38px;height:38px;flex:none;border-radius:var(--r-btn);background:var(--blue-50);color:var(--blue);
+  display:flex;align-items:center;justify-content:center;transition:.2s;}
+.site .scard:hover .scard-ic{background:var(--blue);color:#fff;}
+.site .scard-tx{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.site .scard-tx b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.25;}
+.site .scard-tx small{font-size:var(--fs-sm);color:var(--g600);line-height:1.5;text-wrap:pretty;}
+/* Podklad karty je BIELY vo všetkých úrovniach – „Zvážit" mala kedysi priehľadnú,
+   aby škála klesala aj vnútri mriežky, ale úroveň už dostatočne nesie farebný rám
+   (--nline) a hlavička nad stĺpcom; priehľadná karta z toho robila vyblednutý zoznam. */
+
+/* --- A · SLOUPCE: úroveň = stĺpec --- */
+/* Stĺpec NEMÁ vlastný rám ani podklad – hlavička úrovne stojí samostatne a karty
+   ležia voľne pod ňou. Rámovaný stĺpec s tónovaným vnútrom pridával druhý box okolo
+   boxov a celá sekcia potom čítala ako tri panely, nie ako jeden zoznam v troch úrovniach. */
+.site .solved-m{display:grid;grid-template-columns:1fr;gap:18px;}
+.site .solved-sloupce .sgrp{display:flex;flex-direction:column;gap:10px;}
+/* slabý podklad + farebný obrys: odtieň nesie linka, plocha ostáva tichá */
+.site .solved-sloupce .sgrp-h{background:var(--nbg);color:var(--nfg);padding:12px 15px;
+  border:1px solid var(--nstroke);border-radius:var(--r-card);}
+.site .solved-sloupce .sgrp-list{display:grid;gap:10px;align-content:start;}
+
+/* --- B · PÁSY: úroveň = vodorovný pás s popiskom vľavo --- */
+/* Karty v páse tečú do auto-fit mriežky, takže 5 nutností vyplní pás a 2 doporučenia
+   ho nechajú kratší – rozdiel v počte je tu informácia, nie diera v layoute. */
+.site .solved-pasy{gap:0;}
+.site .solved-pasy .sgrp{padding:22px 0;border-top:1px solid var(--l);}
+.site .solved-pasy .sgrp:first-child{border-top:0;padding-top:0;}
+.site .solved-pasy .sgrp:last-child{padding-bottom:0;}
+.site .solved-pasy .sgrp-h{color:var(--ink);margin-bottom:14px;}
+.site .solved-pasy .sgrp-ic{width:42px;height:42px;border-radius:var(--r-btn);
+  background:var(--nbg);color:var(--nfg);border:1px solid var(--nstroke);
+  align-items:center;justify-content:center;}
+.site .solved-pasy .sgrp-t small{color:var(--g600);opacity:1;}
+.site .solved-pasy .sgrp-list{display:grid;gap:12px;}
+
+/* --- pôvodný jednostĺpcový zoznam (variant „Původní") --- */
+/* Ostáva ako porovnávacia hladina v ladiacom paneli: naliehavosť je tu štítok na
+   riadku, nie rozloženie, takže sa dá zmerať, či matica reálne pomohla. */
 .site .solved{display:grid;grid-template-columns:1fr;gap:12px;}
 .site .solved-item{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px;
   background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);padding:16px 18px;
@@ -204,6 +319,10 @@
   .site .prof-cards{grid-template-columns:repeat(2,1fr);}
   .site .solved-item{grid-template-columns:auto 1fr auto;}
   .site .solved-need{grid-column:auto;order:0;justify-self:end;}
+  /* Pod desktopom sú skupiny ešte pod sebou, takže pás je široký na dve karty vedľa seba.
+     Bez toho je blok na tablete cez 2 000 px vysoký a hlavičky úrovní od seba odletia. */
+  .site .solved-pasy .sgrp-list,
+  .site .solved-sloupce .sgrp-list{grid-template-columns:repeat(2,1fr);}
 }
 @media(min-width:980px){
   /* align-items zámerne nie: zarovnanie na začiatok drží medzeru pod breadcrumbom,
@@ -214,6 +333,26 @@
      výšku textu vedľa; pri krátkom texte z nej ostal drobec – na /profil/rodina 228 px.) */
   .site .prof-cards{grid-template-columns:repeat(4,1fr);}
   .site .prof-cards-3{grid-template-columns:repeat(3,1fr);}
+
+  /* SLOUPCE: počet stĺpcov je počet NEPRÁZDNYCH úrovní (--sgrp-n zo SolvedList).
+     Rodina má 5 : 2 : 0, teda dva stĺpce na plnú šírku – pevné tri by tam nechali
+     prázdne miesto, ktoré vyzerá ako chyba dát. Stĺpce sú rovnako široké zámerne:
+     nutnosti je najviac a nerovnaké šírky by z počtu urobili náhodu. */
+  .site .solved-sloupce{grid-template-columns:repeat(var(--sgrp-n,3),1fr);align-items:start;gap:16px;}
+  .site .solved-sloupce .sgrp-list{grid-template-columns:1fr;}
+
+  /* PÁSY: popisok úrovne je ľavá lišta, karty tečú vedľa nej.
+     Lišta je lepkavá – pri 5 nutnostiach je pás vyšší než výrez a bez toho by človek
+     v polovici stĺpca už nevedel, ktorú úroveň číta. */
+  .site .solved-pasy .sgrp{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start;
+    padding:26px 0;}
+  .site .solved-pasy .sgrp-h{margin-bottom:0;align-items:flex-start;position:sticky;top:88px;}
+  .site .solved-pasy .sgrp-ic{margin-top:1px;}
+  /* auto-FILL, nie auto-fit: auto-fit zbalí prázdne stopy, takže pás s jedinou položkou
+     („Zvážit" má všade práve jednu) roztiahne kartu cez celú šírku a vyzerá dôležitejšie
+     než päť nutností nad ňou. auto-fill stopu nechá a karta drží šírku stĺpca. */
+  .site .solved-pasy .sgrp-list{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+
   /* prepínač na produktovej stránke – počet profilov k produktu nie je fixný,
      preto auto-fit namiesto pevných štyroch stĺpcov */
   .site .prof-tabs{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
