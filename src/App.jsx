@@ -9,6 +9,9 @@ import BranchDetail from './pages/BranchDetail.jsx'
 import AdvisorDetail from './pages/AdvisorDetail.jsx'
 import ProfileDetail from './pages/ProfileDetail.jsx'
 import References from './pages/References.jsx'
+import Business from './pages/Business.jsx'
+import Blog from './pages/Blog.jsx'
+import ArticleDetail from './pages/ArticleDetail.jsx'
 
 export default function App() {
   // Jeden spoločný header pre celý prototyp.
@@ -26,6 +29,9 @@ export default function App() {
         <Route path="/poradce/:slug" element={<AdvisorDetail />} />
         <Route path="/profil/:slug" element={<ProfileDetail />} />
         <Route path="/reference" element={<References />} />
+        <Route path="/podnikatele" element={<Business />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<ArticleDetail />} />
       </Routes>
     </>
   )

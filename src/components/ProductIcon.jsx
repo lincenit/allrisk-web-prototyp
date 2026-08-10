@@ -13,7 +13,7 @@ export const PRODUCT_ICONS = {
   bank: IconBuildingBank, building: IconBuildingSkyscraper, truck: IconTruck, briefcase: IconBriefcase,
   bolt: IconBolt, key: IconKey, warn: IconAlertTriangle, doc: IconFileText, leaf: IconPlant2,
   fish: IconFish, phone: IconPhone,
-  // realitná trojica — všetky tri sú „dom", líšia sa až prívlastkom,
+  // realitná trojica - všetky tri sú „dom", líšia sa až prívlastkom,
   // takže rozdiel musí niesť ikona: peniaze / ruka / lupa
   houseSell: IconHomeDollar, houseBuyout: IconHomeHand, houseBuy: IconHomeSearch,
 }

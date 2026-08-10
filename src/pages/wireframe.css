@@ -1,4 +1,4 @@
-/* / — brand farby + Magistral/Inter + Tabler icons. Mobile-first. */
+/* / - brand farby + Magistral/Inter + Tabler icons. Mobile-first. */
 .site{
   --blue:#0046C8; --blue-800:#0039A3; --dark:#002161; --ink:#0D1F5B; --red:#BF0D0D; --green:#10B981; --orange:#F59E0B;
   --cyan:#5CC8FF; --blue-50:#E5F1FF; --blue-100:#D1E3FA; --blue-200:#B4D4FB; --blue-300:#87BFFE;
@@ -7,7 +7,7 @@
   --grad-blue:linear-gradient(to right,#0046C8,#002366);
   --maxw:1180px; --r:14px;
   /* --fs-* ramp žije v :root (index.css), aby platil aj mimo .site (napr. MegaMenu).
-     Tu sa zámerne neprepisuje – lokálna kópia sa už raz rozišla so systémom. */
+     Tu sa zámerne neprepisuje - lokálna kópia sa už raz rozišla so systémom. */
   /* --sec-pad (vertikálny rytmus) a --hdr-h (výška hlavičky) žijú v :root (index.css)
      z rovnakého dôvodu ako --fs-* ramp: aby platili aj mimo .site a aby nevznikla
      druhá škála. Tu sa zámerne neprepisujú. */
@@ -45,9 +45,25 @@
 .site .switch .opts button.on{background:#fff;color:var(--blue);box-shadow:0 2px 6px -1px rgba(13,31,91,.18);}
 .site .item .ic{width:auto;height:auto;background:transparent;border-radius:0;}
 .site .item .ic svg{width:22px;height:22px;}
+/* ============ SKLENENÉ KARTY V HERO ============
+   Rad bodov vedľa titulku hera: ikona + názov + veta. Používa ho /vozidla
+   aj /podnikatele - je to jeden prvok, nie dva podobné, takže žije tu
+   a nie v CSS jednej stránky. Karta je sklo nad fotkou: svetlý prechod,
+   tenký biely rám a rozostrenie podkladu. */
+.site .hero-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;align-self:center;}
+.site .hero-points li{display:flex;align-items:center;gap:16px;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
+  border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:15px 18px;
+  backdrop-filter:blur(8px);box-shadow:0 12px 30px -22px rgba(0,0,0,.6);transition:.2s var(--ease,ease);}
+.site .hero-points li:hover{border-color:rgba(255,255,255,.42);background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(255,255,255,.08));}
+.site .hp-ic{flex:none;color:#fff;display:flex;align-items:center;justify-content:center;}
+.site .hp-tx{display:flex;flex-direction:column;}
+.site .hp-tx b{font-family:var(--display);font-weight:700;color:#fff;font-size:var(--fs-body);line-height:1.25;}
+.site .hp-tx small{color:rgba(255,255,255,.74);font-size:var(--fs-label);margin-top:3px;line-height:1.4;}
+
 /* ============ FAQ / accordion ============
-   Otázky sú Inter (Magistral držíme na nadpisoch sekcií – v dlhých otázkach pôsobil ťažko),
-   namiesto ikonky pri každom riadku je poradové číslo. Jediný vzhľad je „Seznam" –
+   Otázky sú Inter (Magistral držíme na nadpisoch sekcií - v dlhých otázkach pôsobil ťažko),
+   namiesto ikonky pri každom riadku je poradové číslo. Jediný vzhľad je „Seznam" -
    varianty „Blok" a „Karty" sme zrušili. */
 .site .faq{display:flex;flex-direction:column;}
 .site .acc-q{width:100%;display:flex;align-items:flex-start;gap:16px;background:none;border:0;cursor:pointer;text-align:left;
@@ -66,7 +82,7 @@
 .site .acc-item.open .acc-a{grid-template-rows:1fr;}
 .site .acc-a>p{overflow:hidden;margin:0;color:var(--g600);font-size:var(--fs-body);line-height:1.62;max-width:72ch;}
 
-/* varianta „Seznam" – bez rámov aj bez prúžku, riadky delí len linka.
+/* varianta „Seznam" - bez rámov aj bez prúžku, riadky delí len linka.
    Odpoveď je odsadená na text otázky (4 padding + 26 číslo + 16 medzera). */
 .site .faq-list{border-top:1px solid var(--l);}
 .site .faq-list .acc-item{border-bottom:1px solid var(--l);}
@@ -80,12 +96,12 @@
    klienta sú ten istý prepínač, preto majú jeden komponent (components/TabBar.jsx)
    a jednu definíciu. Vizuálne varianty (.tabs-*) menia iba vzhľad, nie štruktúru.
 
-   Lišta nie je sticky – scrolluje s obsahom ako čokoľvek iné. (Skúšané bolo aj
+   Lišta nie je sticky - scrolluje s obsahom ako čokoľvek iné. (Skúšané bolo aj
    prilepenie pod header; drží síce výber na očiach, ale vyžaduje vlastný nepriehľadný
    pás cez celú šírku a ten rad opticky odtrhne od panelu, ktorý prepína.)
    Záporná margin −6px je priestor pre fokusový prstenec, aby ho neorezala dráha. */
 .site .tabbar{margin:0 -6px 22px;}
-/* position:relative kvôli useTabBar – offsetLeft záložky musí byť voči dráhe */
+/* position:relative kvôli useTabBar - offsetLeft záložky musí byť voči dráhe */
 .site .tabbar-track{position:relative;display:flex;gap:8px;padding:6px;overflow-x:auto;
   scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}
 .site .tabbar-track::-webkit-scrollbar{display:none;}
@@ -105,7 +121,7 @@
 .site .tabs-pill .tab.on{background:var(--blue);border-color:var(--blue);color:#fff;}
 .site .tabs-pill .tab.on .tab-ic{color:#fff;}
 
-/* ---- seg: celý rad je jedno ovládanie – záložky sedia v jednej svetlomodrej
+/* ---- seg: celý rad je jedno ovládanie - záložky sedia v jednej svetlomodrej
    schránke. Na desktope sa schránka zmestí obsahu (fit-content) a jej ľavá hrana
    sedí na text sekcie (margin 6px vyrovnáva zápornú marginu obalu).
    Vonkajší rádius = vnútorný (12) + padding (5), teda --r-card. ---- */
@@ -137,10 +153,10 @@
 
 /* Pod desktopom sa rad nezmestí a scrolluje sa prstom. Skúšané bolo aj vytekanie
    na hranu displeja (odrezaná záložka ako signál, že rad pokračuje), lenže tým sa
-   lišta rozišla s pravým okrajom stránky – teraz končí v tom istom stĺpci ako text
+   lišta rozišla s pravým okrajom stránky - teraz končí v tom istom stĺpci ako text
    a nadpisy nad ňou, vrátane schránky segmentu s celým rámom a oblúkom. */
 @media(min-width:980px){
-  /* dlaždice si na desktope rozdelia riadok rovným dielom – rad potom čítaš ako celok */
+  /* dlaždice si na desktope rozdelia riadok rovným dielom - rad potom čítaš ako celok */
   .site .tabs-card .tabbar-track{overflow:visible;}
   .site .tabs-card .tab{flex:1 1 0;min-width:0;}
   .site .tabs-card .tab .tab-lb{white-space:normal;text-wrap:balance;}
@@ -156,17 +172,17 @@
 /* ---- FOTO-HERO: jediný mechanizmus pre všetky heroy s fotkou ----
    Hero, ktorý má pod sebou fotku, dostane dvojicu tried:
      <section class="hero photo-hero">  +  <div class="photo-hero-bg" style=backgroundImage>
-   Stránka si potom rieši len geometriu (odsadenie, mriežku) – farba ani spracovanie
+   Stránka si potom rieši len geometriu (odsadenie, mriežku) - farba ani spracovanie
    fotky sa v page-CSS neopakujú. Gombíky sú v --hero-base / --hero-photo /
    --hero-tint / --hero-blend (index.css).
 
    Vrstvenie:
      z0  .photo-hero-bg   fotka, v plnej farbe (filter --hero-photo je predvolene none)
-     z1  ::before         modrý gradient nad ňou – toto je to, čo dáva pásu značku
+     z1  ::before         modrý gradient nad ňou - toto je to, čo dáva pásu značku
      z2  obsah            .hero-in / .phero-in už majú z-index:2
 
    Gradient sedí na ::before, nie na ::after: ::after už na .phero nesie značkové
-   žiary a jeden prvok ho má len jeden. Poradie sa tým nekazí – v tej istej vrstve
+   žiary a jeden prvok ho má len jeden. Poradie sa tým nekazí - v tej istej vrstve
    sa ::before kreslí pod ::after, takže žiary ostávajú navrchu.
    isolation:isolate drží prípadné mix-blend-mode vnútri pásu, nech nepretečie
    na sekciu pod ním. */
@@ -181,7 +197,7 @@
 .site .hero-tx>.hero-stats{margin-top:clamp(30px,4.5vw,48px);}
 .site .hero-tx>.hero-cta{margin-top:clamp(28px,4vw,40px);}
 .site .hero-tx .ey{color:var(--blue-200);}
-/* titulok hera podstránky je rovnako veľký ako hlavička sekcie – jeden titulkový stupeň.
+/* titulok hera podstránky je rovnako veľký ako hlavička sekcie - jeden titulkový stupeň.
    Landing hero (.wf-hero / .home-hero) si nižšie berie väčší --fs-hero.
    Zvýraznená časť je svetlomodrá, rovnako ako v kontaktnom banneri a v .page-head. */
 .site .hero-tx h1{color:#fff;font-weight:500;font-size:var(--fs-title);line-height:1.04;}
@@ -196,7 +212,7 @@
 .site .hero-media-img{background:none;border:0;border-radius:0;overflow:visible;height:auto;}
 .site .hero-media-img img{width:100%;height:auto;max-height:360px;object-fit:contain;object-position:center;display:block;}
 
-/* hero – štatistiky: kompaktné, nad tlačidlami, bez labelu a separátora */
+/* hero - štatistiky: kompaktné, nad tlačidlami, bez labelu a separátora */
 .site .hero-stats{width:100%;}
 .site .hero-stats-grid{display:flex;flex-wrap:wrap;gap:14px 30px;}
 .site .hero-stat .n{font-family:var(--display);font-weight:800;font-size:var(--fs-stat);color:#fff;line-height:1.04;white-space:nowrap;}
@@ -204,7 +220,7 @@
 
 /* font-family je nutná: <button class="btn"> by inak zdedil systémové písmo, nie Inter */
 /* Rozmery drží design systém (DESIGN.md → Buttons): 48 px, padding 0 22, --r-btn.
-   Tento selektor mení iba farebnú schému (obrysové tlačidlo stránky), nie veľkosť –
+   Tento selektor mení iba farebnú schému (obrysové tlačidlo stránky), nie veľkosť -
    inak sa rad tlačidiel v obsahu rozíde s .btn v hlavičke aj s .btn-sm. */
 .site .btn{height:48px;border-radius:var(--r-btn);padding:0 22px;display:inline-flex;align-items:center;gap:8px;font-family:var(--sans);font-size:var(--fs-body);font-weight:600;border:1.5px solid var(--blue);background:#fff;color:var(--blue);transition:.2s;cursor:pointer;}
 .site .btn:hover{background:var(--blue-50);}
@@ -214,19 +230,19 @@
 .site .hero .btn:not(.fill):hover{background:rgba(255,255,255,.1);}
 
 /* ============================================================
-   HERO STRÁNKY „/" — čisté video cez celú obrazovku, bez závoja a bez textu.
+   HERO STRÁNKY „/" - čisté video cez celú obrazovku, bez závoja a bez textu.
    Hero nemá miesto vyhradené pre hlavičku (na rozdiel od ostatných stránok
    nepridáva padding-top): video ide od samého vrchu a priehľadný header leží
    na ňom. Header sprehľadní hook useHeroHeader a plnú plochu dostane až po
-   zoskrolovaní — inak by nad videom visel modrý pruh.
+   zoskrolovaní - inak by nad videom visel modrý pruh.
    ============================================================ */
 .site .wf-hero{margin-top:calc(-1 * var(--hdr-h));}
 /* ŠÍRKA VYHRÁVA. Video má vždy celú šírku okna a výšku si z nej dopočíta podľa
-   vlastného pomeru — nikdy sa nenaťahuje a nikdy nevzniknú boky.
-     – kým sa dopočítaná výška do okna zmestí (bežné okno, každý telefón na výšku),
+   vlastného pomeru - nikdy sa nenaťahuje a nikdy nevzniknú boky.
+     - kým sa dopočítaná výška do okna zmestí (bežné okno, každý telefón na výšku),
        je hero presne taký vysoký ako video a vidno ho celé,
-     – keď by prerástla okno (široké a nízke okno, notebook na 1512×860), výšku
-       zastropuje 100svh a záber sa oreže symetricky zhora aj zdola — object-fit:cover
+     - keď by prerástla okno (široké a nízke okno, notebook na 1512×860), výšku
+       zastropuje 100svh a záber sa oreže symetricky zhora aj zdola - object-fit:cover
        so stredom, takže sa reže okraj, nie stred obrazu.
    min() robí presne toto rozhodnutie: menšia z dvoch výšok vyhráva.
    svh, nie vh: na telefóne by pri skrytej adresnej lište vh pretiekol o jej výšku.
@@ -238,11 +254,11 @@
 
 /* cover so stredom: kým sa výška zmestí, je schránka presne v pomere videa a cover
    sa správa ako contain (nič neoreže). Až keď výšku zastropuje okno, oreže vrch
-   a spodok rovnakým dielom — stred záberu ostane. */
+   a spodok rovnakým dielom - stred záberu ostane. */
 .site .hero-video-el{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;object-position:center;background:var(--grad-blue);}
 
-/* fullscreen: tu naopak celý záber a nič orezané – schránkou je celá obrazovka,
+/* fullscreen: tu naopak celý záber a nič orezané - schránkou je celá obrazovka,
    takže contain na čiernej (letterbox je vo fullscreene očakávaný, orez nie) */
 .site .hero-bgvid:fullscreen{width:100%;height:100%;background:#000;}
 .site .hero-bgvid:fullscreen .hero-video-el{object-fit:contain;background:#000;}
@@ -259,7 +275,7 @@
 
 /* ---- hlasitosť: prepínač + rozsah ----
    Posuvník je vidno stále, nevysúva sa: rozbalenie na hover by muselo animovať šírku
-   (layout thrash) a na dotyku by hover aj tak nebol. Tlačidlo stlmenia zostáva – je to
+   (layout thrash) a na dotyku by hover aj tak nebol. Tlačidlo stlmenia zostáva - je to
    jeden klik namiesto ťahania na nulu. */
 .site .hero-vol{display:flex;align-items:center;gap:8px;
   border-radius:var(--r-pill);padding-right:12px;background:rgba(8,22,64,.42);backdrop-filter:blur(6px);}
@@ -276,44 +292,52 @@
 .site .hero-vol-range::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#fff;
   box-shadow:0 2px 6px rgba(13,31,91,.45);}
 .site .hero-vol-range:focus-visible{outline:2px solid #fff;outline-offset:3px;}
-/* na úzkom telefóne by rad ovládania zabral pol šírky videa – dráha sa skráti */
+/* na úzkom telefóne by rad ovládania zabral pol šírky videa - dráha sa skráti */
 @media(max-width:479px){
   .site .hero-vol-range{width:56px;}
 }
 
-/* ============ FILOZOFIA — centrované, scroll highlight ============ */
-/* jeden rytmus ako každá iná sekcia – citát mal predtým dvojnásobnú dávku, ale žiadny
+/* ============ FILOZOFIA - centrované, scroll highlight ============ */
+/* jeden rytmus ako každá iná sekcia - citát mal predtým dvojnásobnú dávku, ale žiadny
    pás na webe nemá výnimku v hornom a spodnom paddingu */
-.site .phil{background:#fff;padding-block:var(--sec-pad);text-align:center;}
+/* Bez vlastnej výplne - biely pás medzi sivými sekciami z nej robil samostatnú
+   dosku, hoci je to sekcia ako každá iná. Podklad drží stránka. */
+.site .phil{padding-block:var(--sec-pad);text-align:center;}
 .site .phil .ey{display:block;margin-bottom:30px;}
-.site .phil-text{font-family:var(--display);font-weight:700;font-size:var(--fs-title);line-height:1.26;letter-spacing:-.02em;color:var(--g300);max-width:22ch;margin:0 auto;}
+/* Váhy sú tie isté ako v hlavičke sekcie (.sec-h h2): veta 500, zvýraznené slová 700.
+   Celá veta v 700 bola o stupeň tučnejšia než ktorýkoľvek nadpis na webe. */
+.site .phil-text{font-family:var(--display);font-weight:500;font-size:var(--fs-title);line-height:1.26;letter-spacing:-.02em;color:var(--g300);max-width:22ch;margin:0 auto;}
 .site .phil-text .w{display:inline-block;transition:color .2s linear;}
+.site .phil-text .w.acc{font-weight:700;}
 .site .phil-text .w.lit{color:var(--ink);} .site .phil-text .w.lit.acc{color:var(--blue);}
 
 /* ============ SECTIONS ============ */
 /* Rytmus sekcií: každá .sec nesie padding hore aj dole, takže medzi dvoma sekciami
    je vždy rovnaká medzera (2× --sec-pad). Nepridávať paddingTop:0 na jednotlivé
-   sekcie – presne tým vznikali užšie medzery v spodnej polovici stránky.
+   sekcie - presne tým vznikali užšie medzery v spodnej polovici stránky.
    Ani zdvojený padding na prvej sekcii pod hero: hero má svoj vlastný spodný
    padding v rovnakej hodnote, takže rozhranie modrá→biela drží ten istý rytmus
    ako rozhranie dvoch bielych sekcií (a je pritom symetrické okolo farebnej hrany). */
 .site .sec{padding-block:var(--sec-pad);}
-/* Hlavička sekcie — jediný tvar (komponent SecHead v components/PageParts.jsx).
+/* Hlavička sekcie - jediný tvar (komponent SecHead v components/PageParts.jsx).
    Medzery nesú marginy, nie gap: pár eyebrow→titulok potrebuje inú hodnotu než
    zvyšok a s gapom sa taká výnimka zapísať nedá.
    h1 aj h2, lebo ten istý blok je aj titulkom podstránky v .page-head. */
 .site .sec-h{display:flex;flex-direction:column;margin-bottom:30px;}
 .site .sec-h > * + *{margin-top:14px;}
-.site .sec-h h1,
-.site .sec-h h2{font-size:var(--fs-title);font-weight:500;}
+/* h1 je názov stránky, h2 názov sekcie - dva rôzne stupne. Kým zdieľali jeden
+   token, bol titulok podstránky rovnako veľký ako každý medzinadpis pod ním
+   a stránka nemala hierarchiu. */
+.site .sec-h h1{font-size:var(--fs-title);font-weight:500;line-height:1.04;}
+.site .sec-h h2{font-size:var(--fs-headline);font-weight:500;}
 .site .sec-h h1 b,
 .site .sec-h h2 b{color:var(--blue);font-weight:700;}
 .site .sec-h p{color:var(--g500);font-size:var(--fs-lead);max-width:56ch;}
 
 /* EYEBROW → TITULOK: jedno pravidlo pre celý web (sekcia, hlavička podstránky
-   aj hero — tam mala dvojica dokonca nulovú medzeru).
+   aj hero - tam mala dvojica dokonca nulovú medzeru).
    Nie je to tá istá hodnota ako medzi titulkom a vetou zámerne: české háčky
-   a čiarky prečnievajú nad riadkovú schránku nadpisu (line-height 1.04–1.08),
+   a čiarky prečnievajú nad riadkovú schránku nadpisu (line-height 1.04-1.08),
    takže rovnaké číslo tu opticky vyjde o polovicu menšie a eyebrow sa lepí
    na diakritiku. Meriame optickú medzeru, nie číslo v CSS. */
 .site .ey + h1,
@@ -323,8 +347,8 @@
 #rozcestnik{scroll-margin-top:80px;}
 
 /* ============================================================
-   ROZCESTNÍK POTŘEB — prvá vlna: 6 zámerov + škoda zvlášť.
-   Menej položiek, väčší text — rozhodnutie má padnúť na jeden pohľad.
+   ROZCESTNÍK POTŘEB - prvá vlna: 6 zámerov + škoda zvlášť.
+   Menej položiek, väčší text - rozhodnutie má padnúť na jeden pohľad.
    ============================================================ */
 
 /* veľké dlaždice, 3/2/1 stĺpce bez breakpointov */
@@ -336,7 +360,7 @@
   transition:border-color .2s,box-shadow .35s var(--ease),transform .35s var(--ease);}
 .site .rz-tile:hover{border-color:var(--blue);box-shadow:0 20px 36px -20px rgba(13,31,91,.38);transform:translateY(-3px);}
 .site .rz-tile:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
-/* veľký vodoznak z tej istej ikony vpravo – translate:33% vysunie tretinu šírky von,
+/* veľký vodoznak z tej istej ikony vpravo - translate:33% vysunie tretinu šírky von,
    presah oreže overflow:hidden vyššie. Obsah dlaždice ide nad ním (position:relative nižšie). */
 .site .rz-bg{position:absolute;z-index:0;top:50%;right:0;translate:33% -50%;display:flex;
   color:var(--blue);opacity:.07;pointer-events:none;transition:opacity .25s var(--ease),color .2s;}
@@ -350,22 +374,22 @@
   font-size:clamp(18px,1.8vw,21px);line-height:1.18;letter-spacing:-.015em;color:var(--ink);text-wrap:balance;}
 .site .rz-tile small{position:relative;display:block;margin-top:7px;font-size:var(--fs-sm);line-height:1.45;color:var(--g600);}
 
-/* jednostĺpcová mriežka nemá čo zarovnávať – dlaždica sa zmrští na obsah, nech scroll nie je zbytočne dlhý */
+/* jednostĺpcová mriežka nemá čo zarovnávať - dlaždica sa zmrští na obsah, nech scroll nie je zbytočne dlhý */
 @media(max-width:639px){
   .site .rz-grid .rz-tile{min-height:0;}
   .site .rz-grid .rz-tile b{margin-top:16px;}
 }
 
 /* --- 2. úroveň: karty produktov ---
-   Dve varianty (DebugPanel → „Rozcestník"): „krok" – mriežka ustúpi samostatnému druhému
-   kroku (šípka späť, názov, karty), „karta" – kliknutá dlaždica sa roztiahne na celú šírku
-   a produkty nesie vo svojom vnútri. Obsahom je v oboch len ponuka – žiadne vysvetľujúce
+   Dve varianty (DebugPanel → „Rozcestník"): „krok" - mriežka ustúpi samostatnému druhému
+   kroku (šípka späť, názov, karty), „karta" - kliknutá dlaždica sa roztiahne na celú šírku
+   a produkty nesie vo svojom vnútri. Obsahom je v oboch len ponuka - žiadne vysvetľujúce
    vety ani počty, o tie sa postarala už prvá úroveň. */
 .site .rz-tile-btn{width:100%;text-align:left;font-family:var(--sans);cursor:pointer;}
 .site .rz-tile.on{border-color:var(--blue);}
 .site .rz-tile.on .ni{background:var(--blue);color:#fff;}
 .site .rz-tile.on .rz-bg{opacity:.12;}
-/* náznak, že dlaždica nie je koniec cesty – v plnej značkovej modrej, aby bolo na prvý
+/* náznak, že dlaždica nie je koniec cesty - v plnej značkovej modrej, aby bolo na prvý
    pohľad jasné, že sa dlaždica dá otvoriť (jediný farebný text na dlaždici) */
 .site .rz-more{position:relative;display:inline-flex;align-items:center;gap:6px;margin-top:14px;
   font-size:var(--fs-sm);font-weight:600;color:var(--blue-700);}
@@ -373,7 +397,7 @@
 
 /* --- druhý krok ---
    Krok nemá vlastnú hlavičku: prepíše sa nadpis aj veta celej sekcie. Na obrazovke tak
-   nikdy nie sú dva nadpisy nad sebou. Celá hlavička je jeden stĺpec – tlačidlo späť
+   nikdy nie sú dva nadpisy nad sebou. Celá hlavička je jeden stĺpec - tlačidlo späť
    nesedí zboku ako šípka, ale stojí na linke eyebrowu, ktorý v kroku 2 nahrádza:
    kam sa človek vráti, je dôležitejšie než zopakovaný názov sekcie. */
 /* vzhľad drží .btn (obrysové tlačidlo stránky), tu je len vstupná animácia a posun šípky.
@@ -391,7 +415,7 @@
 }
 
 /* --- karta produktu ---
-   Jedna karta pre obe varianty: ikona hore, text dole, presne ako dlaždica prvej úrovne –
+   Jedna karta pre obe varianty: ikona hore, text dole, presne ako dlaždica prvej úrovne -
    druhá úroveň tak pôsobí ako jej pokračovanie, nie ako iná sekcia. */
 .site .rz-plist{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:clamp(12px,1.5vw,16px);}
 .site .rz-p{position:relative;display:flex;flex-direction:column;align-items:flex-start;
@@ -400,7 +424,7 @@
   transition:border-color .2s,box-shadow .3s var(--ease),transform .3s var(--ease);}
 .site .rz-p:hover{border-color:var(--blue);box-shadow:0 14px 26px -18px rgba(13,31,91,.45);transform:translateY(-2px);}
 .site .rz-p:focus-visible{outline:2px solid var(--blue);outline-offset:3px;}
-/* margin-bottom:auto pritlačí text k spodku karty – ikony držia jednu linku naprieč mriežkou */
+/* margin-bottom:auto pritlačí text k spodku karty - ikony držia jednu linku naprieč mriežkou */
 .site .rz-p .pi{flex:none;width:50px;height:50px;display:flex;align-items:center;justify-content:center;
   border-radius:var(--r-card);background:var(--blue-50);color:var(--blue);margin-bottom:auto;
   transition:background .2s,color .2s;}
@@ -409,7 +433,7 @@
 .site .rz-p b{display:block;font-family:var(--display);font-size:var(--fs-card);font-weight:700;
   letter-spacing:-.015em;line-height:1.2;color:var(--ink);}
 .site .rz-p small{display:block;margin-top:5px;font-size:var(--fs-sm);line-height:1.4;color:var(--g500);}
-/* jednostĺpcová mriežka nemá čo zarovnávať – rovnaká výnimka ako pri dlaždiciach prvej úrovne,
+/* jednostĺpcová mriežka nemá čo zarovnávať - rovnaká výnimka ako pri dlaždiciach prvej úrovne,
    inak by medzi ikonou a textom ostala prázdna diera cez pol karty */
 @media(max-width:639px){
   .site .rz-p{min-height:0;}
@@ -445,28 +469,41 @@
   .site .rz-fade{animation:none;}
 }
 
-/* banner „revize smluv" – nadpis + text + tlačidlo pod sebou vľavo, značková linka vpravo */
+/* banner „revize smluv" - nadpis + text + tlačidlo pod sebou vľavo, značková linka vpravo */
 .site .banner{position:relative;overflow:hidden;background:var(--grad-blue);border-radius:20px;padding:28px;color:#fff;box-shadow:0 24px 50px -28px rgba(13,31,91,.6);}
 .site .banner::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(50% 70% at 95% 0,rgba(92,200,255,.2),transparent 60%);}
-/* linka je zámerne väčšia ako banner a presahuje von – orezáva ju overflow:hidden vyššie.
+/* linka je zámerne väčšia ako banner a presahuje von - orezáva ju overflow:hidden vyššie.
    Do 980px je len tiché pozadie za textom, na desktope sedí vpravo vedľa textu. */
 .site .banner-line{position:absolute;z-index:0;pointer-events:none;user-select:none;
   right:-16%;top:50%;translate:0 -50%;width:78%;height:auto;opacity:.22;}
 .site .banner-tx{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:10px;}
 .site .banner .ey{color:var(--blue-200);}
-.site .banner h2{color:#fff;font-weight:500;font-size:var(--fs-h2);} .site .banner h2 b{color:var(--cyan);}
-.site .banner p{color:rgba(255,255,255,.82);max-width:62ch;}
+/* Pás je sekcia ako každá iná - jeho nadpis preto drží --fs-headline, nie
+   vlastný menší stupeň. Pri --fs-h2 (34px) pôsobil ako podnadpis. */
+.site .banner h2{color:#fff;font-weight:500;font-size:var(--fs-headline);} .site .banner h2 b{color:var(--cyan);}
+/* Lead pásu je lead ako každý iný - bez font-size dedil 16px z body, takže
+   modré pásy mali text o stupeň menší než biele sekcie nad nimi. */
+.site .banner p{color:rgba(255,255,255,.82);font-size:var(--fs-lead);max-width:62ch;}
 .site .banner .btn{position:relative;flex:none;margin-top:6px;background:#fff;border-color:#fff;color:var(--blue);}
 
-/* ============ FEATURE — text + ilustrácia bez rámu (Kentico štýl) ============ */
+/* ============ FEATURE - text + ilustrácia bez rámu (Kentico štýl) ============ */
 .site .feature{display:grid;grid-template-columns:1fr;gap:24px;align-items:center;}
 .site .feature-tx{display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
-.site .feature-tx h2{font-size:var(--fs-title);font-weight:500;} .site .feature-tx h2 b{color:var(--blue);}
-.site .feature-tx p{color:var(--g600);font-size:var(--fs-body);max-width:46ch;line-height:1.6;}
+.site .feature-tx h2{font-size:var(--fs-headline);font-weight:500;} .site .feature-tx h2 b{color:var(--blue);}
+/* Prvý odstavec je lead sekcie - rovnaká veľkosť a farba ako .sec-h p všade
+   inde na webe. Bol na 16px, takže feature blok mal nadpis sekcie (40px), ale
+   text o stupeň menší než ostatné sekcie. Ďalšie odstavce sú už bežná sadzba. */
+.site .feature-tx p{color:var(--g500);font-size:var(--fs-lead);max-width:52ch;line-height:1.6;}
+.site .feature-tx p ~ p{color:var(--g600);font-size:var(--fs-body);max-width:56ch;}
 .site .feature-tx .btn{margin-top:14px;}
 .site .illus{position:relative;min-height:300px;border-radius:18px;overflow:hidden;background:radial-gradient(60% 60% at 50% 45%,var(--blue-50),transparent 72%);
   display:flex;align-items:center;justify-content:center;}
 .site .illus-img{width:100%;height:100%;max-height:340px;object-fit:contain;padding:30px;}
+/* Náhrada, kým klient neexportuje PNG z tabler.io: ikona z tej istej rodiny
+   v plnej ploche. Radšej tichý znak než rozbitý obrázok - a keď súbor pribudne,
+   nemení sa nič iné než cesta. */
+.site .illus--fb{color:var(--blue-200);}
+.site .illus--fb svg{opacity:.9;}
 .site .ill{position:absolute;inset:0;}
 .site .ill .chip{position:absolute;display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--l);border-radius:14px;padding:11px 14px;box-shadow:0 18px 34px -20px rgba(13,31,91,.38);font-size:var(--fs-sm);font-weight:600;color:var(--ink);white-space:nowrap;}
 .site .ill .chip .i{width:32px;height:32px;border-radius:9px;background:var(--blue-50);display:flex;align-items:center;justify-content:center;color:var(--blue);flex:none;}
@@ -475,10 +512,10 @@
 .site .ill .chip.lg .i svg{width:24px;height:24px;}
 .site .ill.dark .chip{background:rgba(255,255,255,.97);}
 
-/* „Proč Allrisk" – varianta zo striedavých feature blokov */
+/* „Proč Allrisk" - varianta zo striedavých feature blokov */
 .site .why-feats{display:flex;flex-direction:column;gap:clamp(44px,7vw,84px);}
 
-/* príbehy klientov — 4 modelové typy klientov na výber (dlaždica = voľba, nie odkaz) */
+/* príbehy klientov - 4 modelové typy klientov na výber (dlaždica = voľba, nie odkaz) */
 .site .stories{display:grid;grid-template-columns:1fr;gap:18px;}
 .site .story{display:flex;flex-direction:column;align-items:flex-start;gap:8px;border:1px solid var(--l);border-radius:16px;background:var(--box);padding:22px;transition:.2s;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:0 1px 3px rgba(13,31,91,.04);}
 .site .story:hover{border-color:var(--blue-200);box-shadow:0 14px 28px -16px rgba(13,31,91,.32);transform:translateY(-3px);}
@@ -495,7 +532,7 @@
 .site .story b{font-family:var(--display);font-weight:700;font-size:var(--fs-card);color:var(--ink);line-height:1.2;}
 .site .story p{font-size:var(--fs-sm);color:var(--g600);line-height:1.55;}
 .site .story-pick{margin-top:auto;padding-top:14px;font-size:var(--fs-sm);font-weight:700;color:var(--blue);letter-spacing:.02em;}
-/* --green (#10B981) dáva na bielej len 2,56:1 – „Vybráno" je text, preto ide na ink. */
+/* --green (#10B981) dáva na bielej len 2,56:1 - „Vybráno" je text, preto ide na ink. */
 .site .story.on .story-pick{color:var(--ink);}
 
 /* vybraný modelový príklad */
@@ -509,17 +546,18 @@
 .site .story-pts li{display:flex;gap:11px;align-items:flex-start;font-size:var(--fs-body);color:var(--g700);line-height:1.5;}
 .site .story-pts svg{flex:none;color:var(--blue);margin-top:1px;}
 
-/* ============ REFERENCE ============
-   Na úvode vodorovný posuvný rad (swipe + šípky), na /reference plná mriežka.
-   Kartička .ref je pre obe rovnaká. */
+/* ============ POSUVNÝ RAD (.carou-track) + REFERENCE ============
+   Rad je spoločný pre referencie na úvode aj články pod produktom (Carousel.jsx),
+   preto sa šírka karty nastavuje potomkovi (>*), nie konkrétnej triede.
+   Na /reference je z tých istých kartičiek plná mriežka. */
 /* Rad vyteká na obe hrany displeja (záporná margin ruší padding .wrap) a odsadenie od
-   hrany si drží vlastným paddingom. scroll-padding musí sedieť s ním – bez neho mandatory
+   hrany si drží vlastným paddingom. scroll-padding musí sedieť s ním - bez neho mandatory
    snap dosadne kartu na hranu výrezu a ľavý padding v pokojovej polohe zmizne. */
-.site .refs-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+.site .carou-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
   scrollbar-width:none;margin-inline:calc(-1 * clamp(16px,4vw,28px));padding:2px clamp(16px,4vw,28px) 6px;
   scroll-padding-inline:clamp(16px,4vw,28px);}
-.site .refs-track::-webkit-scrollbar{display:none;}
-.site .refs-track>.ref{flex:0 0 84%;scroll-snap-align:start;}
+.site .carou-track::-webkit-scrollbar{display:none;}
+.site .carou-track>*{flex:0 0 84%;scroll-snap-align:start;}
 .site .refs-grid{display:grid;grid-template-columns:1fr;gap:14px;}
 .site .ref{margin:0;border:1px solid var(--l);border-radius:var(--r);background:var(--box);padding:22px;display:flex;flex-direction:column;gap:12px;
   box-shadow:0 1px 3px rgba(13,31,91,.04);transition:border-color .2s,box-shadow .25s,transform .25s;}
@@ -532,14 +570,14 @@
 .site .ref p{font-size:var(--fs-body);color:var(--g700);line-height:1.62;}
 
 /* šípky carouselu + odkaz na všetky reference v hlavičke sekcie
-   (na mobile hlavička ostáva jednostĺpcová a odkaz so šípkami stojí pod radom – .refs-foot-m) */
+   (na mobile hlavička ostáva jednostĺpcová a odkaz so šípkami stojí pod radom - .carou-foot-m) */
 .site .sec-h-act{display:none;align-items:center;gap:18px;}
 .site .carou-nav{display:flex;gap:8px;}
-/* šípky sú .btn – tu ich len zoštvorcujeme (výšku aj rádius drží .btn) */
+/* šípky sú .btn - tu ich len zoštvorcujeme (výšku aj rádius drží .btn) */
 .site .carou-nav .btn{width:48px;padding:0;justify-content:center;}
 .site .carou-nav .btn:disabled{border-color:var(--l);background:var(--box);color:var(--g300);cursor:default;}
-/* mobilná päta radu: odkaz vľavo, šípky vpravo – jeden riadok v šírke sekcie */
-.site .refs-foot-m{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;}
+/* mobilná päta radu: odkaz vľavo, šípky vpravo - jeden riadok v šírke sekcie */
+.site .carou-foot-m{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;}
 
 /* ============ HLAVIČKA PODSTRÁNKY (/reference) ============ */
 /* modrá hlavička nesie ten istý blokový padding ako hero aj ako sekcia pod ňou */
@@ -548,17 +586,17 @@
 .site .page-head>.wrap{position:relative;z-index:1;}
 /* Titulok, eyebrow aj úvodná veta sú tu ten istý .sec-h ako v sekciách (SecHead),
    takže rytmus sa dedí a nedá sa rozísť. Tu ostáva len farebná schéma na modrom
-   a zrušený spodný odstup – ten drží pás sám cez padding-block. */
+   a zrušený spodný odstup - ten drží pás sám cez padding-block. */
 .site .page-head .sec-h{margin-bottom:0;}
 .site .page-head h1{color:#fff;} .site .page-head h1 b{color:var(--cyan);}
-/* .phero (PageHero) má vlastný blok v contact.css – tiež stavia na --fs-title */
+/* .phero (PageHero) má vlastný blok v contact.css - tiež stavia na --fs-title */
 .site .page-head .sec-h p{color:rgba(255,255,255,.82);}
 .site .page-head .ey{color:var(--blue-200);}
-/* medzera pod breadcrumbom je na celom webe rovnaká – 28px (viď .veh-hero / .prof-hero) */
+/* medzera pod breadcrumbom je na celom webe rovnaká - 28px (viď .veh-hero / .prof-hero) */
 .site .page-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);margin-bottom:28px;}
 .site .page-crumb a{color:rgba(255,255,255,.7);transition:.2s;} .site .page-crumb a:hover{color:#fff;}
 .site .page-crumb b{color:#fff;font-weight:600;} .site .page-crumb svg{opacity:.55;}
-/* čísla nie sú pokračovanie vety, ale samostatný riadok údajov – väčší odstup než
+/* čísla nie sú pokračovanie vety, ale samostatný riadok údajov - väčší odstup než
    má rytmus vnútri .sec-h (prebíja .sec-h > * + *) */
 .site .page-head .page-head-nums{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:24px;font-size:var(--fs-sm);color:rgba(255,255,255,.75);}
 .site .page-head-nums span{display:inline-flex;align-items:center;gap:6px;}
@@ -573,7 +611,7 @@
 .site .ref-chip.on{background:var(--blue);border-color:var(--blue);color:#fff;}
 .site .ref .who{display:flex;align-items:center;gap:11px;margin-top:6px;}
 .site .ref .av{width:38px;height:38px;border-radius:50%;background:var(--blue-100);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;color:var(--blue);font-size:var(--fs-sm);}
-/* meno + dátum recenzie je dvojriadkový popisok, nie odstavec – riadky idú tesne
+/* meno + dátum recenzie je dvojriadkový popisok, nie odstavec - riadky idú tesne
    pod seba (dedený line-height 1.6 medzi ne robil medzeru na celý riadok) */
 .site .ref .who>:not(.av){display:flex;flex-direction:column;}
 .site .ref .who b{font-size:var(--fs-sm);color:var(--ink);line-height:1.25;}
@@ -583,7 +621,7 @@
 .site .contact{display:grid;grid-template-columns:1fr;gap:18px;}
 .site .form{border:1px solid var(--l);border-radius:16px;background:var(--box);padding:22px;display:flex;flex-direction:column;gap:13px;box-shadow:0 1px 3px rgba(13,31,91,.04);}
 .site .field{width:100%;height:48px;border:1px solid var(--g300);border-radius:11px;background:#fff;padding:0 14px;font:inherit;font-size:var(--fs-body);color:var(--ink);}
-/* g400 (#9CA3AF) dáva na bielej len 2,5:1 — placeholder je text a musí spĺňať 4,5:1. g500 = 4,83:1. */
+/* g400 (#9CA3AF) dáva na bielej len 2,5:1 - placeholder je text a musí spĺňať 4,5:1. g500 = 4,83:1. */
 .site .field::placeholder{color:var(--g500);}
 .site .field:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
 .site textarea.field{height:auto;padding:12px 14px;resize:vertical;}
@@ -595,15 +633,15 @@
 .site .branch-link:hover{background:var(--blue);color:#fff;} .site .branch-link:hover .ic{background:rgba(255,255,255,.2);} .site .branch-link:hover .ic svg{stroke:#fff;}
 .site .branch-link .ar{margin-left:auto;}
 
-/* kontakt — modrý banner (štýl Allrisk reality), text + formulár vnútri */
+/* kontakt - modrý banner (štýl Allrisk reality), text + formulár vnútri */
 .site .contact-band{position:relative;overflow:hidden;background:var(--grad-blue);border-radius:20px;padding:clamp(24px,4vw,44px);color:#fff;display:grid;grid-template-columns:1fr;gap:26px;box-shadow:0 24px 50px -28px rgba(13,31,91,.6);}
 .site .contact-band::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(50% 70% at 96% 0,rgba(92,200,255,.2),transparent 60%);}
 .site .contact-tx{position:relative;z-index:2;display:flex;flex-direction:column;gap:14px;}
 .site .contact-tx .ey{color:var(--blue-200);}
-.site .contact-tx h2{color:#fff;font-weight:500;font-size:var(--fs-title);}
+.site .contact-tx h2{color:#fff;font-weight:500;font-size:var(--fs-headline);}
 .site .contact-tx h2 b{color:var(--cyan);}
-.site .contact-tx p{color:rgba(255,255,255,.82);max-width:42ch;}
-/* potvrdenie témy z rozcestníka — na modrom poli biela na priesvitnej, nikdy sivá na farbe */
+.site .contact-tx p{color:rgba(255,255,255,.82);font-size:var(--fs-lead);max-width:46ch;}
+/* potvrdenie témy z rozcestníka - na modrom poli biela na priesvitnej, nikdy sivá na farbe */
 .site .contact-band .topic-tag{display:inline-flex;align-items:center;margin-top:14px;
   background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);color:#fff;
   border-radius:var(--r-pill);padding:6px 14px;font-size:var(--fs-sm);font-weight:600;}
@@ -619,10 +657,10 @@
 .site .contact-band .branch-link:hover .ic svg{stroke:var(--blue);}
 .site .contact-band .form{position:relative;z-index:2;margin:0;}
 
-/* ============ FOOTER — bohatá navigácia ============ */
+/* ============ FOOTER - bohatá navigácia ============ */
 .site .foot{background:#091633;color:rgba(255,255,255,.6);}
 .site .foot-top{display:grid;grid-template-columns:1fr;gap:30px;padding-block:clamp(40px,6vw,64px);}
-/* textová podoba loga – značkový prvok s vlastnou mierkou, nie stupeň typografickej rampy */
+/* textová podoba loga - značkový prvok s vlastnou mierkou, nie stupeň typografickej rampy */
 .site .foot-brand .fl{color:#fff;font-size:22px;font-family:var(--display);font-weight:800;letter-spacing:.03em;}
 .site .foot-brand p{margin-top:14px;font-size:var(--fs-sm);max-width:32ch;line-height:1.6;color:rgba(255,255,255,.6);}
 .site .foot-brand .soc{display:flex;gap:10px;margin-top:18px;}
@@ -636,7 +674,7 @@
 @media(min-width:760px){.site .foot-top{grid-template-columns:1.7fr 1fr 1fr 1fr;}}
 @media(min-width:620px){.site .stories{grid-template-columns:repeat(2,1fr);}}
 @media(min-width:620px){
-  .site .refs-track>.ref{flex:0 0 calc(50% - 7px);}
+  .site .carou-track>*{flex:0 0 calc(50% - 7px);}
   .site .refs-grid{grid-template-columns:repeat(2,1fr);}
 }
 
@@ -651,27 +689,27 @@
   .site .stories{grid-template-columns:repeat(4,1fr);}
   .site .story-detail{grid-template-columns:1.05fr .95fr;gap:44px;padding:32px 34px;}
   .site .banner{padding:38px 46px;}
-  /* na desktope je linka plnohodnotná figúra vpravo – text jej uvoľní pravú polovicu */
+  /* na desktope je linka plnohodnotná figúra vpravo - text jej uvoľní pravú polovicu */
   .site .banner-line{right:-7%;width:min(52%,560px);opacity:1;}
   .site .banner-tx{max-width:56%;}
   .site .feature{grid-template-columns:1fr 1fr;gap:54px;}
   .site .feature.alt .feature-tx{order:2;}
   .site .illus{min-height:320px;}
-  /* na desktope presne 3 karty a nič nepresahuje – rad sa už neroztiahne k okrajom
+  /* na desktope presne 3 karty a nič nepresahuje - rad sa už neroztiahne k okrajom
      viewportu (to je mobilný swipe trik), takže štvrtá kartička nevykúka */
-  .site .refs-track{margin-inline:0;padding:2px 0 6px;scroll-padding-inline:0;}
-  .site .refs-track>.ref{flex:0 0 calc(33.333% - 9.34px);}
+  .site .carou-track{margin-inline:0;padding:2px 0 6px;scroll-padding-inline:0;}
+  .site .carou-track>*{flex:0 0 calc(33.333% - 9.34px);}
   .site .refs-grid{grid-template-columns:repeat(3,1fr);}
   /* šípky a odkaz idú do hlavičky sekcie až tam, kde sa nescrolluje prstom */
   .site .sec-h-row{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:24px;}
   .site .sec-h-act{display:flex;}
-  .site .refs-foot-m{display:none;}
+  .site .carou-foot-m{display:none;}
   .site .contact{grid-template-columns:1.3fr 1fr;gap:26px;}
   .site .contact-band{grid-template-columns:1fr 1.05fr;align-items:start;gap:44px;}
 }
 @media(prefers-reduced-motion:reduce){.site .phil-text .w{color:var(--ink) !important;}}
 
-/* SAFETY NET — text na modrých/tmavých plochách je vždy svetlý */
+/* SAFETY NET - text na modrých/tmavých plochách je vždy svetlý */
 .site .hdr h1,
 .site .hdr h2,
 .site .hdr h3,
@@ -696,7 +734,7 @@
 .site .hero:not(.light) .ey,
 .site .numbers .ey,
 .site .banner .ey{color:#fff;}
-/* zvýraznená časť nadpisu na modrom je svetlomodrá (--cyan) – rovnako ako v kontaktnom
+/* zvýraznená časť nadpisu na modrom je svetlomodrá (--cyan) - rovnako ako v kontaktnom
    banneri a v .page-head. Značková modrá (--blue) by na modrom pozadí zanikla. */
 .site .hero:not(.light) h1 b,
 .site .hero:not(.light) h2 b,

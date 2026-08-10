@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IconAdjustments, IconChevronDown } from '@tabler/icons-react'
 
-// Ladiace „option" menu prototypu — floating panel vpravo dole.
+// Ladiace „option" menu prototypu - floating panel vpravo dole.
 // Zbaliteľné (stav v localStorage), reusable naprieč stránkami.
 // Do <DebugPanel> vkladáš ľubovoľný počet <DebugGroup> (segmentovaný prepínač).
 
@@ -23,13 +23,26 @@ export function DebugPanel({ title = '', children }) {
   )
 }
 
-// Voľba, ktorá musí prežiť preklik na inú stránku – ten istý prvok (napr. rad záložiek)
+// Voľba, ktorá musí prežiť preklik na inú stránku - ten istý prvok (napr. rad záložiek)
 // žije na viacerých stránkach a porovnávať sa dá len vtedy, keď sa výber neresetuje.
 export function useDebugOption(key, fallback) {
   const [value, setValue] = useState(() => localStorage.getItem(`dbg:${key}`) || fallback)
+
+  // localStorage prežije preklik, ale nepovie o zmene komponentu, ktorý sa
+  // práve nerenderuje. Panel Podnikatelé žije v hlavičke a jeho prepínač na
+  // stránke - bez tejto udalosti by sa prepínač prepol a menu zostalo staré,
+  // kým používateľ neobnoví stránku. (`storage` event nestačí: prehliadač ho
+  // pošle len do iných kariet, nie do tej, ktorá zapisovala.)
+  useEffect(() => {
+    const onDbg = (e) => { if (e.detail?.key === key) setValue(e.detail.value) }
+    window.addEventListener('dbg:change', onDbg)
+    return () => window.removeEventListener('dbg:change', onDbg)
+  }, [key])
+
   const set = (next) => {
     setValue(next)
     localStorage.setItem(`dbg:${key}`, next)
+    window.dispatchEvent(new CustomEvent('dbg:change', { detail: { key, value: next } }))
   }
   return [value, set]
 }

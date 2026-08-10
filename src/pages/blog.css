@@ -1,0 +1,215 @@
+/* ============================================================
+   BLOG - výpis (/blog), detail článku (/blog/:slug)
+   a blok článkov na produktovej stránke.
+
+   Kostra je zdedená: hlavička podstránky (.page-head) je tu foto-hero
+   (.photo-hero z wireframe.css), filter je ten istý .ref-chip ako na
+   /reference a kontaktný pás je spoločný. Tu žije len to, čo je pre
+   články naozaj nové. Veľkosti písma sú výhradne tokeny z index.css.
+   ============================================================ */
+
+/* ---- hlavička s fotkou ----
+   .page-head má vlastnú modrú výplň; keď pod ňou beží fotka, výplň musí ustúpiť
+   a farbu drží až tint z .photo-hero (zľava doprava, viď --hero-tint v index.css).
+   Aj svetelná žiara v rohu ide preč - nad fotkou je z nej len fľak. */
+.site .page-head.photo-hero{background:var(--hero-base);}
+.site .page-head.photo-hero::after{display:none;}
+.site .page-head.photo-hero>.wrap{position:relative;z-index:2;}
+/* hlavička presahuje pod sticky header, aby fotka začínala až úplne hore */
+.site .blog-head,
+.site .blog-art-head{margin-top:calc(-1 * var(--hdr-h));padding-top:calc(var(--sec-pad) + var(--hdr-h));}
+
+/* tlačidlo späť namiesto drobečkovej navigácie - v detaile článku je cieľ jediný */
+.site .blog-back{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;
+  font-size:var(--fs-sm);font-weight:600;color:rgba(255,255,255,.82);transition:color .2s;}
+.site .blog-back:hover{color:#fff;}
+.site .blog-back svg{transition:transform .18s var(--ease);}
+.site .blog-back:hover svg{transform:translateX(-4px);}
+/* titulok článku je dlhý - perex pod ním znesie širšie meranie než veta sekcie */
+.site .page-head .blog-art-h p{max-width:62ch;}
+
+/* ---- obálka článku ------------------------------------------------------
+   Podklad + ikona rubriky sú SPODNÁ vrstva, fotka sa kladie nad ňu. Keď sa
+   nenačíta, karta nespadne do prázdneho rámu - zostane modrý podklad s ikonou. */
+.site .blog-cover{position:relative;display:block;width:100%;aspect-ratio:16/10;overflow:hidden;
+  background:linear-gradient(160deg,var(--blue-100),var(--blue-50));flex:none;}
+.site .blog-cover-ic{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--blue);opacity:.42;}
+.site .blog-cover-ph{position:absolute;inset:0;background-size:cover;background-position:center;
+  transition:transform .5s var(--ease);}
+.site .blog-card:hover .blog-cover-ph{transform:scale(1.04);}
+
+/* ---- metadáta (rubrika · dátum · doba čítania) ---- */
+.site .blog-meta{display:flex;align-items:center;flex-wrap:wrap;gap:8px;
+  font-size:var(--fs-label);color:var(--g500);line-height:1.3;}
+.site .blog-rub{font-weight:600;color:var(--blue);background:var(--blue-50);
+  border-radius:var(--r-pill);padding:4px 10px;}
+.site .blog-dot{width:3px;height:3px;border-radius:50%;background:var(--g300);flex:none;}
+/* ten istý riadok na modrom podklade hlavičky článku */
+.site .blog-meta.on-dark{color:rgba(255,255,255,.75);margin-top:22px;}
+.site .blog-meta.on-dark .blog-rub{color:#fff;background:rgba(255,255,255,.16);}
+.site .blog-meta.on-dark .blog-dot{background:rgba(255,255,255,.45);}
+
+/* ---- karta článku ----
+   Celá karta je odkaz, takže v rohu nie je žiadne tlačidlo „Přečíst" - robilo
+   len šum a duplikovalo to, čo už robí kliknutie na kartu. */
+.site .blog-card{display:flex;flex-direction:column;border:1px solid var(--l);border-radius:var(--r-card);
+  background:var(--box);overflow:hidden;box-shadow:0 1px 3px rgba(13,31,91,.04);
+  transition:border-color .2s,box-shadow .25s,transform .25s;}
+.site .blog-card:hover{border-color:var(--blue-200);transform:translateY(-2px);
+  box-shadow:0 16px 32px -24px rgba(13,31,91,.5);}
+.site .blog-card-tx{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:20px 20px 22px;flex:1;}
+/* titulok článku je bežná sadzba (Inter), nie displejové písmo - je to veta na
+   čítanie, nie nadpis; Magistral v ňom na troch riadkoch tvrdol */
+.site .blog-card b{font-family:var(--sans);font-weight:600;font-size:var(--fs-card);color:var(--ink);line-height:1.35;
+  letter-spacing:normal;transition:color .2s;}
+.site .blog-card:hover b{color:var(--blue);}
+
+/* hlavný článok - na širokom displeji obálka vedľa textu, nie nad ním */
+.site .blog-card-lg .blog-card-tx{gap:12px;}
+.site .blog-card-lg b{font-size:var(--fs-h3);}
+
+/* ---- výpis ---- */
+.site .blog-grid{display:grid;grid-template-columns:1fr;gap:16px;}
+
+/* ---- telo článku + bočný stĺpec ---- */
+.site .blog-art{display:grid;grid-template-columns:1fr;gap:clamp(28px,4vw,48px);}
+/* Dlhý text má vlastnú mierku čítania - jediné miesto na webe, kde bežná sadzba
+   ide o stupeň hore (--fs-lead). Meranie na riadok drží max-width v ch. */
+.site .blog-body{max-width:68ch;}
+.site .blog-body p{font-size:var(--fs-lead);color:var(--g700);line-height:1.7;}
+/* Rytmus tela článku. Prvý riadok ruší preddefinované okraje prehliadača (zoznamy),
+   druhý nastavuje odstup - obe majú ROVNAKÚ špecificitu a to druhé stojí neskôr,
+   takže vyhrá. Pozor: `.blog-body ul{margin:0}` by špecificitu zdvihlo o element
+   a nadpis by sa opäť zlepil so zoznamom pod sebou (presne to sa tu stalo). */
+.site .blog-body>*{margin:0;}
+.site .blog-body>*+*{margin-top:20px;}
+.site .blog-body h2{font-size:var(--fs-h3);color:var(--ink);scroll-margin-top:calc(var(--hdr-h) + 20px);}
+.site .blog-body>h2{margin-top:clamp(30px,4vw,44px);}
+.site .blog-ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;}
+.site .blog-ul li{display:flex;gap:11px;align-items:flex-start;font-size:var(--fs-body);color:var(--g700);line-height:1.55;}
+.site .blog-ul svg{flex:none;color:var(--blue);margin-top:3px;}
+.site .blog-ol{list-style:none;padding:0;counter-reset:blogol;
+  display:flex;flex-direction:column;gap:14px;}
+.site .blog-ol li{counter-increment:blogol;display:flex;gap:14px;align-items:flex-start;
+  font-size:var(--fs-body);color:var(--g700);line-height:1.55;}
+.site .blog-ol li::before{content:counter(blogol,decimal-leading-zero);flex:none;
+  font-variant-numeric:tabular-nums;font-size:var(--fs-sm);font-weight:700;color:var(--blue);padding-top:1px;}
+
+/* citát - podpisuje sa poradcom z dát, takže sa nemôže rozísť s autorom.
+   Odlišuje ho podklad a úvodzovka, nie farebný pruh po boku. */
+.site .blog-quote{margin:clamp(28px,4vw,40px) 0;padding:clamp(22px,3vw,28px);
+  background:var(--blue-50);border-radius:var(--r-card);}
+.site .blog-quote svg{color:var(--blue);opacity:.6;margin-bottom:10px;}
+.site .blog-quote p{font-family:var(--display);font-weight:500;font-size:var(--fs-h3);line-height:1.35;
+  letter-spacing:-.015em;color:var(--ink);}
+.site .blog-quote cite{display:block;margin-top:14px;font-style:normal;font-size:var(--fs-sm);color:var(--g600);}
+
+/* vsuvka „dobré vědět" - rovnaká rola ako .veh-aside na produktovej stránke */
+.site .blog-note{margin:clamp(26px,4vw,36px) 0;padding:clamp(20px,3vw,24px);border:1px solid var(--l);
+  border-radius:var(--r-card);background:var(--g50);}
+.site .blog-note-h{display:flex;align-items:center;gap:8px;font-size:var(--fs-label);font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
+.site .blog-note p{font-size:var(--fs-body);color:var(--g700);line-height:1.62;}
+
+/* ---- bočný stĺpec detailu ----
+   Tri samostatné bloky pod sebou, všetky s rovnakým bielym rámom a rovnakým
+   popiskom. Modrá je až vnútri – na riadku s človekom a s produktom. */
+.site .blog-aside{display:flex;flex-direction:column;gap:16px;}
+.site .blog-aside-part{border:1px solid var(--l);border-radius:var(--r-card);background:var(--box);padding:20px;
+  box-shadow:0 1px 3px rgba(13,31,91,.04);}
+
+.site .blog-aside-t{display:block;font-size:var(--fs-label);font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mut);margin-bottom:14px;}
+
+/* ---- autor + produkt: dve zvyšné škatuľky bočného stĺpca ----
+   Tvar karty autora je z reality webu (BrokerCard): štvorcový portrét vľavo,
+   meno a rola vpravo, celá karta odkaz. Meno je BEŽNÁ SADZBA (Inter, 600), nie
+   displejové písmo - v reality webe je to `font-semibold`, nie nadpis.
+
+   Bočný stĺpec je sprievodný údaj k článku, nie druhý článok: všetky tri škatuľky
+   majú preto ten istý tichý rám a modrá v nich žije len ako podklad jedného riadku
+   (portrét, ikona produktu) a v odkazoch. Plné modré pozadie tu predtým ťahalo
+   oko od textu, ktorý má človek čítať. */
+/* Riadok sedí presne v paddingu škatuľky - žiadne `padding` + záporný `margin`:
+   podfarbenie pri prejdení myšou potom vytieklo do okraja boxu. Spätnú väzbu nesie
+   farba mena a posun šípky, nie plocha navyše. */
+/* Modrý je len samotný riadok s človekom / produktom, nie celá škatuľka: rám aj
+   popisok sekcie zostávajú rovnaké ako pri obsahu článku nad ním.
+   Stlmený text na --blue-50 musí stmavnúť – g500 tam dáva len 3,8:1, teda pod AA. */
+.site .blog-author,
+.site .blog-prodcard{display:flex;align-items:center;gap:14px;
+  background:var(--blue-50);border-radius:var(--r-btn);padding:14px;}
+.site .blog-author small,
+.site .blog-prodcard small{color:var(--g600);}
+.site .blog-author .av{width:64px;height:64px;flex:none;border-radius:var(--r-btn);background:#fff;
+  display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;
+  color:var(--blue);font-size:var(--fs-card);letter-spacing:-.02em;}
+.site .blog-author .tx,
+.site .blog-prodcard .tx{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;}
+.site .blog-author b,
+.site .blog-prodcard b{font-family:var(--sans);font-size:var(--fs-body);font-weight:600;color:var(--ink);
+  line-height:1.3;letter-spacing:normal;transition:color .2s;}
+.site .blog-author:hover b,
+.site .blog-prodcard:hover b{color:var(--blue);}
+.site .blog-author small,
+.site .blog-prodcard small{font-size:var(--fs-label);color:var(--g500);line-height:1.4;}
+/* ikona produktu je ten istý modrý štvorček ako všade inde na webe (.ic) */
+.site .blog-prodcard .ic{width:44px;height:44px;flex:none;border-radius:var(--r-btn);background:#fff;
+  display:flex;align-items:center;justify-content:center;color:var(--blue);}
+
+/* Obsah je skok po dlhom texte - dáva zmysel len vedľa neho. Na mobile by stál až
+   POD článkom, takže tam nie je vôbec; karta autora ako zakončenie textu zostáva. */
+.site .blog-toc{display:none;}
+.site .blog-toc ol{list-style:none;margin:0;padding:0;counter-reset:blogtoc;display:flex;flex-direction:column;}
+.site .blog-toc li{counter-increment:blogtoc;border-top:1px solid var(--l2);}
+.site .blog-toc li:first-child{border-top:0;}
+.site .blog-toc a{display:flex;gap:10px;padding:9px 0;font-size:var(--fs-sm);color:var(--g600);line-height:1.45;
+  transition:color .2s;}
+.site .blog-toc a::before{content:counter(blogtoc,decimal-leading-zero);flex:none;
+  font-variant-numeric:tabular-nums;font-weight:700;color:var(--g400);}
+.site .blog-toc a:hover{color:var(--blue);}
+.site .blog-toc a:hover::before{color:var(--blue);}
+
+/* ---- pás Allrisk Magazín ----
+   Je to ten istý .banner ako „Věděli jste, že…?" na úvode (wireframe.css), tu
+   len pribudla dvojica tlačidiel namiesto jedného. */
+.site .banner-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;}
+.site .banner-cta .btn{margin-top:0;}
+/* druhé tlačidlo je len obrys - rovnaká dvojica ako v hero (.hero .btn:not(.fill)) */
+.site .banner-cta .btn.line{background:transparent;border-color:rgba(255,255,255,.55);color:#fff;}
+.site .banner-cta .btn.line:hover{background:rgba(255,255,255,.12);}
+
+/* ---- blok blogu na produktovej stránke ----
+   Variant „řada karet" je posuvný rad (.carou-track z wireframe.css), takže tu
+   zostáva len druhý variant. */
+.site .blog-prod-hlavni{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;}
+.site .blog-links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
+  border:1px solid var(--l);border-radius:var(--r-card);background:var(--box);overflow:hidden;}
+.site .blog-links li + li{border-top:1px solid var(--l2);}
+.site .blog-links a{display:flex;align-items:center;gap:14px;padding:16px 18px;transition:background .2s;}
+.site .blog-links a:hover{background:var(--blue-50);}
+.site .blog-links .tx{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
+.site .blog-links b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.3;
+  letter-spacing:-.015em;}
+.site .blog-links small{font-size:var(--fs-label);color:var(--g500);}
+.site .blog-links svg{flex:none;color:var(--blue);transition:transform .18s var(--ease);}
+.site .blog-links a:hover svg{transform:translateX(4px);}
+
+/* ============ RESPONSIVE ============ */
+@media(min-width:620px){
+  .site .blog-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(min-width:760px){
+  /* hlavný článok: obálka vľavo, text vpravo - v mriežke drží celú šírku */
+  .site .blog-card-lg{flex-direction:row;align-items:stretch;}
+  .site .blog-card-lg .blog-cover{width:46%;aspect-ratio:auto;}
+  .site .blog-card-lg .blog-card-tx{padding:clamp(24px,3vw,34px);justify-content:center;}
+}
+@media(min-width:980px){
+  .site .blog-grid{grid-template-columns:repeat(3,1fr);}
+  /* telo článku + bočný stĺpec, ktorý ide so scrollom */
+  .site .blog-art{grid-template-columns:minmax(0,1fr) 320px;}
+  .site .blog-aside{position:sticky;top:calc(var(--hdr-h) + 20px);align-self:start;}
+  .site .blog-toc{display:block;}
+  .site .blog-prod-hlavni{grid-template-columns:1.4fr 1fr;}
+}

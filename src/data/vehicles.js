@@ -1,4 +1,4 @@
-// Obsah stránky pojištění vozidel (/vozidla) – kategórie, produkty, cenník modulov a modelové situácie.
+// Obsah stránky pojištění vozidel (/vozidla) - kategórie, produkty, cenník modulov a modelové situácie.
 // Ikony sú KĽÚČE (rovnako ako v menu.js a home.js), komponenty k nim mapuje stránka.
 
 // kategórie vozidiel, ktoré vieme poistiť
@@ -18,16 +18,16 @@ export const PRODUCTS = [
     tag: 'Ze zákona povinné',
     lead: 'Pojištění odpovědnosti z provozu vozidla, které musí ze zákona mít každý provozovatel vozidla. V případě nehody, kterou zaviníte, se postará o úhradu způsobených škod na zdraví a majetku třetích osob.',
     covers: ['Škody na zdraví třetích osob', 'Škody na cizím majetku', 'Asistenční služby v základu', 'Zelená karta pro cesty do zahraničí'],
-    note: 'Limit krytí volíte vy – od zákonných 50 mil. Kč přes 100 mil. až po 1 miliardu Kč. Povinné ručení ale nekryje škody na vašem vlastním voze ani jeho odcizení – na to slouží havarijní pojištění.',
+    note: 'Limit krytí volíte vy - od zákonných 50 mil. Kč přes 100 mil. až po 1 miliardu Kč. Povinné ručení ale nekryje škody na vašem vlastním voze ani jeho odcizení - na to slouží havarijní pojištění.',
   },
   {
     key: 'havarijni',
     icon: 'crash',
     label: 'Havarijní pojištění',
     tag: 'Chrání vaše auto',
-    lead: 'Ochranný štít pro vaše vozidlo pro případ nehody, poškození i odcizení. Pokryje veškeré náklady na váš vůz – opravy, nové díly, odtah i zapůjčení náhradního vozu po dobu opravy v servisu.',
+    lead: 'Ochranný štít pro vaše vozidlo pro případ nehody, poškození i odcizení. Pokryje veškeré náklady na váš vůz - opravy, nové díly, odtah i zapůjčení náhradního vozu po dobu opravy v servisu.',
     covers: ['Poškození vlastního vozu při nehodě', 'Odcizení vozidla', 'Vandalismus a živelní události', 'Náhradní vůz po dobu opravy'],
-    note: 'Při sjednání si pohlídejte územní platnost, výši pojistné částky a spoluúčasti – některé pojišťovny zlevňují produkt právě omezováním těchto parametrů.',
+    note: 'Při sjednání si pohlídejte územní platnost, výši pojistné částky a spoluúčasti - některé pojišťovny zlevňují produkt právě omezováním těchto parametrů.',
   },
   {
     key: 'skla',
@@ -43,18 +43,18 @@ export const PRODUCTS = [
     icon: 'tool',
     label: 'Technické asistence',
     tag: 'Připojištění',
-    lead: 'Pomoc na cestě 24/7, 365 dní v roce – v ČR i v zahraničí. Odtah do servisu, oprava na místě, náhradní vozidlo i ubytování, když se vůz porouchá daleko od domova.',
-    covers: ['Odtah a vyproštění vozidla', 'Oprava na místě – baterie, palivo, odemčení', 'Náhradní vozidlo nebo ubytování', 'Non-stop dispečink a právní pomoc'],
-    note: 'Limit asistence můžete zvýšit nálepkou Allrisk – nalepíte ji na vůz, pošlete foto se SPZ a do 5 pracovních dnů ji aktivujeme zdarma.',
+    lead: 'Pomoc na cestě 24/7, 365 dní v roce - v ČR i v zahraničí. Odtah do servisu, oprava na místě, náhradní vozidlo i ubytování, když se vůz porouchá daleko od domova.',
+    covers: ['Odtah a vyproštění vozidla', 'Oprava na místě - baterie, palivo, odemčení', 'Náhradní vozidlo nebo ubytování', 'Non-stop dispečink a právní pomoc'],
+    note: 'Limit asistence můžete zvýšit nálepkou Allrisk - nalepíte ji na vůz, pošlete foto se SPZ a do 5 pracovních dnů ji aktivujeme zdarma.',
   },
   {
     key: 'cesty',
     icon: 'route',
     label: 'Ochrana na cestách',
     tag: 'Připojištění',
-    lead: 'Až 80 % vozidel nemá dostatečné limity technické asistence. Ochrana na cestách je zvýší přesně na dobu, kdy je potřebujete – na výlet i dovolenou autem, doma i v zahraničí.',
-    covers: ['Vyšší limity asistence – 10 000 Kč v ČR, 40 000 Kč v zahraničí', 'Ubytování i doprava posádky na cestě', 'Delší uskladnění a odtah vozidla', 'Asistence při odcizení vozu'],
-    note: 'Pro klienty s autopojištěním Allrisk aktivujete na 20 dní za 199 Kč přímo v portálu mujallrisk.cz – klidně i dopředu na plánovanou cestu.',
+    lead: 'Až 80 % vozidel nemá dostatečné limity technické asistence. Ochrana na cestách je zvýší přesně na dobu, kdy je potřebujete - na výlet i dovolenou autem, doma i v zahraničí.',
+    covers: ['Vyšší limity asistence - 10 000 Kč v ČR, 40 000 Kč v zahraničí', 'Ubytování i doprava posádky na cestě', 'Delší uskladnění a odtah vozidla', 'Asistence při odcizení vozu'],
+    note: 'Pro klienty s autopojištěním Allrisk aktivujete na 20 dní za 199 Kč přímo v portálu mujallrisk.cz - klidně i dopředu na plánovanou cestu.',
   },
 ]
 
@@ -71,4 +71,4 @@ export const MODULES = [
 ]
 
 // Modelové situácie (4 klientské profily vrátane vozidla, skladby krytia a situácie)
-// žijú v data/profiles.js – sú zdieľané s landingom aj so stránkou /profil/:slug.
+// žijú v data/profiles.js - sú zdieľané s landingom aj so stránkou /profil/:slug.

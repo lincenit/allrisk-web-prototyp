@@ -1,7 +1,7 @@
 // Zdieľané časti klientskych profilov. Zámerne žijú mimo stránok, lebo tú istú
 // situáciu renderujeme z DVOCH strán:
-//   • profilová stránka  – taby sú situácie, preklik vedie na produkt
-//   • produktová stránka – taby sú profily, preklik vedie na profil
+//   • profilová stránka  - taby sú situácie, preklik vedie na produkt
+//   • produktová stránka - taby sú profily, preklik vedie na profil
 // Vďaka tomu je „tab názov produktu" a „tab stala se nehoda" doslova ten istý obsah.
 import { createElement, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -31,23 +31,23 @@ export const PROFILE_ICONS = {
   car: IconCar, home: IconHome, sofa: IconSofa, umbrella: IconUmbrella,
   stethoscope: IconStethoscope, key: IconKey, plane: IconPlane,
   warehouse: IconBuildingWarehouse, truck: IconTruck, license: IconLicense, scale: IconScale,
-  // situácie – každá má vlastnú ikonu, aby sa taby dali odlíšiť na prvý pohľad.
+  // situácie - každá má vlastnú ikonu, aby sa taby dali odlíšiť na prvý pohľad.
   // Zámerne jednoduché tvary: v tabe sa kreslia na 16 px, detailné ikony tam splynú do škvrny.
   crash: IconCar, water: IconDroplet, injury: IconTrendingDown, newhome: IconHomePlus,
   claim: IconGavel, hospital: IconBuildingHospital, storm: IconWind, animal: IconPaw,
   school: IconSchool, firstaid: IconFirstAidKit, illness: IconHeartbeat, income: IconWallet,
   frost: IconSnowflake, garage: IconGauge, theft: IconLock, growth: IconTrendingUp,
   // úrovne naliehavosti v „Co je dobré mít vyřešeno" (NEED_META v profiles.js).
-  // Štít zámerne u nutnosti – je to jediná úroveň, ktorá kryje, nie zlepšuje.
+  // Štít zámerne u nutnosti - je to jediná úroveň, ktorá kryje, nie zlepšuje.
   'need-must': IconShieldCheck, 'need-rec': IconThumbUp, 'need-opt': IconBulb,
 }
 export const iconFor = (key) => PROFILE_ICONS[key] || IconFileText
 
-// Ikona z kľúča. Zámerne cez createElement, nie cez JSX s premennou –
+// Ikona z kľúča. Zámerne cez createElement, nie cez JSX s premennou -
 // inak React lint hlási „component created during render".
 export const Icon = ({ name, ...props }) => createElement(iconFor(name), props)
 
-// Ilustrácia profilu – tabler.io SVG z public/illus/tabler/stories.
+// Ilustrácia profilu - tabler.io SVG z public/illus/tabler/stories.
 // Keby súbor chýbal, spadne späť na ikonu, aby dlaždica nikdy nezostala prázdna.
 export function ProfileIllus({ img, ic }) {
   const [ok, setOk] = useState(true)
@@ -59,7 +59,7 @@ export function ProfileIllus({ img, ic }) {
   )
 }
 
-// Mriežka 4 profilov na landingu – dlaždica je odkaz na vlastnú stránku profilu.
+// Mriežka 4 profilov na landingu - dlaždica je odkaz na vlastnú stránku profilu.
 export function ProfileCards({ profiles, className = '' }) {
   return (
     <div className={`prof-cards ${className}`.trim()}>
@@ -83,10 +83,10 @@ export function ProfileCards({ profiles, className = '' }) {
 }
 
 // Tá istá dlaždica ako na landingu, len ako prepínač na produktovej stránke.
-// Zámerne bez „Zobrazit profil" – výber nikam nevedie, prepína situáciu pod sebou.
+// Zámerne bez „Zobrazit profil" - výber nikam nevedie, prepína situáciu pod sebou.
 // Vybraná dlaždica berie stav .on z .story (wireframe.css), rovnako ako ostatné prepínače.
 export function ProfileTabs({ profiles, value, onChange }) {
-  // pod desktopom je rad vodorovne posuvný – vybraná dlaždica sa musí sama dostať do výrezu
+  // pod desktopom je rad vodorovne posuvný - vybraná dlaždica sa musí sama dostať do výrezu
   const ref = useTabBar(value)
   return (
     <div className="prof-cards prof-tabs" ref={ref} role="tablist">
@@ -108,7 +108,7 @@ export function ProfileTabs({ profiles, value, onChange }) {
   )
 }
 
-// Jedna situácia. `context` mení iba CTA a nadpisové drobnosti – telo je zhodné.
+// Jedna situácia. `context` mení iba CTA a nadpisové drobnosti - telo je zhodné.
 //   context='profil'  → z profilu klikáš na produkt
 //   context='produkt' → z produktu klikáš na profil
 export function SituationPanel({ profile, situation, context = 'profil' }) {
@@ -139,15 +139,15 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
         </div>
       </div>
 
-      {/* Preklik na druhú stranu väzby – kartička v pravom stĺpci.
+      {/* Preklik na druhú stranu väzby - kartička v pravom stĺpci.
           Ikona + názov sedia v jednom riadku (nie štyri veci pod sebou),
           tlačidlo drží spodok na plnú šírku. */}
       <aside className="sit-aside">
-        {/* popisok je hlavička karty, pod ňou ikona a až pod ňou názov – ako „Dobré vědět“ vyššie */}
+        {/* popisok je hlavička karty, pod ňou ikona a až pod ňou názov - ako „Dobré vědět“ vyššie */}
         <div className="sit-aside-lbl">{toProduct ? 'Řeší produkt' : 'Profil klienta'}</div>
         <span className="sit-aside-ic"><Icon name={linkIcon} size={38} stroke={1.5} /></span>
         {/* Z profilu ukazujeme PODPRODUKT, ktorý škodu reálne kryl („Havarijní pojištění“),
-            a pod ním produkt, na ktorého stránke býva – to je tá istá dvojica, akú človek
+            a pod ním produkt, na ktorého stránke býva - to je tá istá dvojica, akú človek
             uvidí na /vozidla ako záložku. Samotné „Pojištění vozidel“ mu nepovie, čo z toho
             zafungovalo. Ak situácia podprodukt nemá, karta spadne späť na názov produktu. */}
         <div className="sit-aside-h">
@@ -161,9 +161,9 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
         <p>
           {toProduct
             ? 'Co přesně kryje a jak si ho poskládat na míru.'
-            : `${profile.ey} – co dalšího je v téhle situaci dobré mít vyřešeno.`}
+            : `${profile.ey} - co dalšího je v téhle situaci dobré mít vyřešeno.`}
         </p>
-        {/* „Zobrazit produkt" sľubuje stránku produktu – dáme ho len tam, kde reálne je
+        {/* „Zobrazit produkt" sľubuje stránku produktu - dáme ho len tam, kde reálne je
             (dnes vozidlá). Inak vedie odkaz na poradcu a musí to aj povedať. */}
         <Link
           to={toProduct ? productHref(situation.product) : `/profil/${profile.slug}`}
@@ -179,22 +179,22 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
   )
 }
 
-// Zoznam „Co je dobré mít vyřešeno" – produkt + prečo ho tento archetyp potrebuje.
+// Zoznam „Co je dobré mít vyřešeno" - produkt + prečo ho tento archetyp potrebuje.
 // Pôvodne jeden stĺpec so štítkom naliehavosti na každom riadku; naliehavosť sa tak
 // dala prečítať až po položkách a rovnaké úrovne držala pri sebe len zhoda triedenia.
 // Dnes je delenie samotné rozloženie: úroveň je hlavička skupiny, položka pod ňu patrí.
-// Preto na karte NIE JE štítok – v skupine „Nutnost" by bol na každej karte ten istý.
+// Preto na karte NIE JE štítok - v skupine „Nutnost" by bol na každej karte ten istý.
 export function SolvedList({ items, variant = SOLVED_VARIANT_DEFAULT, colors = SOLVED_COLOR_DEFAULT }) {
   const sorted = [...items].sort((a, b) => needRank(a.need) - needRank(b.need))
   if (variant === 'puvodni') return <SolvedFlat items={sorted} />
 
   const groups = groupByNeed(sorted)
   return (
-    // počet skupín ide do CSS ako premenná – stĺpcový variant sa podľa nej rozloží
+    // počet skupín ide do CSS ako premenná - stĺpcový variant sa podľa nej rozloží
     // na 3 alebo 2 stĺpce podľa toho, či profil vôbec nejaké „Zvážit" má
     <div className={`solved-m solved-${variant} solved-c-${colors}`} style={{ '--sgrp-n': groups.length }}>
       {/* Hlavička nesie IBA ikonu, názov úrovne a preklad do bežnej reči.
-          Počet položiek ani poradové číslo tu zámerne nie sú – poradie aj množstvo
+          Počet položiek ani poradové číslo tu zámerne nie sú - poradie aj množstvo
           človek vidí priamo z toho, čo je pod hlavičkou, a v troch hlavičkách nad sebou
           to boli tri čísla, ktoré ťahali oko preč od názvov produktov. */}
       {groups.map((g) => (
@@ -223,7 +223,7 @@ export function SolvedList({ items, variant = SOLVED_VARIANT_DEFAULT, colors = S
   )
 }
 
-// Pôvodný jednostĺpcový zoznam so štítkom naliehavosti na riadku – ostáva ako
+// Pôvodný jednostĺpcový zoznam so štítkom naliehavosti na riadku - ostáva ako
 // porovnávacia hladina v ladiacom paneli, aby sa maticové varianty mali proti čomu merať.
 function SolvedFlat({ items }) {
   return (

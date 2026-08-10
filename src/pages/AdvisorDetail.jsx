@@ -13,7 +13,7 @@ import {
 
 // Poradie sekcií podľa reality webu (/broker/$id): hero s tlačidlom späť, fotkou,
 // menom, rolou a čipmi → vľavo predstavenie, špecializácia a reference, vpravo sticky
-// kontaktný formulár. Kontaktný banner tu zámerne nie je – formulár už na stránke je.
+// kontaktný formulár. Kontaktný banner tu zámerne nie je - formulár už na stránke je.
 
 // Reference sa vyberajú podľa tém poradce; keď nič nesedí, ukážeme prvé dve.
 function referencesFor(advisor) {
@@ -93,7 +93,7 @@ export default function AdvisorDetail() {
             </div>
           </div>
 
-          {/* sticky kontaktný formulár – to isté miesto ako na reality webe */}
+          {/* sticky kontaktný formulár - to isté miesto ako na reality webe */}
           <aside className="ad-side">
             <form className="pcardbox ad-form" onSubmit={(e) => e.preventDefault()}>
               <SectionHead icon={<IconMessage />} title="Kontaktujte mě" />

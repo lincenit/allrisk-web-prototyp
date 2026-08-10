@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 // má fokus, ale myš nemá ako rad posunúť: koliesko točí stránkou, nie radom, a šípky
 // má len carousel referencií. Preto sa dá rad chytiť a potiahnuť.
 //
-// Používa to každý vodorovný scroller na webe – rad záložiek (.tabbar-track), dlaždice
+// Používa to každý vodorovný scroller na webe - rad záložiek (.tabbar-track), dlaždice
 // profilov na produktovej stránke (.prof-tabs) aj carousel referencií (.refs-track).
 // Keby pribudol ďalší, stačí naň zavesiť useDragScroll.
 export function attachDragScroll(el) {
@@ -14,7 +14,7 @@ export function attachDragScroll(el) {
 
   const move = (e) => {
     const dx = e.clientX - startX
-    // prah oddeľuje ťah od kliku – bez neho by posun o pixel pri kliknutí prepol
+    // prah oddeľuje ťah od kliku - bez neho by posun o pixel pri kliknutí prepol
     // záložku, na ktorú človek vôbec nemieril
     if (Math.abs(dx) > 4) moved = true
     el.scrollLeft = startLeft - dx
@@ -38,7 +38,7 @@ export function attachDragScroll(el) {
   const down = (e) => {
     // len ľavé tlačidlo myši; dotyk a pero si scrollujú natívne
     if (e.pointerType !== 'mouse' || e.button !== 0) return
-    // keď sa rad celý zmestí, nie je kam ťahať – nechceme kurzor, čo klame
+    // keď sa rad celý zmestí, nie je kam ťahať - nechceme kurzor, čo klame
     if (el.scrollWidth <= el.clientWidth) return
     dragging = true
     moved = false
@@ -64,7 +64,7 @@ export function attachDragScroll(el) {
     e.stopPropagation()
   }
 
-  // Kurzor „grab" je jediné, čo o ťahaní vopred prezradí – ale len keď je rad naozaj
+  // Kurzor „grab" je jediné, čo o ťahaní vopred prezradí - ale len keď je rad naozaj
   // posuvný, inak by sľuboval pohyb, ktorý sa nekoná. Šírka sa mení pri resize okna
   // aj pri výmene obsahu (iný profil = iné záložky), preto obe sledujeme.
   const syncDraggable = () => el.classList.toggle('can-drag', el.scrollWidth > el.clientWidth)

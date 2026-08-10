@@ -1,5 +1,5 @@
 /* ============================================================
-   Allrisk web — design system (mobile-first)
+   Allrisk web - design system (mobile-first)
    Base grammar = "reality" DNA (rounded-lg buttons, rounded-2xl cards,
    blue-gradient hero). Signature = klikatá linka + cesta života.
    Fonts self-hosted from src/fonts (Vite fingerprints + rebases for any base).
@@ -33,30 +33,33 @@
 
      Tri vrstvy zdola nahor:
        1. --hero-base   podklad, keď fotka chýba alebo sa ešte načítava
-       2. --hero-photo  filter na samotnú fotku (predvolene žiadny – fotka je taká, aká je)
+       2. --hero-photo  filter na samotnú fotku (predvolene žiadny - fotka je taká, aká je)
        3. --hero-tint   modrý gradient NAD fotkou; jeho alfa rozhoduje, koľko fotky vidno
        4. --hero-blend  režim miešania gradientu (normal / multiply / color / overlay…)
 
      Ladí sa hlavne alfa v --hero-tint: nižšia = viac fotky, vyššia = viac modrej.
 
      POZOR na kontrast bieleho textu. Najhorší prípad je biele miesto vo fotke (odlesk,
-     biely notebook) – tam sa alfa počíta proti bielej, nie proti priemeru fotky:
+     biely notebook) - tam sa alfa počíta proti bielej, nie proti priemeru fotky:
        alfa .68 → 3,9:1  (padá pod AA pre bežný text)
        alfa .75 → 4,55:1 (tesne prejde)
        alfa .85 → 5,75:1 (pohodlne)
      Preto svetlý koniec gradientu začína na .78. Veľké nadpisy majú AA na 3:1, takže
-     tie znesú aj menej – ale odstavec pod nimi nie. Ak pôjdeš nižšie, over si to na
+     tie znesú aj menej - ale odstavec pod nimi nie. Ak pôjdeš nižšie, over si to na
      fotke s bielym miestom, nie na tmavej. */
   --hero-base:linear-gradient(to right,#0046C8 0%,#0039A3 100%);
   --hero-photo:none;
-  --hero-tint:linear-gradient(100deg,rgba(0,70,200,.78) 0%,rgba(0,48,150,.86) 45%,rgba(0,24,84,.94) 100%);
+  /* Smer je VŽDY vodorovný, zľava doprava - rovnako ako --grad-blue a --hero-base.
+     Šikmý uhol (bol tu 100deg) robil na každom hero inú diagonálu a pásy sa medzi
+     sebou rozchádzali; jeden smer drží celý web pohromade. */
+  --hero-tint:linear-gradient(to right,rgba(0,70,200,.78) 0%,rgba(0,48,150,.86) 45%,rgba(0,24,84,.94) 100%);
   --hero-blend:normal;
   /* type */
   --display:"Magistral","Inter",system-ui,sans-serif;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  /* TYPOGRAFICKÝ RAMP — osem stupňov, iná veľkosť sa nikde nepíše natvrdo.
+  /* TYPOGRAFICKÝ RAMP - osem stupňov, iná veľkosť sa nikde nepíše natvrdo.
      Predtým tu žilo 21 fixných veľkostí a 24 jednorazových clamp() výrazov;
-     pásmo 13–15px malo päť stupňov, ktoré od seba nikto nerozoznal.
+     pásmo 13-15px malo päť stupňov, ktoré od seba nikto nerozoznal.
      Hodnoty sa držia DESIGN.md, od ktorého sa kód medzitým odchýlil. */
   --fs-label:12px;                     /* eyebrow, badge, popisok pod hodnotou */
   --fs-sm:14px;                        /* metadáta, doplnkový text, kompaktné ovládanie */
@@ -66,26 +69,27 @@
   --fs-stat:clamp(19px,2.2vw,25px);    /* číselný údaj (DESIGN.md „stat") */
   --fs-h3:clamp(20px,3vw,26px);        /* podnadpis vnútri sekcie */
   --fs-h2:clamp(24px,3.6vw,34px);      /* nadpis kompaktného pásu alebo panelu */
-  --fs-title:clamp(28px,4.5vw,44px);   /* h2 sekcií + h1 podstránok */
+  --fs-headline:clamp(27px,5.2vw,40px);/* nadpis sekcie (DESIGN.md §3 „Headline") */
+  --fs-title:clamp(28px,4.5vw,44px);   /* h1 podstránky - o stupeň nad nadpisom sekcie */
   --fs-hero:clamp(36px,7vw,68px);      /* výhradne hero landing page */
-  /* shape — base grammar */
+  /* shape - base grammar */
   --r-btn:12px; --r-card:16px; --r-band:24px; --r-pill:999px;
   --shadow-card:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.05);
   --shadow-lift:0 10px 15px -3px rgba(13,31,91,.10),0 4px 6px -2px rgba(13,31,91,.05);
   --shadow-band:0 30px 60px -30px rgba(13,31,91,.5);
   /* layout */
   --maxw:1180px; --pad:clamp(18px,5vw,32px);
-  /* VERTIKÁLNY RYTMUS — jedna jednotka pre celý web (žije tu, nie v .site, nech
-     nevzniknú dve rôzne škály; predtým tu bolo --sec 56–104 a v .site --sec-pad 44–84).
+  /* VERTIKÁLNY RYTMUS - jedna jednotka pre celý web (žije tu, nie v .site, nech
+     nevzniknú dve rôzne škály; predtým tu bolo --sec 56-104 a v .site --sec-pad 44-84).
      Každý pás (hero, hlavička podstránky, sekcia) nesie tento padding hore aj dole,
-     takže medzera medzi ľubovoľnými dvoma pásmi je vždy 2× táto hodnota — aj na
+     takže medzera medzi ľubovoľnými dvoma pásmi je vždy 2× táto hodnota - aj na
      rozhraní farieb. --hdr-h je výška sticky hlavičky, nie odsadenie obsahu.
-     Menilo sa tu, nie po jednotlivých pásoch – hero sa nesmie odtrhnúť od sekcií pod
+     Menilo sa tu, nie po jednotlivých pásoch - hero sa nesmie odtrhnúť od sekcií pod
      ním, inak prestane platiť, že medzera medzi pásmi je 2× jednotka. Strop 80 px platí
-     rovnako pre hero, hlavičku podstránky aj každú .sec – žiadny pás nemá výnimku. */
-  --sec-pad:clamp(48px,6.5vw,80px); --hdr-h:64px;
+     rovnako pre hero, hlavičku podstránky aj každú .sec - žiadny pás nemá výnimku. */
+  --sec-pad:clamp(48px,6.5vw,80px); --hdr-h:80px;
   /* Výška ilustrácie v hero profilu. Drží sa blízko výšky textového stĺpca vedľa:
-     keby ju prerástla, riadok by sa roztiahol a pod tlačidlami by ostalo prázdno –
+     keby ju prerástla, riadok by sa roztiahol a pod tlačidlami by ostalo prázdno -
      a naopak min-height na celom riadku (skúšané ako --hero-sub) pridával vôľu nad
      breadcrumb, takže hero opticky dostalo väčší horný padding než sekcie pod ním. */
   --hero-illus:clamp(260px,23vw,320px);
@@ -93,7 +97,7 @@
 }
 *{box-sizing:border-box;}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;}
-/* hladký scroll kotiev je tiež pohyb — rešpektuj systémové nastavenie */
+/* hladký scroll kotiev je tiež pohyb - rešpektuj systémové nastavenie */
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
 body{margin:0;font-family:var(--sans);background:var(--page);color:var(--body);
   font-size:var(--fs-body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
@@ -125,7 +129,7 @@ img,svg{display:block;max-width:100%;}
 .brandline{height:4px;width:64px;border-radius:99px;background:var(--grad-core);}
 .sec-head{max-width:62ch;margin-bottom:clamp(26px,4vw,40px);}
 .sec-head .eyebrow{margin-bottom:14px;}
-.sec-head h2{font-size:var(--fs-title);font-weight:500;}
+.sec-head h2{font-size:var(--fs-headline);font-weight:500;}
 .sec-head p{margin-top:12px;color:var(--g500);font-size:var(--fs-lead);}
 .muted{color:var(--g500);}
 
@@ -165,7 +169,7 @@ img,svg{display:block;max-width:100%;}
 .promo{position:relative;overflow:hidden;background:var(--grad-blue);border-radius:var(--r-band);color:#fff;
   padding:clamp(30px,5vw,56px);box-shadow:var(--shadow-band);}
 .promo-in{position:relative;z-index:2;max-width:34ch;}
-.promo h2{color:#fff;font-weight:500;font-size:var(--fs-h2);}
+.promo h2{color:#fff;font-weight:500;font-size:var(--fs-headline);}
 .promo p{margin-top:12px;color:rgba(255,255,255,.82);font-size:var(--fs-lead);}
 .promo .row{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;}
 .promo .mini{display:flex;gap:18px;margin-top:24px;flex-wrap:wrap;}
@@ -214,8 +218,8 @@ img,svg{display:block;max-width:100%;}
 }
 
 /* ============================================================
-   SAFETY NET — text na modrom/tmavom pozadí je vždy svetlý
-   (nadpisy h1–h4 sú globálne tmavé, .eyebrow modrý → tu prebíjame)
+   SAFETY NET - text na modrom/tmavom pozadí je vždy svetlý
+   (nadpisy h1-h4 sú globálne tmavé, .eyebrow modrý → tu prebíjame)
    ============================================================ */
 
 .promo h1,.promo h2,.promo h3,.promo h4,

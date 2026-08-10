@@ -1,15 +1,15 @@
 // Jeden rad záložiek pre celý web. Ten istý prepínač nesie produkty na /vozidla
-// aj modelové situácie na profile klienta – je to tá istá vec, tak je to aj ten istý
+// aj modelové situácie na profile klienta - je to tá istá vec, tak je to aj ten istý
 // komponent (predtým žili dve zhodné kópie: .veh-tab vo vehicles.css a .sit-tab
 // v profile.css, ktoré sa museli udržiavať synchrónne ručne).
 //
 // `variant` mení iba vizuál (definície v wireframe.css), nikdy nie správanie:
-//   seg  – segmentový prepínač v svetlomodrej schránke (predvolený)
-//   card – dlaždice s ikonou v odznaku a špičkou do panelu
-//   pill – pôvodné pilulky, referencia
+//   seg  - segmentový prepínač v svetlomodrej schránke (predvolený)
+//   card - dlaždice s ikonou v odznaku a špičkou do panelu
+//   pill - pôvodné pilulky, referencia
 import { useTabBar } from '../useTabBar.js'
 
-// väčší variant kreslí ikonu väčšiu – v dlaždici by 18px pôsobilo stratene
+// väčší variant kreslí ikonu väčšiu - v dlaždici by 18px pôsobilo stratene
 const IC_SIZE = { card: 22 }
 
 export default function TabBar({ items, value, onChange, variant = 'seg', label }) {

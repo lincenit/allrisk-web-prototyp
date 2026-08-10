@@ -1,11 +1,11 @@
-/* /vozidla — kategória "Pojištění vozidel" na jednej stránke.
+/* /vozidla - kategória "Pojištění vozidel" na jednej stránke.
    Reuse: wireframe.css (tokeny, header, hero, sekcie, kontakt, footer).
    Tu len: breadcrumb, hero foto, záložkový systém, modelové príklady, form. */
 
 /* ---- breadcrumb v hero ----
    Bez vlastného paddingu: blokové odsadenie celého hera nesie .veh-hero (jedno miesto),
    breadcrumb je jeho súčasťou rovnako ako nadpis. */
-/* breadcrumb je prvý riadok textového stĺpca (viď Vehicles.jsx) – rovnako ako na /profil */
+/* breadcrumb je prvý riadok textového stĺpca (viď Vehicles.jsx) - rovnako ako na /profil */
 .site .veh-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);color:rgba(255,255,255,.7);
   margin-bottom:28px;}
 .site .veh-crumb a{color:rgba(255,255,255,.7);transition:.2s;}
@@ -14,11 +14,11 @@
 .site .veh-crumb svg{opacity:.55;}
 
 /* ---- kompaktné záhlavie kategórie (menšie ako hero na home, žiadne full-height) ---- */
-/* foto vozu pod hero + modrý overlay – fallback je značkový gradient (--grad-blue) na .hero.
+/* foto vozu pod hero + modrý overlay - fallback je značkový gradient (--grad-blue) na .hero.
    Hero presahuje pod sticky header (margin -64 / padding +64), takže foto vidno aj za hlavičkou. */
 /* Celý pás má odsadenie na jednom mieste: hore aj dole rovnaká rytmická jednotka
    (--sec-pad), hore navyše výška hlavičky, pod ktorú hero podlieza. Deti (breadcrumb,
-   .hero-in) už žiadny blokový padding nepridávajú – nesú len vnútorné medzery. */
+   .hero-in) už žiadny blokový padding nepridávajú - nesú len vnútorné medzery. */
 /* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
    tu zostáva len geometria pásu */
 .site .veh-hero{margin-top:calc(-1 * var(--hdr-h));
@@ -29,8 +29,8 @@
 /* rytmika so zalomkami: breadcrumbs → 28 → title → 16 → text → 32 → buttons.
    Celá žije vnútri textového stĺpca (breadcrumb je jeho prvý riadok), takže nezávisí od
    výšky pravého stĺpca. Textový stĺpec je zarovnaný na začiatok, aby breadcrumb stál
-   presne --sec-pad pod hlavičkou – rovnako ako titulok každej sekcie od svojej hrany.
-   Body s ikonami sa centrujú samy (.veh-hero-points{align-self:center}). */
+   presne --sec-pad pod hlavičkou - rovnako ako titulok každej sekcie od svojej hrany.
+   Body s ikonami sa centrujú samy (.hero-points{align-self:center}). */
 .site .veh-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
   padding-block:0;align-items:start;}
 .site .veh-hero .hero-tx{max-width:640px;gap:0;}
@@ -39,20 +39,11 @@
 /* veľkosť titulku drží spoločný token --fs-title (rovnaký ako hlavičky sekcií), tu sa neprepisuje */
 .site .veh-hero .hero-tx p{max-width:56ch;}
 
-/* ---- body s ikonami priamo v hero (sklenené karty, ikona aj text v boxe) ---- */
-.site .veh-hero-points{list-style:none;margin:0;padding:0;display:grid;gap:12px;align-self:center;}
-.site .veh-hero-points li{display:flex;align-items:center;gap:16px;
-  background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.22);border-radius:16px;padding:15px 18px;
-  backdrop-filter:blur(8px);box-shadow:0 12px 30px -22px rgba(0,0,0,.6);transition:.2s var(--ease,ease);}
-.site .veh-hero-points li:hover{border-color:rgba(255,255,255,.42);background:linear-gradient(120deg,rgba(255,255,255,.2),rgba(255,255,255,.08));}
-.site .veh-hp-ic{flex:none;color:#fff;display:flex;align-items:center;justify-content:center;}
-.site .veh-hp-tx{display:flex;flex-direction:column;}
-.site .veh-hp-tx b{font-family:var(--display);font-weight:700;color:#fff;font-size:var(--fs-body);line-height:1.25;}
-.site .veh-hp-tx small{color:rgba(255,255,255,.74);font-size:var(--fs-label);margin-top:3px;line-height:1.4;}
+/* body s ikonami v hero sú spoločné .hero-points (wireframe.css) - ten istý
+   prvok nesie aj /podnikatele, tak nemá dve definície */
 
 /* ============ ZÁLOŽKY ============ */
-/* Rad záložiek produktov je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) –
+/* Rad záložiek produktov je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) -
    ten istý prepínač nesú aj modelové situácie v profile klienta. */
 
 /* panel */
@@ -72,7 +63,7 @@
 .site .veh-cov li:last-child{border-bottom:0;}
 .site .veh-cov li svg{color:var(--green);flex:none;margin-top:1px;}
 
-/* aside karta vedľa panela – full svetlomodré pozadie, ikona bez rámčeka */
+/* aside karta vedľa panela - full svetlomodré pozadie, ikona bez rámčeka */
 .site .veh-aside{background:var(--blue-50);border:1px solid var(--blue-100);
   border-radius:16px;padding:22px;display:flex;flex-direction:column;align-items:flex-start;}
 .site .veh-aside-ic{display:flex;align-items:center;justify-content:center;color:var(--blue);margin-bottom:10px;}
@@ -92,7 +83,7 @@
 .site .veh-cm-tx b{display:block;font-family:var(--display);font-weight:700;font-size:var(--fs-sm);color:var(--ink);line-height:1.2;}
 .site .veh-cm-tx small{display:block;font-size:var(--fs-label);color:var(--g500);margin-top:1px;}
 
-/* ============ JEDINEČNÝ INKASNÍ SYSTÉM – 2 riadky 50/50 (text + foto) ============ */
+/* ============ JEDINEČNÝ INKASNÍ SYSTÉM - 2 riadky 50/50 (text + foto) ============ */
 .site .veh-feat{display:grid;grid-template-columns:1fr;gap:22px;align-items:stretch;margin-bottom:26px;}
 .site .veh-feat:last-child{margin-bottom:0;}
 .site .veh-feat-tx{display:flex;flex-direction:column;justify-content:center;gap:24px;}
@@ -103,13 +94,13 @@
   box-shadow:0 22px 46px -28px rgba(13,31,91,.45);}
 .site .veh-feat-img img{width:100%;height:100%;object-fit:cover;display:block;}
 
-/* anchor ciele z hero buttonov – odsadenie pod sticky header */
+/* anchor ciele z hero buttonov - odsadenie pod sticky header */
 #veh-produkty,#veh-modely{scroll-margin-top:80px;}
 
-/* ============ MODELOVÉ SITUACE — 3 modely na preklik ============ */
+/* ============ MODELOVÉ SITUACE - 3 modely na preklik ============ */
 /* mobil: vodorovne posuvateľný rad kartičiek (swipe + snap), kúsok ďalšej vykúka */
-/* prepínač 3 vodičov – vodorovný rad navrchu, samostatný nad kartou detailu */
-/* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) – bez neho
+/* prepínač 3 vodičov - vodorovný rad navrchu, samostatný nad kartou detailu */
+/* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) - bez neho
    mandatory snap dosadne prvú kartu na hranu výrezu a ľavé odsadenie v pokoji zmizne */
 .site .veh-models{display:flex;gap:14px;margin-bottom:16px;overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
@@ -173,7 +164,7 @@
 .site .veh-verify-tx h3{font-size:var(--fs-h3);color:var(--ink);}
 .site .veh-verify-tx p{color:var(--g600);font-size:var(--fs-body);margin-top:8px;max-width:62ch;line-height:1.6;}
 
-/* ============ (staré) MODELOVÉ PŘÍKLADY — hlavička + přepínač ============ */
+/* ============ (staré) MODELOVÉ PŘÍKLADY - hlavička + přepínač ============ */
 .site .veh-ex-top{display:flex;flex-direction:column;gap:18px;margin-bottom:26px;}
 .site .veh-viewswitch{display:inline-flex;align-self:flex-start;gap:4px;background:var(--g100);
   border:1px solid var(--l);border-radius:999px;padding:4px;}
@@ -247,7 +238,7 @@
 .site .veh-reset:hover{border-color:var(--blue-200);color:var(--blue);}
 .site .veh-sum-note{font-size:var(--fs-label);color:var(--mut);margin-top:12px;line-height:1.5;}
 
-/* ============ MODELOVÉ PŘÍKLADY — původní karty ============ */
+/* ============ MODELOVÉ PŘÍKLADY - původní karty ============ */
 .site .veh-examples{display:grid;grid-template-columns:1fr;gap:16px;}
 .site .veh-ex{display:flex;flex-direction:column;background:var(--box);border:1px solid var(--l);
   border-radius:16px;padding:22px;box-shadow:0 1px 3px rgba(13,31,91,.04);transition:.2s;}
@@ -283,7 +274,7 @@
 
 /* ============ DESKTOP ============ */
 @media(min-width:980px){
-  /* hero: text vľavo, body s ikonami vpravo – oba stĺpce centrované (viď .veh-hero .hero-in) */
+  /* hero: text vľavo, body s ikonami vpravo - oba stĺpce centrované (viď .veh-hero .hero-in) */
   .site .veh-hero .hero-in{grid-template-columns:1.1fr .9fr;}
   .site .veh-hero-bg{background-position:center;}
   /* inkasný systém: 50/50 text + foto */

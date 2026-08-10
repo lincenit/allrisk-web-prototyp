@@ -23,7 +23,7 @@ export default function Contact() {
     return BRANCHES.filter((b) => [b.city, b.cityFull, b.street, b.zip].some((s) => s.toLowerCase().includes(needle)))
   }, [q])
 
-  // Zoznam je jeden súvislý rad kariet – regióny už nie sú medzititulky, len poradie,
+  // Zoznam je jeden súvislý rad kariet - regióny už nie sú medzititulky, len poradie,
   // nech Praha nestojí medzi moravskými mestami.
   const ordered = REGION_ORDER.flatMap((rk) => filtered.filter((b) => b.region === rk))
 
@@ -32,7 +32,7 @@ export default function Contact() {
       <PageHero
         photo="/kontakt/hero.jpg"
         title="Kontakt"
-        subtitle="Najdete nás po celé České republice. Vyberte si nejbližší pobočku, prohlédněte si tým – nebo nám rovnou napište."
+        subtitle="Najdete nás po celé České republice. Vyberte si nejbližší pobočku, prohlédněte si tým - nebo nám rovnou napište."
       >
         <div className="hchips">
           <HeroChip href="tel:+420545110341" icon={<IconPhone size={20} stroke={1.8} />}>+420 545 110 341</HeroChip>
@@ -51,7 +51,7 @@ export default function Contact() {
 
             {ordered.length ? (
               <div className="branch-list">
-                {/* karta ako na reality webe: foto, názov, adresa – nič viac */}
+                {/* karta ako na reality webe: foto, názov, adresa - nič viac */}
                 {ordered.map((b) => (
                   <Link className="branch-row" key={b.slug} to={`/pobocky/${b.slug}`}>
                     <img src={b.img} alt={b.name} loading="lazy" />

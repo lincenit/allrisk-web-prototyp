@@ -1,17 +1,17 @@
-/* Klientské profily – detail archetypu (/profil/:slug), dlaždice na landingu
+/* Klientské profily - detail archetypu (/profil/:slug), dlaždice na landingu
    a zdieľaný blok situácie, ktorý sa renderuje aj na produktových stránkach.
-   Preto tento súbor importuje aj Vehicles.jsx – trieda .sit* musí byť dostupná v oboch kontextoch. */
+   Preto tento súbor importuje aj Vehicles.jsx - trieda .sit* musí byť dostupná v oboch kontextoch. */
 
 /* ============ 1 · HERO ARCHETYPU (rovnaká kostra ako veh-hero na /vozidla) ============ */
-/* foto klienta pod hero + modrý overlay – fallback je značkový gradient (--grad-blue) na .hero.
+/* foto klienta pod hero + modrý overlay - fallback je značkový gradient (--grad-blue) na .hero.
    Hero presahuje pod sticky header (margin -64 / padding +64), takže foto vidno aj za hlavičkou. */
-/* blokové odsadenie pásu na jednom mieste – zhodné s .veh-hero (viď vehicles.css) */
+/* blokové odsadenie pásu na jednom mieste - zhodné s .veh-hero (viď vehicles.css) */
 /* modrý duotón (podklad + násobená fotka) nesie spoločná .photo-hero z wireframe.css;
    tu zostáva len geometria pásu */
 .site .prof-hero{margin-top:calc(-1 * var(--hdr-h));
   padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
 
-/* anchor ciele z hero buttonov – odsadenie pod sticky header (zhodné s /vozidla) */
+/* anchor ciele z hero buttonov - odsadenie pod sticky header (zhodné s /vozidla) */
 #prof-reseni,#prof-situace{scroll-margin-top:80px;}
 
 /* breadcrumb je prvý riadok textového stĺpca (viď ProfileDetail.jsx), medzera pod ním
@@ -26,7 +26,7 @@
 /* rytmika zhodná s /vozidla: breadcrumbs → 28 → title → 16 → text → 32 → buttons.
    Celá rytmika žije vnútri textového stĺpca (breadcrumb je jeho prvý riadok), takže
    je nezávislá od výšky ilustrácie vedľa. Textový stĺpec je zarovnaný na začiatok, aby
-   breadcrumb stál presne --sec-pad pod hlavičkou – rovnako ďaleko ako titulok každej
+   breadcrumb stál presne --sec-pad pod hlavičkou - rovnako ďaleko ako titulok každej
    sekcie od jej hrany. Ilustrácia sa centruje sama (.prof-hero-illus{align-self:center}).
    Selektor cez .prof-hero, nech má o triedu vyššiu váhu než základné .site .hero-in
    a nezávisí od poradia importov CSS. */
@@ -38,13 +38,13 @@
 .site .prof-hero .hero-tx p{max-width:56ch;}
 .site .prof-hero .hero-tx>.hero-cta{margin-top:32px;}
 
-/* tabler.io ilustrácia vpravo – bez rámu, aby dýchala nad fotkou */
+/* tabler.io ilustrácia vpravo - bez rámu, aby dýchala nad fotkou */
 .site .prof-hero-illus{display:flex;align-items:center;justify-content:center;align-self:center;}
 .site .prof-hero-illus .story-ill{width:100%;height:var(--hero-illus);
   display:flex;align-items:center;justify-content:center;}
 .site .prof-hero-illus .story-ill img{max-width:100%;max-height:100%;object-fit:contain;
   filter:drop-shadow(0 24px 44px rgba(0,16,54,.45));}
-/* fallback, kým ilustrácia nie je exportovaná – sklenená dlaždica ako body v hero na /vozidla */
+/* fallback, kým ilustrácia nie je exportovaná - sklenená dlaždica ako body v hero na /vozidla */
 .site .prof-hero-illus .ni{width:clamp(96px,12vw,128px);height:clamp(96px,12vw,128px);
   border-radius:var(--r-band);color:#fff;display:flex;align-items:center;justify-content:center;
   background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
@@ -53,12 +53,12 @@
 .site .prof-hero-illus .ni svg{width:44px;height:44px;}
 
 /* ============ 2 · DLAŽDICE PROFILOV NA LANDINGU ============ */
-/* Vychádza z .story (wireframe.css) – tu mriežka, obrázkový blok a stav odkazu namiesto tabu. */
+/* Vychádza z .story (wireframe.css) - tu mriežka, obrázkový blok a stav odkazu namiesto tabu. */
 .site .prof-cards{display:grid;grid-template-columns:1fr;gap:18px;}
 /* obrázkový blok ide edge-to-edge ako foto modelu na produktovej stránke (.veh-model-photo),
-   preto dlaždica sama nemá padding ani gap – odsadenie nesie až .prof-card-tx */
+   preto dlaždica sama nemá padding ani gap - odsadenie nesie až .prof-card-tx */
 .site .prof-card{text-decoration:none;padding:0;gap:0;overflow:hidden;}
-/* tabler.io ilustrácia nesie dlaždicu – tónovaný blok, aby aj ikonový fallback pôsobil zámerne */
+/* tabler.io ilustrácia nesie dlaždicu - tónovaný blok, aby aj ikonový fallback pôsobil zámerne */
 .site .prof-card .story-ill{aspect-ratio:16/10;height:auto;width:100%;margin:0;border-radius:0;
   border-bottom:1px solid var(--l2);
   background:linear-gradient(160deg,var(--blue-50),#F4F8FF);
@@ -73,10 +73,10 @@
   display:flex;align-items:center;justify-content:center;transition:.2s;}
 .site .prof-card:hover .ni{background:linear-gradient(160deg,var(--blue-100),var(--blue-50));}
 .site .prof-card .ni svg{width:40px;height:40px;}
-/* text pod obrázkom – prevezme rytmus, ktorý mala pôvodne dlaždica (.story padding 22px) */
+/* text pod obrázkom - prevezme rytmus, ktorý mala pôvodne dlaždica (.story padding 22px) */
 .site .prof-card-tx{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:8px;
   width:100%;padding:18px 20px 20px;}
-/* meno profilu je Inter, nie Magistral – v malej dlaždici pôsobil display font ťažko */
+/* meno profilu je Inter, nie Magistral - v malej dlaždici pôsobil display font ťažko */
 .site .prof-card b{font-family:var(--sans);font-weight:700;letter-spacing:-.015em;}
 /* eyebrow bol kedysi dvojriadkový („Rodina v nejlepších letech") a rezervoval si dva riadky,
    aby si mená naprieč dlaždicami sadli na jednu linku. Dnešné popisky sa zmestia na riadok
@@ -88,23 +88,23 @@
 
 /* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============ */
 /* Naliehavosť nesie ROZLOŽENIE, nie štítok na položke: úroveň je hlavička skupiny
-   a položka pod ňu patrí. Preto v maticových variantoch karta štítok nemá – v skupine
+   a položka pod ňu patrí. Preto v maticových variantoch karta štítok nemá - v skupine
    „Nutnost" by bol na každej karte ten istý.
    Dva varianty (viď solvedVariants.js) zdieľajú markup a líšia sa len tu:
-     .solved-sloupce – úroveň = stĺpec (najviac „maticové", ale najužšia karta)
-     .solved-pasy    – úroveň = vodorovný pás s popiskom vľavo (znesie 5 : 2 : 0)
-   Prázdne úrovne sa nevykresľujú (groupByNeed) – rodina nemá ani jedno „Zvážit". */
+     .solved-sloupce - úroveň = stĺpec (najviac „maticové", ale najužšia karta)
+     .solved-pasy    - úroveň = vodorovný pás s popiskom vľavo (znesie 5 : 2 : 0)
+   Prázdne úrovne sa nevykresľujú (groupByNeed) - rodina nemá ani jedno „Zvážit". */
 
-/* Farebná škála úrovní. Jediné miesto, kde sa úroveň prekladá do farby – zvyšok berie
+/* Farebná škála úrovní. Jediné miesto, kde sa úroveň prekladá do farby - zvyšok berie
    premenné, takže sa dá vymeniť celá škála jednou triedou na obale (.solved-c-*).
      --nbg       SLABÝ farebný podklad hlavičky úrovne
-     --nstroke   silný obrys hlavičky, čip ikony a zvislá os v „Ose" – nositeľ odtieňa
+     --nstroke   silný obrys hlavičky, čip ikony a zvislá os v „Ose" - nositeľ odtieňa
      --nfg       text a ikona v hlavičke (tmavý variant odtieňa, kvôli kontrastu)
      --nline     rám karty v tejto úrovni (váhová os vnútri mriežky)
-   Plné farebné výplne bili do očí – celý pás svietil sýtou farbou a ťahal oko viac než
+   Plné farebné výplne bili do očí - celý pás svietil sýtou farbou a ťahal oko viac než
    názvy produktov pod ním. Odtieň teraz nesie OBRYS, nie plocha: podklad je len tint,
    obrys 2 px v plnej farbe. Signál ostáva rovnako jasný, ale plocha je tichá. */
-/* A · váha v značkovej modrej – nepridáva do palety žiadnu novú farbu */
+/* A · váha v značkovej modrej - nepridáva do palety žiadnu novú farbu */
 .site .solved-c-modra .sgrp{--nbg:var(--blue-50);--nstroke:var(--blue);--nfg:var(--blue);--nline:var(--blue-200);}
 .site .solved-c-modra .sgrp.doporuceno{--nbg:var(--blue-50);--nstroke:var(--blue-200);--nfg:var(--blue);--nline:var(--l);}
 .site .solved-c-modra .sgrp.zvazit{--nbg:var(--g50);--nstroke:var(--g300);--nfg:var(--g600);--nline:var(--l2);}
@@ -131,7 +131,7 @@
 
 /* C · zelená → amber → šedá (predchádzajúci návrh, ponechaný na porovnanie).
    Stojí dva odtiene mimo palety: #10B981 dáva s bielym textom len 2,5 : 1 a #F59E0B
-   ešte menej, takže ako výplň sa použiť nedajú – tmavá zelená je odvodená od
+   ešte menej, takže ako výplň sa použiť nedajú - tmavá zelená je odvodená od
    existujúcej .tag-green (index.css), tmavý amber je nový. Tretí odtieň tu nie je
    zámerne: „Zvážit" ostáva šedé, aby škála klesala. */
 .site .solved-c-zelena .sgrp{--nbg:#EAF8F1;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B7E4D0;}
@@ -152,7 +152,7 @@
 .site .sgrp-ic{flex:none;display:flex;}
 .site .sgrp-t{display:flex;flex-direction:column;gap:2px;min-width:0;}
 .site .sgrp-t b{font-family:var(--display);font-weight:700;font-size:var(--fs-card);line-height:1.2;}
-/* preklad štítku do bežnej reči – samotné „Zvážit" nepovie, podľa čoho sa rozhodnúť */
+/* preklad štítku do bežnej reči - samotné „Zvážit" nepovie, podľa čoho sa rozhodnúť */
 .site .sgrp-t small{font-size:var(--fs-sm);line-height:1.35;opacity:.78;text-wrap:pretty;}
 
 /* --- karta položky (spoločná pre všetky varianty) --- */
@@ -162,7 +162,7 @@
 .site .scard{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:12px;
   background:var(--box);border:1px solid var(--nline,var(--l));border-radius:var(--r-card);padding:14px 16px;
   text-decoration:none;color:inherit;transition:.2s;}
-/* hover aj focus berú farbu úrovne, nie natvrdo modrú – v semafore by modrý rám
+/* hover aj focus berú farbu úrovne, nie natvrdo modrú - v semafore by modrý rám
    na červenej skupine popieral hlavičku nad ňou */
 .site .scard:hover{border-color:var(--nstroke,var(--blue));transform:translateY(-2px);box-shadow:var(--shadow-lift);}
 .site .scard:focus-visible{outline:0;border-color:var(--nstroke,var(--blue));box-shadow:0 0 0 3px var(--nbg,var(--blue-50));}
@@ -172,12 +172,12 @@
 .site .scard-tx{display:flex;flex-direction:column;gap:4px;min-width:0;}
 .site .scard-tx b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.25;}
 .site .scard-tx small{font-size:var(--fs-sm);color:var(--g600);line-height:1.5;text-wrap:pretty;}
-/* Podklad karty je BIELY vo všetkých úrovniach – „Zvážit" mala kedysi priehľadnú,
+/* Podklad karty je BIELY vo všetkých úrovniach - „Zvážit" mala kedysi priehľadnú,
    aby škála klesala aj vnútri mriežky, ale úroveň už dostatočne nesie farebný rám
    (--nline) a hlavička nad stĺpcom; priehľadná karta z toho robila vyblednutý zoznam. */
 
 /* --- A · SLOUPCE: úroveň = stĺpec --- */
-/* Stĺpec NEMÁ vlastný rám ani podklad – hlavička úrovne stojí samostatne a karty
+/* Stĺpec NEMÁ vlastný rám ani podklad - hlavička úrovne stojí samostatne a karty
    ležia voľne pod ňou. Rámovaný stĺpec s tónovaným vnútrom pridával druhý box okolo
    boxov a celá sekcia potom čítala ako tri panely, nie ako jeden zoznam v troch úrovniach. */
 .site .solved-m{display:grid;grid-template-columns:1fr;gap:18px;}
@@ -189,7 +189,7 @@
 
 /* --- B · PÁSY: úroveň = vodorovný pás s popiskom vľavo --- */
 /* Karty v páse tečú do auto-fit mriežky, takže 5 nutností vyplní pás a 2 doporučenia
-   ho nechajú kratší – rozdiel v počte je tu informácia, nie diera v layoute. */
+   ho nechajú kratší - rozdiel v počte je tu informácia, nie diera v layoute. */
 .site .solved-pasy{gap:0;}
 .site .solved-pasy .sgrp{padding:22px 0;border-top:1px solid var(--l);}
 .site .solved-pasy .sgrp:first-child{border-top:0;padding-top:0;}
@@ -210,7 +210,7 @@
   text-decoration:none;color:inherit;transition:.2s;box-shadow:0 1px 3px rgba(13,31,91,.04);}
 .site .solved-item:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-lift);}
 .site .solved-item:focus-visible{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
-/* ikona sedí hore vľavo, na linke názvu – vycentrovaná na celú kartu plávala pri dlhších
+/* ikona sedí hore vľavo, na linke názvu - vycentrovaná na celú kartu plávala pri dlhších
    popisoch kdesi v strede textu a riadky položiek sa opticky rozpadli */
 .site .solved-ic{align-self:start;width:44px;height:44px;flex:none;border-radius:var(--r-btn);background:var(--blue-50);color:var(--blue);
   display:flex;align-items:center;justify-content:center;transition:.2s;}
@@ -225,7 +225,7 @@
 .site .solved-need.zvazit{background:var(--g100);color:var(--g600);}
 
 /* ============ 4 · SITUÁCIA (zdieľaná s produktovými stránkami) ============ */
-/* Rad záložiek situácií je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) –
+/* Rad záložiek situácií je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) -
    ten istý prepínač nesú aj produkty na /vozidla. */
 
 /* kostra karty zhodná s .veh-panel na /vozidla (rádius, padding, tieň) */
@@ -238,7 +238,7 @@
 .site .sit-main{display:flex;flex-direction:column;align-items:flex-start;min-width:0;}
 .site .sit-badge{display:inline-flex;align-items:center;gap:7px;border-radius:var(--r-pill);
   background:#FBEAEA;color:var(--red);padding:5px 12px;font-size:var(--fs-label);font-weight:600;}
-/* typografia panelu = .veh-panel-tx na /vozidla: h3 clamp(23–32), lede 16/1.6, popisok 11px */
+/* typografia panelu = .veh-panel-tx na /vozidla: h3 clamp(23-32), lede 16/1.6, popisok 11px */
 .site .sit-main h3{font-family:var(--display);font-weight:700;font-size:var(--fs-h3);
   line-height:1.22;color:var(--ink);margin:14px 0 0;text-wrap:balance;}
 .site .sit-story{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:52ch;text-wrap:pretty;}
@@ -257,20 +257,20 @@
   padding:14px 16px;font-size:var(--fs-body);line-height:1.55;color:var(--ink);font-weight:500;}
 .site .sit-outcome svg{color:var(--blue);flex:none;margin-top:2px;}
 
-/* preklik na produkt/profil – kartička v pravom stĺpci.
+/* preklik na produkt/profil - kartička v pravom stĺpci.
    Popisok je hlavička karty, pod ňou ikona a až pod ňou názov (ako .veh-aside „Dobré vědět"
    o sekciu vyššie), potom vysvetlenie a tlačidlo na plnú šírku dole. */
 .site .sit-aside{background:var(--blue-50);border:1px solid var(--blue-100);
   border-radius:var(--r-card);padding:18px 20px 20px;display:flex;flex-direction:column;gap:14px;}
 .site .sit-aside-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--blue);}
-/* ikona stojí voľne na modrom podklade – biely štvorec pôsobil ako ďalšia karta v karte */
+/* ikona stojí voľne na modrom podklade - biely štvorec pôsobil ako ďalšia karta v karte */
 .site .sit-aside-ic{align-self:flex-start;color:var(--blue);display:flex;align-items:center;justify-content:center;
   margin:-2px 0 -6px;}
-/* názov podproduktu a produkt pod ním sú jedna dvojica – vlastný tesný gap,
+/* názov podproduktu a produkt pod ním sú jedna dvojica - vlastný tesný gap,
    nech ich 14px medzera karty od seba neodtrhne ako dva samostatné riadky */
 .site .sit-aside-h{display:flex;flex-direction:column;gap:4px;}
 .site .sit-aside-t{font-family:var(--display);font-weight:700;color:var(--ink);font-size:var(--fs-card);line-height:1.25;}
-/* zámerne NIE modrá – nie je to odkaz, klikateľné je až tlačidlo dole;
+/* zámerne NIE modrá - nie je to odkaz, klikateľné je až tlačidlo dole;
    od popisu pod ňou ju odlíši váha, nie farba */
 .site .sit-aside-parent{font-size:var(--fs-sm);line-height:1.4;color:var(--g600);font-weight:600;}
 .site .sit-aside p{color:var(--g600);font-size:var(--fs-sm);line-height:1.55;margin:0;}
@@ -280,16 +280,16 @@
 .site .veh-sit{margin-top:18px;}
 
 /* ============ 5 · OSTATNÉ PROFILY ============ */
-/* Zoznam „Nejste to úplně vy?" používa ProfileCards – tie isté dlaždice ako landing.
+/* Zoznam „Nejste to úplně vy?" používa ProfileCards - tie isté dlaždice ako landing.
    Jediný rozdiel je počet stĺpcov na desktope (3 profily namiesto 4), viď media query. */
 
 /* ============ RESPONZÍVNE ============ */
 /* Prepínač na produktovej stránke: pod desktopom je vodorovný posuvný rad so snapom
    (rovnaká mechanika ako .tabbar). Štyri dlaždice pod sebou zaberú na mobile celú
    obrazovku, než sa človek vôbec dostane k situácii, ktorú prepínajú.
-   Časť ďalšej dlaždice zámerne vykúka – je to jediný signál, že sa rad posúva. */
+   Časť ďalšej dlaždice zámerne vykúka - je to jediný signál, že sa rad posúva. */
 @media(max-width:979px){
-  /* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) – bez neho
+  /* scroll-padding musí sedieť s paddingom (viď .refs-track vo wireframe.css) - bez neho
      mandatory snap dosadne prvú dlaždicu na hranu výrezu a ľavé odsadenie v pokoji zmizne */
   .site .prof-tabs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
     -webkit-overflow-scrolling:touch;scrollbar-width:none;
@@ -297,7 +297,7 @@
     scroll-padding-inline:clamp(16px,4vw,28px);}
   .site .prof-tabs::-webkit-scrollbar{display:none;}
   .site .prof-tabs .prof-card{flex:0 0 74%;scroll-snap-align:start;}
-  /* v rade je dlaždica nižšia – ilustrácia dostane plochší pomer a text menej vzduchu */
+  /* v rade je dlaždica nižšia - ilustrácia dostane plochší pomer a text menej vzduchu */
   .site .prof-tabs .prof-card .story-ill,
   .site .prof-tabs .prof-card .ni{aspect-ratio:16/7;padding:12px 18px;}
   .site .prof-tabs .prof-card-tx{gap:5px;padding:14px 16px 16px;}
@@ -328,21 +328,21 @@
   /* align-items zámerne nie: zarovnanie na začiatok drží medzeru pod breadcrumbom,
      ilustrácia sa centruje sama (.prof-hero-illus) */
   .site .prof-hero .hero-in{grid-template-columns:1.1fr .9fr;}
-  /* Výšku drží token --hero-illus rovnako ako pod desktopom – tu netreba nič meniť.
+  /* Výšku drží token --hero-illus rovnako ako pod desktopom - tu netreba nič meniť.
      (Skúšaný bol aj grid trik height:0 + min-height:100%, ktorý ilustráciu zrovnal na
-     výšku textu vedľa; pri krátkom texte z nej ostal drobec – na /profil/rodina 228 px.) */
+     výšku textu vedľa; pri krátkom texte z nej ostal drobec - na /profil/rodina 228 px.) */
   .site .prof-cards{grid-template-columns:repeat(4,1fr);}
   .site .prof-cards-3{grid-template-columns:repeat(3,1fr);}
 
   /* SLOUPCE: počet stĺpcov je počet NEPRÁZDNYCH úrovní (--sgrp-n zo SolvedList).
-     Rodina má 5 : 2 : 0, teda dva stĺpce na plnú šírku – pevné tri by tam nechali
+     Rodina má 5 : 2 : 0, teda dva stĺpce na plnú šírku - pevné tri by tam nechali
      prázdne miesto, ktoré vyzerá ako chyba dát. Stĺpce sú rovnako široké zámerne:
      nutnosti je najviac a nerovnaké šírky by z počtu urobili náhodu. */
   .site .solved-sloupce{grid-template-columns:repeat(var(--sgrp-n,3),1fr);align-items:start;gap:16px;}
   .site .solved-sloupce .sgrp-list{grid-template-columns:1fr;}
 
   /* PÁSY: popisok úrovne je ľavá lišta, karty tečú vedľa nej.
-     Lišta je lepkavá – pri 5 nutnostiach je pás vyšší než výrez a bez toho by človek
+     Lišta je lepkavá - pri 5 nutnostiach je pás vyšší než výrez a bez toho by človek
      v polovici stĺpca už nevedel, ktorú úroveň číta. */
   .site .solved-pasy .sgrp{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start;
     padding:26px 0;}
@@ -353,7 +353,7 @@
      než päť nutností nad ňou. auto-fill stopu nechá a karta drží šírku stĺpca. */
   .site .solved-pasy .sgrp-list{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
 
-  /* prepínač na produktovej stránke – počet profilov k produktu nie je fixný,
+  /* prepínač na produktovej stránke - počet profilov k produktu nie je fixný,
      preto auto-fit namiesto pevných štyroch stĺpcov */
   .site .prof-tabs{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
   /* rovnaký pomer stĺpcov a medzera ako .veh-panel na /vozidla */

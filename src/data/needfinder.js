@@ -1,16 +1,16 @@
-// Potřebový rozcestník na landing page – dve úrovne.
+// Potřebový rozcestník na landing page - dve úrovne.
 // 1. úroveň = „nákupný zámer" v prvej osobe (dlaždica), 2. úroveň = konkrétne produkty.
 // Produkty držia rovnaké názvy ako mega-menu (data/menu.js, segment „rodiny"), aby si
 // klient po kliku z rozcestníka a z menu prišiel na to isté.
-// Ikony sú kľúče (string) – mapuje ich stránka. `to` je nepovinné; bez neho ide položka
+// Ikony sú kľúče (string) - mapuje ich stránka. `to` je nepovinné; bez neho ide položka
 // na /kontakt?tema=<label>, lebo produktové stránky zatiaľ neexistujú.
 
 const p = (label, icon, desc, to) => ({ label, icon, desc, to })
 
-// Škoda nie je nákup – urgentná, neprodejná potreba, preto stojí mimo mriežky.
+// Škoda nie je nákup - urgentná, neprodejná potreba, preto stojí mimo mriežky.
 export const NEED_CLAIM = {
   t: 'Chci nahlásit škodu',
-  d: 'Škody likvidujeme sami – jeden kontakt od nahlášení až po výplatu.',
+  d: 'Škody likvidujeme sami - jeden kontakt od nahlášení až po výplatu.',
   to: '/kontakt?tema=Nahlásit škodu',
 }
 
@@ -44,7 +44,7 @@ export const NEED_INTENTS = [
   {
     key: 'reality', icon: 'house', t: 'Chci koupit / prodat / pronajmout nemovitost', accent: 'nemovitost', d: 'Realitní služby i nájem bez rizika',
     tema: 'Reality',
-    lead: 'Od odhadu ceny po podpis – papírování necháte na nás.',
+    lead: 'Od odhadu ceny po podpis - papírování necháte na nás.',
     products: [
       p('Prodej nemovitosti', 'houseSell', 'Odhad, inzerce i prohlídky'),
       p('Nákup nemovitosti', 'houseSearch', 'Najdeme a prověříme za vás'),
@@ -57,7 +57,7 @@ export const NEED_INTENTS = [
   {
     key: 'investice', icon: 'chart', t: 'Chci investovat', accent: 'investovat', d: 'Portfolio, spoření i penze',
     tema: 'Investice',
-    lead: 'Podle cíle a horizontu – srozumitelně, bez žargonu.',
+    lead: 'Podle cíle a horizontu - srozumitelně, bez žargonu.',
     products: [
       p('Investice', 'chart', 'Portfolio podle vašeho cíle'),
       p('Penzijní spoření', 'piggy', 'Se státním příspěvkem'),
@@ -79,7 +79,7 @@ export const NEED_INTENTS = [
   {
     key: 'auto', icon: 'key', t: 'Chci si půjčit / pronajmout auto', accent: 'auto', d: 'Autopůjčovna a operativní leasing',
     tema: 'Autopůjčovna',
-    lead: 'Na pár dní i na roky – s pojištěním i servisem v ceně.',
+    lead: 'Na pár dní i na roky - s pojištěním i servisem v ceně.',
     products: [
       p('Autopůjčovna', 'key', 'Krátkodobý i náhradní vůz'),
       p('Operativní leasing', 'truck', 'Auto na paušál, vše v ceně'),

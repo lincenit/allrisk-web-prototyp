@@ -16,11 +16,11 @@
   background:radial-gradient(55% 60% at 92% 0,rgba(92,200,255,.22),transparent 60%),
              radial-gradient(50% 60% at -4% 110%,rgba(136,6,228,.18),transparent 60%);}
 .site .phero-in{position:relative;z-index:2;padding-block:var(--sec-pad);}
-.site .phero h1{color:#fff;font-weight:500;font-size:var(--fs-title);text-wrap:balance;}
+.site .phero h1{color:#fff;font-weight:500;font-size:var(--fs-title);line-height:1.04;text-wrap:balance;}
 .site .phero h1 b{color:var(--cyan);font-weight:700;}
 .site .phero p{margin-top:12px;color:rgba(255,255,255,.82);font-size:var(--fs-lead);max-width:62ch;}
 
-/* späť – hranaté tlačidlo, rovnaký tvar ako .btn inde na webe */
+/* späť - hranaté tlačidlo, rovnaký tvar ako .btn inde na webe */
 .site .phero-back{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px 0 14px;
   margin-bottom:clamp(16px,2.4vw,22px);border:1px solid rgba(255,255,255,.5);border-radius:var(--r-btn);
   background:rgba(255,255,255,.08);color:#fff;font-size:var(--fs-sm);font-weight:600;transition:background .2s,border-color .2s;}
@@ -35,7 +35,7 @@
   font-size:clamp(34px,5vw,46px);letter-spacing:.02em;}
 @media(min-width:760px){.site .phero-id{flex-direction:row;align-items:center;}}
 
-/* kontaktné čipy v hero – tvar podľa reality webu: hranatý rám v plnej bielej,
+/* kontaktné čipy v hero - tvar podľa reality webu: hranatý rám v plnej bielej,
    žiadna výplň, ikona rovno v riadku. Hover prevráti farby. */
 .site .hchips{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(18px,3vw,26px);}
 .site .hchip{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;
@@ -45,7 +45,7 @@
 .site a.hchip:hover{background:#fff;color:var(--blue);}
 .site .hchip .tx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-/* (Záplata na zdvojenú medzeru pod hlavičkou tu už netreba – wireframe.css žiadnu
+/* (Záplata na zdvojenú medzeru pod hlavičkou tu už netreba - wireframe.css žiadnu
    zdvojenú medzeru nerobí, každý pás nesie ten istý --sec-pad hore aj dole.) */
 
 /* ===== spoločné diely tela stránky ===== */
@@ -57,7 +57,7 @@
 .site .shead h2{flex:1;min-width:0;font-size:var(--fs-h3);line-height:1.14;}
 .site .shead .act{flex:none;}
 
-/* biela karta – panel v bočnom stĺpci aj formulár */
+/* biela karta - panel v bočnom stĺpci aj formulár */
 .site .pcardbox{border:1px solid var(--l);border-radius:var(--r-card);background:var(--box);
   padding:clamp(20px,2.4vw,26px);box-shadow:0 1px 3px rgba(13,31,91,.04);}
 
@@ -67,7 +67,7 @@
   display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;
   font-size:18px;letter-spacing:.02em;}
 /* karta poradce ako na reality webe: biela plocha bez rámu, foto 80 px, meno a rola.
-   Odlíšenie od pozadia nesie samotná biela, nie hairline – hover ju preleje do modrej. */
+   Odlíšenie od pozadia nesie samotná biela, nie hairline - hover ju preleje do modrej. */
 .site .pcard{display:flex;align-items:center;gap:24px;padding:16px;border-radius:var(--r-btn);
   background:var(--box);color:inherit;text-decoration:none;transition:background .2s;}
 .site a.pcard:hover{background:var(--blue-50);}
@@ -93,7 +93,7 @@
 .site .branch-search input{width:100%;height:52px;border:1px solid var(--g300);border-radius:var(--r-card);background:#fff;
   padding:0 16px 0 46px;font:inherit;font-size:var(--fs-body);color:var(--ink);}
 .site .branch-search input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
-/* jeden súvislý rad kariet – bez medzititulkov regiónov (poradie ich stále rešpektuje) */
+/* jeden súvislý rad kariet - bez medzititulkov regiónov (poradie ich stále rešpektuje) */
 .site .branch-list{display:flex;flex-direction:column;gap:12px;}
 /* karta pobočky ako na reality webe: biela plocha bez rámu a bez tieňa, foto 80 px,
    názov a pod ním adresa. Hover preleje kartu do modrej a názov na AllBlue. */
@@ -115,7 +115,7 @@
 /* štylizovaná mapa (bez tile providera).
    --cmap-gap je medzera, ktorá mape ostane nad ňou aj pod ňou, keď je pripnutá:
    hore ju odsadí od sticky hlavičky, dole od spodnej hrany okna. Preto vstupuje
-   do výpočtu dvakrát (výška) aj raz do `top` – keby sa rozišli, mapa by sa
+   do výpočtu dvakrát (výška) aj raz do `top` - keby sa rozišli, mapa by sa
    o spodnú hranu orezala. 20 px sedí s doterajším `top:84px` (64 hlavička + 20). */
 .site .contact-layout{--cmap-gap:20px;--cmap-min:340px;}
 .site .cmap-wrap{width:100%;}
@@ -130,7 +130,7 @@
 @media(min-width:980px){
   .site .contact-layout{flex-direction:row;align-items:flex-start;gap:30px;}
 
-  /* Sticky sedí na SAMOTNEJ MAPE, nie na stĺpci – a stĺpec sa naťahuje na výšku
+  /* Sticky sedí na SAMOTNEJ MAPE, nie na stĺpci - a stĺpec sa naťahuje na výšku
      riadku (align-self:stretch). Znie to zbytočne, ale je to jediné usporiadanie,
      kde mapa nikdy neprerastie zoznam:
 
@@ -145,14 +145,14 @@
      výšku zoznamu. Keby tu stálo len calc(100dvh − …), sme späť pri prvom prípade. */
   /* min-height musí poznať aj stĺpec, nielen mapa: inak by pri vyfiltrovanom zozname
      riadok ostal na výške tej jednej kartičky (186 px) a mapa by z neho vytiekla na
-     sekciu pod sebou. Takto riadok narastie s ňou. Výšku okna stĺpec zámerne nepozná –
+     sekciu pod sebou. Takto riadok narastie s ňou. Výšku okna stĺpec zámerne nepozná -
      tú nesie až mapa cez min(100%, …), aby riadok neprerástol zoznam. */
   .site .cmap-wrap{width:400px;flex:none;align-self:stretch;min-height:var(--cmap-min);}
   /* --cmap-min je podlaha: pri vyfiltrovanom zozname by sa mapa inak stiahla na výšku
      jednej kartičky a ostal by z nej prúžok. */
   .site .cmap{position:sticky;top:calc(var(--hdr-h) + var(--cmap-gap));
     height:max(var(--cmap-min), min(100%, calc(100vh - var(--hdr-h) - 2 * var(--cmap-gap))));}
-  /* dvh počíta so zaťahovacími lištami prehliadača, vh nie – s vh by mapa na
+  /* dvh počíta so zaťahovacími lištami prehliadača, vh nie - s vh by mapa na
      prehliadači s plávajúcou lištou presiahla pod spodnú hranu okna. Cez @supports,
      nech to na starších prehliadačoch spadne späť na vh. */
   @supports (height:100dvh){

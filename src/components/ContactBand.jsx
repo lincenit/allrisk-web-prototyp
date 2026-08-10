@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { IconPhone, IconMail, IconMapPin, IconArrowRight } from '@tabler/icons-react'
 
-// Modrý banner „Ozvěte se nám" – rovnaký na všetkých .site stránkach (Home, Vehicles).
+// Modrý banner „Ozvěte se nám" - rovnaký na všetkých .site stránkach (Home, Vehicles).
 // Štýl je v wireframe.css (.contact-band), ktorý tieto stránky importujú.
 // ?tema=<produkt> nesie tému z rozcestníka, aby pristátie nadväzovalo na klik a nebolo slepé.
 export default function ContactBand() {
@@ -14,7 +14,7 @@ export default function ContactBand() {
         <div className="contact-tx">
           <span className="ey">Kontakt</span>
           <h2>Ozvěte se <b>nám</b></h2>
-          <p>Nechte nám kontakt a ozve se vám osobní poradce Allrisk – nezávazně, srozumitelně a zdarma.</p>
+          <p>Nechte nám kontakt a ozve se vám osobní poradce Allrisk - nezávazně, srozumitelně a zdarma.</p>
           {topic && <span className="topic-tag">Zajímá vás: {topic}</span>}
           <div className="info">
             <div className="info-row"><span className="ic"><IconPhone size={18} stroke={1.7} /></span> +420 545 110 341</div>

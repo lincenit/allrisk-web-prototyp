@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import './wireframe.css'
 import './vehicles.css'
 import './profile.css'
+import './blog.css'
 import { asset } from '../asset.js'
 import { useHeroHeader } from '../useHeroHeader.js'
 import ContactBand from '../components/ContactBand.jsx'
@@ -10,8 +11,11 @@ import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
 import { TAB_VARIANTS, TAB_VARIANT_DEFAULT } from '../tabVariants.js'
+import { BLOG_PROD_VARIANTS, BLOG_PROD_DEFAULT } from '../blogVariants.js'
+import HeaderDebug from '../components/HeaderDebug.jsx'
+import { ProductArticles } from '../components/ArticleParts.jsx'
 import { VEHICLE_CATS, PRODUCTS } from '../data/vehicles.js'
-// Modelové situácie ťaháme z klientských profilov – ten istý archetyp, ktorý má
+// Modelové situácie ťaháme z klientských profilov - ten istý archetyp, ktorý má
 // vlastnú stránku /profil/:slug. Situácia „stala se nehoda" je doslova tá istá entita.
 import { situationsFor, countGen } from '../data/profiles.js'
 import { SituationPanel, ProfileTabs } from '../components/ProfileParts.jsx'
@@ -22,7 +26,7 @@ import {
   IconChevronRight, IconCar, IconUser, IconUsers,
   IconBuildingCommunity, IconPaw, IconLock, IconHeadset,
   IconMotorbike, IconCaravan, IconTractor,
-  IconLayoutNavbar,
+  IconLayoutNavbar, IconNews,
 } from '@tabler/icons-react'
 
 // Kľúč ikony z data/vehicles.js -> tabler komponent (dáta samotné zostávajú bez Reactu).
@@ -37,9 +41,13 @@ const VEH_ICONS = {
 export default function Vehicles() {
   const [tab, setTab] = useState('povinne')
   const active = PRODUCTS.find((t) => t.key === tab)
-  // vzhľad radu záložiek – rozpracovaná voľba, drží sa naprieč stránkami (aj na profile)
+  // vzhľad radu záložiek - rozpracovaná voľba, drží sa naprieč stránkami (aj na profile)
   const [tabStyle, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
-  // ikona pre TabBar je komponent, nie hotový prvok – veľkosť si volí variant
+  // koľko miesta dostane blog na produktovej stránke - tiež rozpracovaná voľba
+  const [blogStyle, setBlogStyle] = useDebugOption('blogProd', BLOG_PROD_DEFAULT)
+  // Panel Podnikatelé je v hlavičke, teda na každej stránke; prepínač musí
+  // stáť niekde, tak stojí tu - hlavička vlastný ladiaci panel nemá.
+  // ikona pre TabBar je komponent, nie hotový prvok - veľkosť si volí variant
   const tabItems = PRODUCTS.map((t) => ({ key: t.key, label: t.label, icon: VEH_ICONS[t.icon] }))
 
   // --- modelové situace: klientské profily na preklik ---
@@ -56,12 +64,12 @@ export default function Vehicles() {
 
   return (
     <div className="site">
-      {/* ============ 1 · ÚVODNÍ SEKCE – kompaktní záhlaví kategorie ============ */}
+      {/* ============ 1 · ÚVODNÍ SEKCE - kompaktní záhlaví kategorie ============ */}
       <section className="hero veh-hero photo-hero">
         {/* foto vozu v modrom duotóne (foto vloží klient do public/vozidla/hero.jpg) */}
         <div className="photo-hero-bg veh-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
         <div className="wrap hero-in veh-hero-in">
-          {/* breadcrumb je súčasťou textového stĺpca, nie pás nad ním – rovnako ako na /profil */}
+          {/* breadcrumb je súčasťou textového stĺpca, nie pás nad ním - rovnako ako na /profil */}
           <div className="hero-tx">
             <nav className="veh-crumb">
               <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} />
@@ -69,26 +77,26 @@ export default function Vehicles() {
               <b>Pojištění vozidel</b>
             </nav>
             <h1>Pojištění <b>vozidel</b></h1>
-            <p>Povinné ručení, havarijní pojištění i asistence – poskládané na míru tomu, jak a kde jezdíte.</p>
+            <p>Povinné ručení, havarijní pojištění i asistence - poskládané na míru tomu, jak a kde jezdíte.</p>
             <div className="hero-cta">
-              {/* na produkte sa hovorí o produktoch – „Co se jim stalo“ patrí profilu klienta,
+              {/* na produkte sa hovorí o produktoch - „Co se jim stalo“ patrí profilu klienta,
                   kde je ten človek konkrétny; tu sú modelové situace prehľadom viacerých profilov */}
               <a href="#veh-produkty" className="btn fill">Prohlédnout produkty <IconArrowRight size={18} stroke={2.2} /></a>
               <a href="#veh-modely" className="btn">Modelové situace</a>
             </div>
           </div>
-          <ul className="veh-hero-points">
+          <ul className="hero-points">
             <li>
-              <span className="veh-hp-ic"><IconCar size={28} stroke={1.5} /></span>
-              <span className="veh-hp-tx"><b>Náhradní vůz až na 20 dní zdarma</b><small>Abyste zůstali mobilní i během opravy vozu.</small></span>
+              <span className="hp-ic"><IconCar size={28} stroke={1.5} /></span>
+              <span className="hp-tx"><b>Náhradní vůz až na 20 dní zdarma</b><small>Abyste zůstali mobilní i během opravy vozu.</small></span>
             </li>
             <li>
-              <span className="veh-hp-ic"><IconHeadset size={28} stroke={1.5} /></span>
-              <span className="veh-hp-tx"><b>Oddělení likvidací 24/7, 365 dní</b><small>Škodu řešíme interně, kdykoliv ji nahlásíte.</small></span>
+              <span className="hp-ic"><IconHeadset size={28} stroke={1.5} /></span>
+              <span className="hp-tx"><b>Oddělení likvidací 24/7, 365 dní</b><small>Škodu řešíme interně, kdykoliv ji nahlásíte.</small></span>
             </li>
             <li>
-              <span className="veh-hp-ic"><IconRoute size={28} stroke={1.5} /></span>
-              <span className="veh-hp-tx"><b>Služby autopůjčovny</b><small>Vše kolem vozu pod jednou střechou.</small></span>
+              <span className="hp-ic"><IconRoute size={28} stroke={1.5} /></span>
+              <span className="hp-tx"><b>Služby autopůjčovny</b><small>Vše kolem vozu pod jednou střechou.</small></span>
             </li>
           </ul>
         </div>
@@ -96,7 +104,7 @@ export default function Vehicles() {
 
       {/* ============ 2 · INKASNÍ SYSTÉM (2× 50/50 text + foto), bez veľkého nadpisu ============ */}
       <section className="sec wrap veh-system">
-        {/* riadok 1 – Systém + kategórie vozidel vľavo, foto vpravo */}
+        {/* riadok 1 - Systém + kategórie vozidel vľavo, foto vpravo */}
         <div className="veh-feat">
           <div className="veh-feat-tx">
             <div className="veh-feat-block">
@@ -121,7 +129,7 @@ export default function Vehicles() {
           <div className="veh-feat-img"><img src={asset('/vozidla/system.jpg')} alt="Inkasní systém Allrisk" loading="lazy" /></div>
         </div>
 
-        {/* riadok 2 – foto vľavo, texty vpravo */}
+        {/* riadok 2 - foto vľavo, texty vpravo */}
         <div className="veh-feat rev">
           <div className="veh-feat-img"><img src={asset('/vozidla/vyhody.jpg')} alt="Autopojištění Allrisk" loading="lazy" /></div>
           <div className="veh-feat-tx">
@@ -146,16 +154,16 @@ export default function Vehicles() {
         <SecHead
           ey="Co lze sjednat"
           title={<>Vše k autu na <b>jedné stránce</b></>}
-          lead="Přepínejte mezi produkty a poskládejte si krytí přesně na míru – od povinného ručení po ochranu na cestách."
+          lead="Přepínejte mezi produkty a poskládejte si krytí přesně na míru - od povinného ručení po ochranu na cestách."
         />
 
-        {/* rovnaký rad záložiek ako situácie v profile klienta – jeden komponent */}
+        {/* rovnaký rad záložiek ako situácie v profile klienta - jeden komponent */}
         <TabBar
           items={tabItems} value={tab} onChange={setTab}
           variant={tabStyle} label="Produkty k vozidlu"
         />
 
-        {/* panel aktívneho produktu – rovnaká kostra pre všetky */}
+        {/* panel aktívneho produktu - rovnaká kostra pre všetky */}
         <div className="veh-panel" role="tabpanel">
           <div className="veh-panel-tx">
             <span className="veh-pill">{active.tag}</span>
@@ -183,18 +191,18 @@ export default function Vehicles() {
 
       {/* ============ 3 · MODELOVÉ SITUACE (klientské profily na preklik) ============ */}
       <section id="veh-modely" className="sec wrap">
-        {/* počet nie je natvrdo – iný produkt môže mať modelov menej */}
+        {/* počet nie je natvrdo - iný produkt môže mať modelov menej */}
         <SecHead
           ey="Modelové situace"
           title={<>Najděte se v <b>jednom ze {countGen(profiles.length)} profilů</b></>}
-          lead="Vyberte si profil, který vám sedí nejvíc, a podívejte se, co se v něm reálně stalo – a co v tom pojištění udělalo."
+          lead="Vyberte si profil, který vám sedí nejvíc, a podívejte se, co se v něm reálně stalo - a co v tom pojištění udělalo."
         />
 
-        {/* Prepínač klientských profilov – doslova tie isté dlaždice ako na landingu,
+        {/* Prepínač klientských profilov - doslova tie isté dlaždice ako na landingu,
             len bez CTA. Jeden komponent, žiadny druhý variant karty. */}
         <ProfileTabs profiles={profiles.map((x) => x.profile)} value={profKey} onChange={setProfKey} />
 
-        {/* Tá istá situácia, akú vidí klient na svojej profilovej stránke – len vstup je produkt. */}
+        {/* Tá istá situácia, akú vidí klient na svojej profilovej stránke - len vstup je produkt. */}
         <div className="veh-sit" key={situation.key}>
           <SituationPanel profile={prof} situation={situation} context="produkt" />
         </div>
@@ -203,25 +211,39 @@ export default function Vehicles() {
         <div className="veh-verify">
           <div className="veh-verify-tx">
             <h3>Chcete si to ověřit přesně na vaši situaci?</h3>
-            <p>Projděte si krytí s poradcem – ukážeme, co přesně potřebujete, bez zbytečného přeplácení i bez děr v krytí.</p>
+            <p>Projděte si krytí s poradcem - ukážeme, co přesně potřebujete, bez zbytečného přeplácení i bez děr v krytí.</p>
           </div>
           <Link to="/kontakt?tema=Pojištění vozidel" className="btn fill">Probrat s poradcem <IconArrowRight size={18} stroke={2.2} /></Link>
         </div>
       </section>
 
 
-      {/* ============ 5 · KONTAKT (spoločný banner) ============ */}
+      {/* ============ 5 · BLOG ============ */}
+      {/* Články sa sem ťahajú z väzby článok × produkt (data/blog.js), rovnako ako
+          modelové situácie vyššie. Nový článok s `product: 'vozidla'` sa tu objaví sám.
+          Hlavička sekcie má rovnaký tvar ako referencie na úvode: vľavo eyebrow
+          a titulok, vpravo odkaz na celý zoznam. */}
+      <section className="sec wrap">
+        <ProductArticles productKey="vozidla" variant={blogStyle} />
+      </section>
+
+      {/* ============ 6 · KONTAKT (spoločný banner) ============ */}
       <ContactBand />
 
       {/* ============ FOOTER (spoločný) ============ */}
       <SiteFooter />
 
-      {/* rad záložiek je ten istý prvok ako v profile klienta – variant sa prepína
+      {/* rad záložiek je ten istý prvok ako v profile klienta - variant sa prepína
           na oboch stránkach naraz, aby sa dal porovnať v oboch kontextoch */}
       <DebugPanel>
+        <HeaderDebug />
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}
+        />
+        <DebugGroup
+          icon={IconNews} label="Články u produktu" value={blogStyle} onChange={setBlogStyle} wrap
+          options={BLOG_PROD_VARIANTS}
         />
       </DebugPanel>
     </div>

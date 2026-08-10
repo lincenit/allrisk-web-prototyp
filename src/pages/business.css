@@ -1,0 +1,186 @@
+/* /podnikatele - systém péče o klienta.
+   Reuse: wireframe.css (tokeny, hero, .photo-hero, .sec, .sec-h, .illus,
+   spoločné .hero-points, kontakt, footer).
+   Tu len: geometria hera, hlavička sekcie s ilustráciou, karty, kroky. */
+
+/* Každý cieľ kotvy si drží odstup od lepivej hlavičky, inak skočí nadpis
+   presne pod ňu a prvý riadok sekcie je schovaný. */
+.site [id]{scroll-margin-top:calc(var(--hdr-h) + 24px);}
+
+/* ---- breadcrumb ----
+   Vlastná trieda, nie .veh-crumb: tá žije vo vehicles.css, ktorý táto stránka
+   neimportuje. Rozostup pod ním je 28px, rovnaký na celom webe. */
+.site .biz-crumb{display:flex;align-items:center;gap:7px;font-size:var(--fs-sm);
+  color:rgba(255,255,255,.7);margin-bottom:28px;}
+.site .biz-crumb a{color:rgba(255,255,255,.7);text-decoration:none;transition:.2s;}
+.site .biz-crumb a:hover{color:#fff;}
+.site .biz-crumb b{color:#fff;font-weight:600;}
+.site .biz-crumb svg{opacity:.55;}
+
+/* ---- hero ----
+   Rovnaká geometria ako /vozidla: podlieza pod sticky hlavičku, takže foto
+   vidno aj za ňou. Odsadenie je na jednom mieste, deti ho nepridávajú. */
+.site .biz-hero{margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+.site .biz-hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
+  padding-block:0;align-items:start;}
+.site .biz-hero .hero-tx{max-width:620px;gap:0;}
+.site .biz-hero .hero-tx>p{margin-top:16px;max-width:52ch;}
+.site .biz-hero .hero-tx>.hero-cta{margin-top:32px;}
+
+/* ---- hlavička sekcie s ilustráciou ----
+   Nadpis a lead vľavo, ilustrácia vpravo; obsah sekcie ide pod celým blokom
+   na plnú šírku. Používa to spolupráce, kde je päť krokov pod sebou a nemali
+   by sa tlačiť do stĺpca vedľa obrázka.
+   Ostatné sekcie majú `.biz-care`: obsah v jednom stĺpci, ilustrácia cez celú
+   druhú stranu. Ekosystém ilustráciu nemá vôbec. */
+.site .biz-head{display:grid;grid-template-columns:1fr;gap:clamp(12px,2vw,32px);
+  align-items:center;margin-bottom:clamp(22px,3vw,34px);}
+.site .biz-head .sec-h{margin-bottom:0;}
+.site .biz-head .illus{min-height:0;background:none;}
+.site .biz-head .illus-img{max-height:230px;padding:0;}
+
+/* ---- karty „Proč Allrisk" ----
+   Svetlomodrá plocha, ikona, názov, popis. Prvá karta je zastrešujúci sľub,
+   nie jedna zo siedmich rovnocenných: má plnú modrú, väčší nadpis a v mriežke
+   zaberá dve miesta, aby sedmička nekončila dierou v poslednom riadku. */
+.site .biz-cards{list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.site .biz-cards li{background:var(--blue-50);border-radius:var(--r-card);
+  padding:22px 24px 24px;}
+.site .biz-card-ic{display:flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:var(--r-btn);
+  background:#fff;color:var(--blue);margin-bottom:14px;}
+.site .biz-cards b{display:block;font-family:var(--display);font-size:var(--fs-card);
+  font-weight:700;color:var(--ink);line-height:1.28;margin-bottom:8px;}
+.site .biz-cards p{margin:0;font-size:var(--fs-sm);line-height:1.6;color:var(--g600);}
+
+.site .biz-cards .is-lead{background:var(--grad-blue);}
+.site .biz-cards .is-lead .biz-card-ic{background:rgba(255,255,255,.16);color:#fff;}
+.site .biz-cards .is-lead b{color:#fff;font-size:var(--fs-h3);letter-spacing:-.02em;}
+.site .biz-cards .is-lead p{color:rgba(255,255,255,.86);font-size:var(--fs-body);}
+
+/* ---- kroky ----
+   Päť krokov pod sebou na plnú šírku. Číslo sedí na riadku s názvom, nie nad
+   ním: vlastný riadok pre číslo stál 52px na kartu, teda 260px na sekciu,
+   a nepridával nič, čo by sa nedalo prečítať aj takto. Popis visí pod názvom
+   v tom istom stĺpci, takže číslo drží ľavú hranu ako v obsahu knihy. */
+.site .biz-steps{list-style:none;margin:0;padding:0;counter-reset:bizstep;
+  display:flex;flex-direction:column;gap:10px;}
+.site .biz-steps li{counter-increment:bizstep;
+  display:grid;grid-template-columns:34px 1fr;gap:6px 14px;align-items:center;
+  background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);
+  padding:16px 20px;scroll-margin-top:calc(var(--hdr-h) + 24px);}
+.site .biz-steps li::before{content:counter(bizstep);grid-area:1 / 1;
+  display:flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border-radius:var(--r-pill);background:var(--blue);color:#fff;
+  font-family:var(--display);font-size:var(--fs-sm);font-weight:700;line-height:1;}
+.site .biz-steps b{grid-area:1 / 2;font-family:var(--display);font-size:var(--fs-card);
+  font-weight:700;color:var(--ink);line-height:1.28;}
+.site .biz-steps p{grid-area:2 / 2;margin:0;font-size:var(--fs-sm);
+  line-height:1.55;color:var(--g600);}
+
+/* ---- následná péče ----
+   Text a zoznam v jednom stĺpci, ilustrácia v druhom cez celú výšku sekcie.
+   Keď zoznam bežal na plnú šírku pod blokom, sekcia sa čítala ako dve
+   nesúvisiace časti a ilustrácia visela pri odstavci bez väzby na zvyšok. */
+.site .biz-care{display:grid;grid-template-columns:1fr;gap:clamp(20px,3vw,44px);
+  align-items:center;}
+.site .biz-care-tx h2{font-size:var(--fs-headline);font-weight:500;margin:6px 0 14px;}
+.site .biz-care-tx h2 b{color:var(--blue);}
+.site .biz-care-tx > p{margin:0 0 20px;color:var(--g500);font-size:var(--fs-lead);
+  line-height:1.6;max-width:56ch;}
+/* Strany sa striedajú, aby dva rovnaké bloky za sebou nestáli na jednej osi. */
+.site .biz-care .illus{min-height:0;background:none;align-self:stretch;}
+.site .biz-care .illus-img{max-height:none;height:100%;padding:0;}
+
+/* ---- výpočty služby ----
+   Zoznam s odškrtnutím, nie s bodkou: sú to veci, ktoré sa naozaj dejú, nie
+   vlastnosti. Linka medzi riadkami mu dáva rytmus tabuľky plnenia. */
+.site .biz-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--l);}
+.site .biz-list li{display:grid;grid-template-columns:17px 1fr;gap:12px;align-items:start;
+  padding:13px 0;border-bottom:1px solid var(--l);
+  font-size:var(--fs-sm);line-height:1.55;color:var(--g700);}
+.site .biz-list svg{color:var(--blue);margin-top:3px;}
+/* Väčší stupeň: tento zoznam je hlavný obsah sekcie, nie doplnok pod ňou. */
+.site .biz-list--lg li{padding:15px 0;font-size:var(--fs-body);line-height:1.5;
+  grid-template-columns:22px 1fr;gap:14px;color:var(--ink);}
+.site .biz-list--lg svg{margin-top:2px;}
+.site .biz-list--cols{border-top:0;}
+.site .biz-list--cols li{border-bottom:0;padding:7px 0;}
+
+/* ---- úrovně asistence ----
+   Samostatný nízky pás pod sekciou Centrum likvidace, nie jej súčasť: je to
+   porovnanie s trhom, nie výpočet toho, čo Centrum robí. V jednej sekcii sa
+   dva zoznamy o tom istom bili.
+   Dve karty sa musia líšiť na prvý pohľad: vľavo trhový štandard (tlmená,
+   len rám), vpravo to, čo robíme navyše (modrá plocha). Rozdiel nesie farba
+   aj ikona v štítku, nie iba text. */
+.site .biz-mini{padding-block:0 var(--sec-pad);}
+.site .biz-mini .ey{display:block;margin-bottom:14px;}
+.site .biz-assist{display:grid;grid-template-columns:1fr;gap:14px;}
+.site .biz-assist article{border-radius:var(--r-card);padding:22px 24px;}
+.site .biz-assist article.is-market{border:1px solid var(--l);background:var(--box);}
+.site .biz-assist article.is-ours{background:var(--grad-blue);color:#fff;}
+.site .biz-assist-note{display:inline-flex;align-items:center;gap:6px;
+  font-size:var(--fs-label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-bottom:10px;}
+.site .biz-assist .is-market .biz-assist-note{color:var(--g500);}
+.site .biz-assist .is-ours .biz-assist-note{color:var(--cyan);}
+.site .biz-assist b{display:block;font-family:var(--display);font-size:var(--fs-h3);
+  font-weight:700;line-height:1.15;letter-spacing:-.02em;margin-bottom:8px;}
+.site .biz-assist .is-market b{color:var(--ink);}
+.site .biz-assist .is-ours b{color:#fff;}
+.site .biz-assist p{margin:0;font-size:var(--fs-sm);line-height:1.6;}
+.site .biz-assist .is-market p{color:var(--g600);}
+.site .biz-assist .is-ours p{color:rgba(255,255,255,.86);}
+
+/* ---- krytí zdarma ----
+   Desať drobných dlaždíc v stĺpci vedľa ilustrácie. Žiadna nesmie byť väčšia
+   než ostatné: v tlači je to rad rovnocenných ikon a hodnota je v tom, koľko
+   ich je. Ikona vľavo, text vpravo, aby dlaždica zostala nízka. */
+.site .biz-perks{list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;}
+.site .biz-perks li{display:flex;align-items:flex-start;gap:12px;
+  background:var(--blue-50);border-radius:var(--r-btn);padding:13px 15px;}
+.site .biz-perk-ic{flex:none;display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:var(--r-btn);background:#fff;color:var(--blue);}
+.site .biz-perks b{display:block;font-size:var(--fs-sm);font-weight:700;color:var(--ink);
+  line-height:1.3;margin-bottom:2px;}
+.site .biz-perks small{display:block;font-size:var(--fs-label);line-height:1.45;color:var(--g600);}
+
+/* ---- ekosystém ----
+   Šesť línií ako karty s ikonou. Predtým to bola holá sadzba s linkou nad
+   nadpisom a po piatich sekciách s plochami pôsobila ako nedokončený zvyšok.
+   Karta je biela s rámom, nie modrá: modrých plôch je na stránke už dosť
+   a tu ide o výpočet, nie o zvýraznenie. */
+.site .biz-eco{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.site .biz-eco article{background:var(--box);border:1px solid var(--l);
+  border-radius:var(--r-card);padding:22px 24px 24px;}
+.site .biz-eco-ic{display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:var(--r-btn);
+  background:var(--blue-50);color:var(--blue);margin-bottom:14px;}
+.site .biz-eco b{display:block;font-family:var(--display);font-size:var(--fs-card);
+  font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3;}
+.site .biz-eco > article > p{margin:0 0 12px;font-size:var(--fs-sm);line-height:1.55;color:var(--g600);}
+/* Odrážky delí linka, nie bodka: je to zoznam plnenia a linky mu dávajú
+   rytmus tabuľky, rovnako ako výpočty služby vyššie. */
+.site .biz-eco ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--l2);}
+.site .biz-eco li{font-size:var(--fs-sm);line-height:1.45;color:var(--g700);
+  padding:9px 0;border-bottom:1px solid var(--l2);}
+.site .biz-eco li:last-child{border-bottom:0;padding-bottom:0;}
+
+/* ============ ŠIRŠIE OBRAZOVKY ============
+   Dvojstĺpce sa zapínajú až tu. Na mobile by z nich boli úzke stĺpce a to je
+   horšie než pod sebou. */
+@media(min-width:860px){
+  .site .biz-hero-in{grid-template-columns:1.25fr .85fr;align-items:center;}
+  .site .biz-head{grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);}
+  .site .biz-care{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);}
+  .site .biz-care--alt{grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);}
+  .site .biz-care--alt .biz-care-tx{order:2;}
+  .site .biz-care--alt .illus{order:1;}
+  .site .biz-assist{grid-template-columns:1fr 1fr;align-items:stretch;}
+  .site .biz-list--cols{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(24px,4vw,44px);}
+  .site .biz-cards .is-lead{grid-column:span 2;}
+}

@@ -1,24 +1,24 @@
-// Klientské profily (archetypy) – JEDEN zdroj pravdy pre tri kontexty:
-//   1. landing (/)            – dlaždica profilu + preklik na detail
-//   2. /profil/:slug          – archetyp, „Co je dobré mít vyřešeno", situácie ako taby
-//   3. produktová stránka     – tá istá situácia, len vstup je produkt a taby sú profily
+// Klientské profily (archetypy) - JEDEN zdroj pravdy pre tri kontexty:
+//   1. landing (/)            - dlaždica profilu + preklik na detail
+//   2. /profil/:slug          - archetyp, „Co je dobré mít vyřešeno", situácie ako taby
+//   3. produktová stránka     - tá istá situácia, len vstup je produkt a taby sú profily
 //
 // Kľúčová myšlienka: SITUÁCIA je zdieľaná entita s väzbou (profil × produkt).
 // Z profilu ju čítaš cez `p.situations`, z produktu cez `situationsFor(productKey)`.
 // `product` je stránka, na ktorú situácia vedie; `sub` je konkrétne krytie, ktoré tú
-// škodu reálne zaplatilo („Havarijní pojištění“ na stránke „Pojištění vozidel“) – to je
+// škodu reálne zaplatilo („Havarijní pojištění“ na stránke „Pojištění vozidel“) - to je
 // to, čo karta v profile ukazuje ako názov. U vozidiel `sub` doslova kopíruje label
 // záložky z vehicles.js PRODUCTS, nech obe stránky hovoria to isté; ostatné produkty
 // vlastný katalóg podproduktov zatiaľ nemajú, takže je to voľný text.
 // Ikony sú KĽÚČE (rovnako ako v menu.js), komponenty k nim mapuje ProfileParts.jsx.
 //
-// Rovnakú väzbu (profil × produkt) má aj MODEL – konkrétne zadanie, na ktorom produktová
+// Rovnakú väzbu (profil × produkt) má aj MODEL - konkrétne zadanie, na ktorom produktová
 // stránka ukazuje odporúčané krytie a cenu. Preto žije v `p.models[productKey]`, nie
 // natvrdo ako „vehicle". Kontrakt modelu:
 //   povinné pre každý produkt: img, tagIcon, usage, why, perks[], base, preset[]
 //   zvyšok je špecifický pre daný produkt (u vozidiel car/year/engine/mileage/deductible)
 // Profil sa na produktovej stránke objaví len vtedy, keď má K TOMU PRODUKTU aj situáciu
-// aj model – `modelsFor(productKey)` vracia presne tie dvojice.
+// aj model - `modelsFor(productKey)` vracia presne tie dvojice.
 
 import { routeFor, hasRoute } from '../productRoutes.js'
 
@@ -56,7 +56,7 @@ export const PROFILES = [
     // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
     photo: '/profily/sam-za-sebe.jpg',
     ic: 'user',
-    // tabler „boy-and-cat" – chlap s mačkou, teda človek, čo bydlí sám
+    // tabler „boy-and-cat" - chlap s mačkou, teda človek, čo bydlí sám
     img: '/illus/tabler/stories/sam-za-sebe.svg',
     ey: 'Sám za sebe',
     t: 'Lukáš, 28 let',
@@ -68,13 +68,13 @@ export const PROFILES = [
       'Odpovědnost za škodu v běžném životě',
     ],
     // ---- krátky popis osoby do hera detailnej stránky (/profil/:slug) ----
-    intro: 'Bydlí v nájmu, jezdí ojetým autem a poprvé v životě mu na konci měsíce něco zbyde. Nemá co ztratit na majetku – zato všechno stojí na jednom příjmu, který nikdo nenahradí.',
+    intro: 'Bydlí v nájmu, jezdí ojetým autem a poprvé v životě mu na konci měsíce něco zbyde. Nemá co ztratit na majetku - zato všechno stojí na jednom příjmu, který nikdo nenahradí.',
     // ---- „Co je dobré mít vyřešeno" ----
     solved: [
       { product: 'vozidla', need: 'nutnost', note: 'Povinné ručení je ze zákona, zbytek podle stáří vozu. U ojetiny často stačí asistence a skla místo drahé havarijky.' },
       { product: 'odpovednost', need: 'nutnost', note: 'Škoda, kterou způsobíte někomu jinému v běžném životě. Nejlevnější pojistka na trhu a nejčastěji zachrání majlant.' },
       { product: 'prijem', need: 'doporuceno', note: 'Denní dávka při pracovní neschopnosti. Když bydlíte sám, nájem běží dál i tři měsíce na neschopence.' },
-      { product: 'domacnost', need: 'doporuceno', note: 'Vaše věci v pronajatém bytě – notebook, kolo, elektronika. Majitelova pojistka kryje jen jeho zdi, ne váš majetek.' },
+      { product: 'domacnost', need: 'doporuceno', note: 'Vaše věci v pronajatém bytě - notebook, kolo, elektronika. Majitelova pojistka kryje jen jeho zdi, ne váš majetek.' },
       { product: 'cesty', need: 'doporuceno', note: 'Léčebné výlohy a zavazadla. Celoroční varianta pokryje i víkendový výjezd, na který se sjednávat nechce.' },
       { product: 'investice', need: 'zvazit', note: 'Pravidelné investování už od pár stovek měsíčně. Nejlevnější složené úročení je to, které začne nejdřív.' },
     ],
@@ -86,7 +86,7 @@ export const PROFILES = [
         title: 'Na parkovišti u práce mu někdo urazil zrcátko a ujel',
         story: 'Škoda 14 000 Kč, viník nezjištěn, kamery na parkovišti nic nezachytily. Lukáš má auto z druhé ruky a na opravu z vlastní kapsy nemá.',
         fix: [
-          'Havarijní připojištění krylo i škodu od neznámého viníka – povinné ručení tohle nikdy nekryje.',
+          'Havarijní připojištění krylo i škodu od neznámého viníka - povinné ručení tohle nikdy nekryje.',
           'Škodu jsme nahlásili za něj, likvidaci vede přímo oddělení Allrisk.',
           'Opravu odsouhlasil online, do servisu jel jednou a bez zálohy.',
         ],
@@ -97,7 +97,7 @@ export const PROFILES = [
         product: 'odpovednost', sub: 'Odpovědnost za škodu v běžném životě',
         tab: 'Způsobil škodu',
         title: 'Při stěhování upustil kamarádovi televizi',
-        story: 'Nová 65" OLED za 38 000 Kč, rozbitá při nesení do výtahu. Kamarád nic nechtěl, ale Lukášovi to nedalo – a byla to skoro celá jeho rezerva.',
+        story: 'Nová 65" OLED za 38 000 Kč, rozbitá při nesení do výtahu. Kamarád nic nechtěl, ale Lukášovi to nedalo - a byla to skoro celá jeho rezerva.',
         fix: [
           'Pojištění odpovědnosti krylo škodu na cizí věci, kterou způsobil neúmyslně.',
           'Stačilo doložit účtenku a fotky, žádný znalecký posudek.',
@@ -136,7 +136,7 @@ export const PROFILES = [
         product: 'domacnost', sub: 'Krádež vloupáním',
         tab: 'Vykradli mu byt',
         title: 'Vypáčené dveře v pronajatém bytě, když byl týden na horách',
-        story: 'Zmizel notebook, fotoaparát a kolo ze sklepa – dohromady za 74 000 Kč. Majitel bytu má pojištěné zdi, na Lukášovy věci se jeho smlouva nevztahuje.',
+        story: 'Zmizel notebook, fotoaparát a kolo ze sklepa - dohromady za 74 000 Kč. Majitel bytu má pojištěné zdi, na Lukášovy věci se jeho smlouva nevztahuje.',
         fix: [
           'Pojištění domácnosti krylo vybavení bytu i věci ve sklepě, který k bytu patří.',
           'Elektronika byla pojištěná na novou cenu, ne na tu odepsanou po třech letech používání.',
@@ -151,7 +151,7 @@ export const PROFILES = [
         title: 'Poprvé mu na konci měsíce zbývalo a nevěděl, kam s tím',
         story: 'Zbývalo kolem 4 000 Kč měsíčně, které se rok a půl vršily na běžném účtu. Nastřádalo se 70 000 Kč, ze kterých inflace tiše ukrajovala.',
         fix: [
-          'Tři platy jsme nechali stranou na spořicím účtu – rezerva má být po ruce, ne ve fondech.',
+          'Tři platy jsme nechali stranou na spořicím účtu - rezerva má být po ruce, ne ve fondech.',
           'Zbytek jde pravidelnou měsíční platbou do dynamického portfolia, horizont je přes dvacet let.',
           'Platba odchází den po výplatě, takže se z rozpočtu neztratí a Lukáš na ni nemusí myslet.',
         ],
@@ -181,32 +181,32 @@ export const PROFILES = [
   {
     key: 'rodina',
     slug: 'rodina',
-    // foto pár ~38 s dvomi školákmi – presne tento zlúčený archetyp
+    // foto pár ~38 s dvomi školákmi - presne tento zlúčený archetyp
     // (súbor sa volá po pôvodnom profile „rodina v nejlepších letech", obsah sedí)
     photo: '/profily/rodina-v-nejlepsich-letech.jpg',
     ic: 'heart',
-    // tabler „shopping" – pár s nákupným vozíkom
+    // tabler „shopping" - pár s nákupným vozíkom
     img: '/illus/tabler/stories/rodina.svg',
     ey: 'Rodina',
     t: 'Jana a Tomáš, 38 let',
     p: 'Hypotéka, dvě děti a všechno najednou.',
-    lead: 'Byt na hypotéku, dvě děti a jedno auto na všechno. Nejvíc majetku i nejvíc závazků za celý život – a rozpočet, který stojí na dvou příjmech.',
+    lead: 'Byt na hypotéku, dvě děti a jedno auto na všechno. Nejvíc majetku i nejvíc závazků za celý život - a rozpočet, který stojí na dvou příjmech.',
     pts: [
       'Životní pojištění navázané na splátku hypotéky',
       'Pojištění nemovitosti, domácnosti i odpovědnosti',
       'Investice na studium dětí a vlastní rezervu',
     ],
     // ---- krátky popis osoby do hera detailnej stránky (/profil/:slug) ----
-    intro: 'Splácejí hypotéku, vozí dvě děti na kroužky a byt mají čerstvě po rekonstrukci. Je to období, kdy mají nejvyšší příjem a největší majetek – a zároveň nejvíc toho, co se může pokazit.',
+    intro: 'Splácejí hypotéku, vozí dvě děti na kroužky a byt mají čerstvě po rekonstrukci. Je to období, kdy mají nejvyšší příjem a největší majetek - a zároveň nejvíc toho, co se může pokazit.',
     // ---- „Co je dobré mít vyřešeno" ----
     solved: [
       { product: 'zivot', need: 'nutnost', note: 'Výplata sjednané částky při úrazu, vážné nemoci nebo úmrtí. Pojistnou částku navážeme na zůstatek hypotéky.' },
       { product: 'hypoteka', need: 'nutnost', note: 'Sazba a podmínky napříč trhem, ne jen u vlastní banky. Refinancování řešíme včas před koncem fixace, ne až když přijde nabídka na prodloužení.' },
-      { product: 'nemovitost', need: 'nutnost', note: 'Stavba bytu či domu proti požáru, vodě a živlu – včetně sklepa a garáže. Po rekonstrukci částku přepíšeme na novou cenu.' },
+      { product: 'nemovitost', need: 'nutnost', note: 'Stavba bytu či domu proti požáru, vodě a živlu - včetně sklepa a garáže. Po rekonstrukci částku přepíšeme na novou cenu.' },
       { product: 'domacnost', need: 'nutnost', note: 'Vybavení, elektronika a osobní věci uvnitř. Kryje i krádež, vytopení a poškozené spotřebiče.' },
       { product: 'vozidla', need: 'nutnost', note: 'Povinné ručení i havarijní pojištění. Všechna auta v rodině na jednom vyúčtování, bonus lze mezi nimi převádět.' },
-      { product: 'odpovednost', need: 'doporuceno', note: 'Škoda, kterou způsobíte někomu jinému v běžném životě – vytopený soused i rozbitá věc v cizím bytě.' },
-      { product: 'investice', need: 'doporuceno', note: 'Investice a spoření s odlišnou strategií podle horizontu – peníze na školu dětí zvlášť od vlastní rezervy.' },
+      { product: 'odpovednost', need: 'doporuceno', note: 'Škoda, kterou způsobíte někomu jinému v běžném životě - vytopený soused i rozbitá věc v cizím bytě.' },
+      { product: 'investice', need: 'doporuceno', note: 'Investice a spoření s odlišnou strategií podle horizontu - peníze na školu dětí zvlášť od vlastní rezervy.' },
     ],
     // ---- situácie („Proč je dobré mít toto pojištění") ----
     situations: [
@@ -217,7 +217,7 @@ export const PROFILES = [
         title: 'Na kruhovém objezdu do nich zezadu naboural dodávkař',
         story: 'Jana vezla malou z kontroly. Škoda na zadní části vozu 78 000 Kč, auto nepojízdné, viník uznal zavinění na místě. Rodina má jedno auto a Tomáš jím jezdí do práce 40 km denně.',
         fix: [
-          'Škodu jsme nahlásili za ně – likvidaci vede přímo oddělení Allrisk, ne cizí pojišťovna.',
+          'Škodu jsme nahlásili za ně - likvidaci vede přímo oddělení Allrisk, ne cizí pojišťovna.',
           'Náhradní vůz přistavený do druhého dne, Tomáš nevynechal jedinou směnu.',
           'Vymáhání po viníkově pojišťovně jsme převzali my, Jana neřešila ani jeden telefonát.',
         ],
@@ -231,7 +231,7 @@ export const PROFILES = [
         story: 'Voda tekla šest hodin. Zničená plovoucí podlaha v novém bytě a promáčený strop u sousedů pod nimi, kteří měli rok starou rekonstrukci koupelny.',
         fix: [
           'Pojištění domácnosti pokrylo podlahu, nábytek a vysoušení jejich bytu.',
-          'Pojištění odpovědnosti zaplatilo škodu sousedům – 112 000 Kč, kterou by jinak platili ze svého.',
+          'Pojištění odpovědnosti zaplatilo škodu sousedům - 112 000 Kč, kterou by jinak platili ze svého.',
           'Vysoušeče a firmu na sanaci zařídila asistenční služba, ne oni.',
         ],
         outcome: 'Z celkové škody 190 000 Kč zaplatila rodina spoluúčast 1 000 Kč. Se sousedy zůstali zadobře.',
@@ -245,7 +245,7 @@ export const PROFILES = [
         fix: [
           'Denní dávka při pracovní neschopnosti dorovnala výpadek od 29. dne.',
           'Plnění za trvalé následky úrazu přišlo jednorázově po ustálení stavu.',
-          'Splátky hypotéky ani jednou nevypadly – nemuseli sahat na rezervu ani žádat o odklad.',
+          'Splátky hypotéky ani jednou nevypadly - nemuseli sahat na rezervu ani žádat o odklad.',
         ],
         outcome: 'Za pět měsíců přišlo plnění 168 000 Kč. Rodina neřešila peníze, jen Tomášovu nohu.',
       },
@@ -258,7 +258,7 @@ export const PROFILES = [
         fix: [
           'Srovnali jsme nabídky napříč trhem a vyjednali podmínky u banky, kde nejsou klienty.',
           'Životní pojištění jsme napojili na skutečný zůstatek úvěru, ne na balíček od banky.',
-          'Pojištění nemovitosti sjednali u nás – levněji a s vyšší pojistnou částkou než v bankovním balíčku.',
+          'Pojištění nemovitosti sjednali u nás - levněji a s vyšší pojistnou částkou než v bankovním balíčku.',
         ],
         outcome: 'Úspora 0,4 p. b. na sazbě znamená za dobu fixace zhruba 94 000 Kč, které zůstaly rodině.',
       },
@@ -267,9 +267,9 @@ export const PROFILES = [
         product: 'nemovitost', sub: 'Živelní pojištění stavby',
         tab: 'Přišla vichřice',
         title: 'Orkán vytrhl okna v posledním patře a voda zatekla až do bytu',
-        story: 'Škoda 340 000 Kč na oknech, podlahách a rozvodech. Byt byl po rekonstrukci za 1,4 milionu, ale pojistka pořád běžela na částku z původní smlouvy – 2,6 milionu místo reálných 5 milionů.',
+        story: 'Škoda 340 000 Kč na oknech, podlahách a rozvodech. Byt byl po rekonstrukci za 1,4 milionu, ale pojistka pořád běžela na částku z původní smlouvy - 2,6 milionu místo reálných 5 milionů.',
         fix: [
-          'Pojistnou částku jsme aktualizovali při revizi devět měsíců před vichřicí – bez toho by pojišťovna plnila zhruba polovinu.',
+          'Pojistnou částku jsme aktualizovali při revizi devět měsíců před vichřicí - bez toho by pojišťovna plnila zhruba polovinu.',
           'Škodu likvidovalo oddělení Allrisk, zálohu na materiál měli na účtu do deseti dnů.',
           'Provizorní zabednění oken zajistila asistenční služba ještě týž večer.',
         ],
@@ -280,10 +280,10 @@ export const PROFILES = [
         product: 'investice', sub: 'Pravidelné investování',
         tab: 'Děti půjdou na vysokou',
         title: 'Za osm let Praha, podnájem a pět let studia',
-        story: 'Podnájem, jídlo a doprava dnes vycházejí na 14 000 Kč měsíčně. Za pět let studia je to zhruba 840 000 Kč na dítě – a doma jsou děti dvě, s odstupem tří let.',
+        story: 'Podnájem, jídlo a doprava dnes vycházejí na 14 000 Kč měsíčně. Za pět let studia je to zhruba 840 000 Kč na dítě - a doma jsou děti dvě, s odstupem tří let.',
         fix: [
           'Peníze na studium jsme oddělili od rodinné rezervy, aby se z nich neuždibovalo na běžné výdaje.',
-          'Horizont je dost dlouhý na dynamické portfolio – ke konci ho postupně překlopíme do konzervativního.',
+          'Horizont je dost dlouhý na dynamické portfolio - ke konci ho postupně překlopíme do konzervativního.',
           'Nastavili jsme pravidelnou platbu, která se z rozpočtu neztratí, ale za osm let udělá rozdíl.',
         ],
         outcome: 'Při dnešní platbě 3 500 Kč měsíčně pokryjí studium obou dětí, aniž by sahali na hypotéku nebo rezervu.',
@@ -295,7 +295,7 @@ export const PROFILES = [
         title: 'Syn při fotbale na hřišti rozbil zaparkované auto souseda',
         story: 'Míč trefil čelní sklo a promáčkl bok vozu, oprava 46 000 Kč. Soused chtěl škodu uhradit do měsíce v hotovosti, jinak že to předá právníkovi.',
         fix: [
-          'Pojištění odpovědnosti kryje i škody způsobené dětmi – ty za sebe právně neodpovídají, platí rodiče.',
+          'Pojištění odpovědnosti kryje i škody způsobené dětmi - ty za sebe právně neodpovídají, platí rodiče.',
           'Stačilo nahlásit škodu a doložit fotky, s pojišťovnou i se sousedem jednalo oddělení Allrisk.',
           'Rodinná varianta pokrývá oba rodiče, obě děti i psa na jedné smlouvě.',
         ],
@@ -305,13 +305,13 @@ export const PROFILES = [
     // ---- modely pre produktové stránky (kľúč = produkt) ----
     models: {
     vozidla: {
-      // TODO(design): vlastná ilustrácia pre každý profil – zatiaľ 3 existujúce SVG na 4 profily.
+      // TODO(design): vlastná ilustrácia pre každý profil - zatiaľ 3 existujúce SVG na 4 profily.
       img: '/cars/driver.svg',
       tagIcon: 'users',
       driver: 'Řidiči 38 let · děti v autě',
       car: 'Škoda Fabia', year: '2018', engine: '1.0 TSI · 70 kW',
       mileage: '14 000 km / rok', deductible: '5 000 Kč',
-      usage: 'Hlavní auto na všechno – do práce, s dětmi k lékaři a o víkendu za rodiči. Když stojí, stojí celá domácnost.',
+      usage: 'Hlavní auto na všechno - do práce, s dětmi k lékaři a o víkendu za rodiči. Když stojí, stojí celá domácnost.',
       base: 480, preset: ['havarie', 'skla', 'asistence', 'nahradni'],
       why: 'Jediné auto v rodině musí být pojízdné. Havarijka na starší Fabii nestojí moc a náhradní vůz řeší to, co by rodinu položilo nejvíc.',
       perks: [
@@ -339,12 +339,12 @@ export const PROFILES = [
       'Odpovědnost za škodu vůči klientům',
       'Flotila vozidel pod jednou smlouvou',
     ],
-    intro: 'Firma vyrostla z jednoho člověka na tým se skladem, auty a šesti zaměstnanci. Má rizika velké firmy, ale nemá její rezervy – a celý provoz i rodina pořád visí na jednom člověku.',
+    intro: 'Firma vyrostla z jednoho člověka na tým se skladem, auty a šesti zaměstnanci. Má rizika velké firmy, ale nemá její rezervy - a celý provoz i rodina pořád visí na jednom člověku.',
     solved: [
       { product: 'odpovednostFirmy', need: 'nutnost', note: 'Škoda způsobená vaší činností klientovi nebo třetí straně. Kryje i následné škody, nejen tu přímou.' },
       { product: 'firma', need: 'nutnost', note: 'Budovy, zásoby a technika. Součástí je přerušení provozu, které platí režii, když nemůžete vyrábět.' },
       // Zámerne `vozidla`, nie `flotila`: flotila vlastnú stránku nemá, kým ju nedostane,
-      // firemné vozy žijú na /vozidla (tam je aj Martinov model – dodávka, viac vodičov).
+      // firemné vozy žijú na /vozidla (tam je aj Martinov model - dodávka, viac vodičov).
       // Keby tu stálo `flotila`, prípad „naboural dodávku" by ukazoval na produkt, ktorý
       // nikam nevedie, a Martin by vypadol z prepínača profilov na /vozidla.
       { product: 'vozidla', need: 'nutnost', note: 'Všechna firemní auta na jedné smlouvě a jednom vyúčtování. Přidání vozu bez nové smlouvy.' },
@@ -361,7 +361,7 @@ export const PROFILES = [
         story: 'Na výjezdu z dvora přehlédl sloup. Škoda na dodávce 143 000 Kč, poškozený materiál na zakázku za 60 000 Kč a montáž u klienta naplánovaná na další den.',
         fix: [
           'Havarijní pojištění pokrylo opravu dodávky včetně odtahu z místa.',
-          'Náhradní dodávka ze služby autopůjčovny Allrisk dorazila týž den – montáž u klienta se nezrušila.',
+          'Náhradní dodávka ze služby autopůjčovny Allrisk dorazila týž den - montáž u klienta se nezrušila.',
           'Škodu jsme likvidovali interně, Martin ji nahlásil jedním telefonátem a dál se o ni nestaral.',
         ],
         outcome: 'Firma doplatila spoluúčast 5 000 Kč a nepřišla o zakázku ani o klienta.',
@@ -387,7 +387,7 @@ export const PROFILES = [
         story: 'Špatně dotažený spoj podmáčel klientovi novou podlahu v provozovně. Klient vyčíslil škodu na 410 000 Kč včetně dvou dnů zavřeného provozu a poslal předžalobní výzvu.',
         fix: [
           'Pojištění odpovědnosti krylo škodu na cizím majetku i následnou škodu z přerušení provozu klienta.',
-          'Pojišťovna vedla jednání o výši škody – Martin neplatil vlastního znalce ani advokáta.',
+          'Pojišťovna vedla jednání o výši škody - Martin neplatil vlastního znalce ani advokáta.',
           'Neoprávněnou část nároku pojišťovna odmítla za něj, což je součást krytí.',
         ],
         outcome: 'Uznaná škoda 355 000 Kč šla z pojištění, firma platila spoluúčast 10 000 Kč a udržela si odběratele.',
@@ -412,9 +412,9 @@ export const PROFILES = [
         title: 'Faktura za 380 000 Kč devět měsíců po splatnosti',
         story: 'Odběratel dílo převzal bez výhrad, pak přestal zvedat telefon. Martin měl na výběr odepsat to, nebo jít k soudu a platit advokáta z vlastního.',
         fix: [
-          'Právní ochrana zaplatila advokáta, soudní poplatek i znalecký posudek – Martin nedal ze svého nic.',
+          'Právní ochrana zaplatila advokáta, soudní poplatek i znalecký posudek - Martin nedal ze svého nic.',
           'Předžalobní výzva z advokátní kanceláře vyřešila dvě menší faktury ještě před podáním žaloby.',
-          'Kdyby spor prohrál, krytí zahrnuje i náklady protistrany – to je ta část, která podnikatele obvykle položí.',
+          'Kdyby spor prohrál, krytí zahrnuje i náklady protistrany - to je ta část, která podnikatele obvykle položí.',
         ],
         outcome: 'Soud přiznal 380 000 Kč i s úroky. Právní náklady 92 000 Kč šly z pojištění, ne ze zisku.',
       },
@@ -423,7 +423,7 @@ export const PROFILES = [
         product: 'investice', sub: 'Zhodnocení volných prostředků firmy',
         tab: 'Firmě ležely peníze',
         title: 'Milion na běžném účtu, který jen čekal na daně',
-        story: 'Na firemním účtu trvale leželo kolem 1 200 000 Kč – provozní rezerva a peníze odložené na DPH a daň z příjmu. Banka je úročila prakticky nulou.',
+        story: 'Na firemním účtu trvale leželo kolem 1 200 000 Kč - provozní rezerva a peníze odložené na DPH a daň z příjmu. Banka je úročila prakticky nulou.',
         fix: [
           'Provozní rezervu na tři měsíce nákladů jsme nechali okamžitě dostupnou, ne v investicích.',
           'Peníze s pevným termínem (daně, leasing) jdou do konzervativních nástrojů se splatností přesně na ten termín.',
@@ -467,11 +467,11 @@ export const PROFILES = [
       'Zrušení smluv, které už nic nekryjí',
       'Nastavení majetku pro předání dětem',
     ],
-    intro: 'Za dva roky odchází do důchodu. Hypotéka je splacená a děti odrostlé, ale staré pojistky pořád běží a kryjí rizika, která už dávno nehrozí – zatímco příjem brzy klesne na polovinu.',
+    intro: 'Za dva roky odchází do důchodu. Hypotéka je splacená a děti odrostlé, ale staré pojistky pořád běží a kryjí rizika, která už dávno nehrozí - zatímco příjem brzy klesne na polovinu.',
     solved: [
       { product: 'penze', need: 'nutnost', note: 'Penzijní spoření se státním příspěvkem a výplata renty. Spočítáme, kolik měsíčně reálně přijde.' },
       { product: 'zivot', need: 'doporuceno', note: 'Výplata sjednané částky při vážné nemoci, úrazu nebo úmrtí. Rozsah rizik doladíme na váš věk.' },
-      { product: 'investice', need: 'doporuceno', note: 'Investice ve výplatní fázi – portfolio, které místo růstu posílá peníze každý měsíc.' },
+      { product: 'investice', need: 'doporuceno', note: 'Investice ve výplatní fázi - portfolio, které místo růstu posílá peníze každý měsíc.' },
       { product: 'nemovitost', need: 'nutnost', note: 'Stavba domu proti požáru, vodě a živlu. Pojistnou částku nastavíme na dnešní cenu, ne na tu z původní smlouvy.' },
       { product: 'pravni', need: 'zvazit', note: 'Právník, soudní poplatky i náklady protistrany. Převody majetku, darovací smlouvy a věcná břemena.' },
       { product: 'vozidla', need: 'doporuceno', note: 'Povinné ručení i havarijní pojištění. U staršího vozu a nízkého nájezdu rozsah i cenu přizpůsobíme.' },
@@ -510,7 +510,7 @@ export const PROFILES = [
         title: 'Prasklé rozvody a vytopený suterén po lednových mrazech',
         story: 'Byli u dcery přes svátky. Zamrzlo a prasklo potrubí v nevytápěné části domu, voda tekla několik dní. Škoda 380 000 Kč na rozvodech, podlaze a technice v suterénu.',
         fix: [
-          'Pojistnou částku jsme při revizi zvedli na reálnou hodnotu domu – původní byla z roku 2009.',
+          'Pojistnou částku jsme při revizi zvedli na reálnou hodnotu domu - původní byla z roku 2009.',
           'Krytí zahrnuje i škody vodou z prasklého potrubí, což v původní smlouvě chybělo.',
           'Havarijní službu a vysoušeče poslala asistence ještě před jejich návratem domů.',
         ],
@@ -523,7 +523,7 @@ export const PROFILES = [
         title: 'Platil havarijku na patnáct let starý vůz',
         story: 'Golf z roku 2012 s nájezdem 8 000 km ročně. Havarijní pojištění stálo 420 Kč měsíčně, přitom obecná cena vozu klesla pod 90 000 Kč.',
         fix: [
-          'Havarijku jsme zrušili – u vozu téhle hodnoty se spoluúčastí už nedává smysl.',
+          'Havarijku jsme zrušili - u vozu téhle hodnoty se spoluúčastí už nedává smysl.',
           'Ušetřené peníze šly do kvalitní asistence, která u staršího auta zasáhne mnohem častěji.',
           'Bonus za bezeškodní průběh jsme převedli, takže povinné ručení kleslo ještě víc.',
         ],
@@ -538,7 +538,7 @@ export const PROFILES = [
         fix: [
           'Dva roky výběrů jsme drželi mimo trh, takže Pavel nemusel prodat ani jednu akcii v propadu.',
           'Portfolio jsme překlápěli do konzervativního podle plánu, ne podle nálady na trhu.',
-          'Rebalancování po propadu nakoupilo levněji – bez něj by se návrat protáhl o roky.',
+          'Rebalancování po propadu nakoupilo levněji - bez něj by se návrat protáhl o roky.',
         ],
         outcome: 'Portfolio se vrátilo na původní hodnotu za 14 měsíců a výplatní plán se nemusel měnit ani o korunu.',
       },
@@ -565,7 +565,7 @@ export const PROFILES = [
       mileage: '8 000 km / rok', deductible: '10 000 Kč',
       usage: 'Nákupy, chalupa a cesty za vnoučaty. Nízký nájezd, ale vůz musí spolehlivě nastartovat pokaždé.',
       base: 320, preset: ['asistence', 'skla'],
-      why: 'Starší vůz s nízkou hodnotou. Havarijku už nemá smysl platit – vyplatí se spolehlivá asistence a maximální bonus.',
+      why: 'Starší vůz s nízkou hodnotou. Havarijku už nemá smysl platit - vyplatí se spolehlivá asistence a maximální bonus.',
       perks: [
         'Levné a férové krytí podle skutečné hodnoty vozu',
         'Žádné přeplácení za připojištění, které nedává smysl',
@@ -580,11 +580,11 @@ export const PROFILES = [
 export const profileBySlug = (slug) => PROFILES.find((p) => p.slug === slug)
 export const profileByKey = (key) => PROFILES.find((p) => p.key === key)
 
-// Situácia pre dvojicu (profil, produkt) – vstup z produktovej stránky.
+// Situácia pre dvojicu (profil, produkt) - vstup z produktovej stránky.
 export const situationFor = (profileKey, productKey) =>
   profileByKey(profileKey)?.situations.find((s) => s.product === productKey)
 
-// Všetky situácie k jednému produktu, v poradí profilov – taby na produktovej stránke.
+// Všetky situácie k jednému produktu, v poradí profilov - taby na produktovej stránke.
 export const situationsFor = (productKey) =>
   PROFILES.map((p) => {
     const s = p.situations.find((x) => x.product === productKey)
@@ -596,18 +596,18 @@ export const modelFor = (profileKey, productKey) =>
   profileByKey(profileKey)?.models?.[productKey]
 
 // Vstup pre sekciu „Najděte se v jednom ze čtyř profilů" na produktovej stránke.
-// Vracia iba profily, ktoré majú k produktu OBOJE – situáciu aj model – takže
+// Vracia iba profily, ktoré majú k produktu OBOJE - situáciu aj model - takže
 // prepínač nikdy neponúkne dlaždicu, pod ktorou by nebolo čo vykresliť.
 export const modelsFor = (productKey) =>
   situationsFor(productKey)
     .map((x) => ({ ...x, model: x.profile.models?.[productKey] }))
     .filter((x) => x.model)
 
-// Genitív pre nadpis „jednom ze <…> profilů" – počet sa mení podľa produktu.
+// Genitív pre nadpis „jednom ze <…> profilů" - počet sa mení podľa produktu.
 const COUNT_GEN = { 2: 'dvou', 3: 'tří', 4: 'čtyř', 5: 'pěti', 6: 'šesti', 7: 'sedmi' }
 export const countGen = (n) => COUNT_GEN[n] || String(n)
 
-// „Čtyři situace" / „Pět situací" – česky sa s číslovkou 5+ mení aj pád podstatného mena,
+// „Čtyři situace" / „Pět situací" - česky sa s číslovkou 5+ mení aj pád podstatného mena,
 // preto to vracia celú frázu, nie len číslovku. Počet situácií je per profil.
 const COUNT_NOM = { 1: 'Jedna', 2: 'Dvě', 3: 'Tři', 4: 'Čtyři', 5: 'Pět', 6: 'Šest', 7: 'Sedm' }
 export const situationCount = (n) =>
@@ -620,14 +620,14 @@ export const NEED_LABEL = {
   zvazit: 'Zvážit',
 }
 // Hlavička úrovne v maticovom rozložení. `hint` je jednoveršový preklad štítku do
-// bežnej reči – samotné „Zvážit" nepovie, podľa čoho sa má človek rozhodnúť.
+// bežnej reči - samotné „Zvážit" nepovie, podľa čoho sa má človek rozhodnúť.
 // Ikony sú KĽÚČE, komponenty k nim mapuje ProfileParts.jsx (rovnako ako pri produktoch).
 export const NEED_META = {
   nutnost: { label: 'Nutnost', hint: 'Bez tohohle to nedává smysl', ic: 'need-must' },
   doporuceno: { label: 'Doporučujeme', hint: 'Chybí to nejčastěji ze všeho', ic: 'need-rec' },
   zvazit: { label: 'Zvážit', hint: 'Podle toho, jak na tom jste', ic: 'need-opt' },
 }
-// Poradie naliehavosti – zoznam sa ním triedi, nutnosti idú navrch.
+// Poradie naliehavosti - zoznam sa ním triedi, nutnosti idú navrch.
 export const NEED_ORDER = ['nutnost', 'doporuceno', 'zvazit']
 export const needRank = (need) => {
   const i = NEED_ORDER.indexOf(need)
@@ -635,7 +635,7 @@ export const needRank = (need) => {
 }
 
 // Položky zoskupené po úrovniach pre maticové rozloženie.
-// Prázdne úrovne VYPADNÚ – rodina nemá ani jedno „Zvážit" a pevné tri stĺpce by
+// Prázdne úrovne VYPADNÚ - rodina nemá ani jedno „Zvážit" a pevné tri stĺpce by
 // tam nechali prázdne miesto, ktoré vyzerá ako chyba. Počet skupín preto určuje
 // aj počet stĺpcov (viď --sgrp-n v profile.css).
 export const groupByNeed = (items) =>

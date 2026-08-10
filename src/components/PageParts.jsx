@@ -43,7 +43,7 @@ export function PageHero({ back, backLabel, title, subtitle, photo, media, child
   )
 }
 
-// Kontaktný čip v hero – telefón, e-mail, adresa. Bez href je to len údaj.
+// Kontaktný čip v hero - telefón, e-mail, adresa. Bez href je to len údaj.
 // Tvar podľa reality webu: hranatý rám v bielej, ikona rovno v riadku (bez bublinky).
 export function HeroChip({ href, icon, children }) {
   const Tag = href ? 'a' : 'span'
@@ -56,15 +56,15 @@ export function HeroChip({ href, icon, children }) {
   )
 }
 
-// Hlavička sekcie: eyebrow → titulok → úvodná veta. JEDINÝ tvar pre celý web —
+// Hlavička sekcie: eyebrow → titulok → úvodná veta. JEDINÝ tvar pre celý web -
 // sekcie na všetkých stránkach aj modrá hlavička podstránky (/reference), ktorá
 // je ten istý blok, len s h1 a s farbami na tmavom (rieši .page-head v CSS).
 // Predtým bola táto trojica rozpísaná inline na dvanástich miestach a hlavička
-// podstránky mala vlastnú štruktúru s inými medzerami — presne tým sa rozišli.
-//   ey    – text eyebrowu; ako element (napr. tlačidlo späť) sa vloží tak, ako je
-//   lead  – úvodná veta pod titulkom
-//   level – 1 pre titulok stránky, inak 2
-//   children – čokoľvek pod vetou (čísla v hlavičke, skratky v „cestě života")
+// podstránky mala vlastnú štruktúru s inými medzerami - presne tým sa rozišli.
+//   ey    - text eyebrowu; ako element (napr. tlačidlo späť) sa vloží tak, ako je
+//   lead  - úvodná veta pod titulkom
+//   level - 1 pre titulok stránky, inak 2
+//   children - čokoľvek pod vetou (čísla v hlavičke, skratky v „cestě života")
 export function SecHead({ ey, title, lead, leadClass, level = 2, className = '', children }) {
   const H = `h${level}`
   return (
@@ -88,7 +88,7 @@ export function SectionHead({ icon, title, action }) {
   )
 }
 
-// Karta človeka (poradce) – avatar, meno, rola. Zhodná v tíme pobočky aj vo formulári.
+// Karta človeka (poradce) - avatar, meno, rola. Zhodná v tíme pobočky aj vo formulári.
 export function PersonCard({ a, initials, to, plain }) {
   const inner = (
     <>

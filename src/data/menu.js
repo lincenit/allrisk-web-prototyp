@@ -1,4 +1,4 @@
-// IA allrisk.cz – segment × kategória × produkty (pre header mega-menu).
+// IA allrisk.cz - segment × kategória × produkty (pre header mega-menu).
 // icon = kľúč do ICONS. Wireframe dáta, dolaďujeme.
 
 export const ICONS = {
@@ -33,10 +33,16 @@ export const CATS = [
   { key: 'effective', label: 'Allrisk EFFECTIVE' },
 ]
 
+// Segmenty sú od 2026-08-10 prvou úrovňou navigácie - každý má vlastné
+// tlačidlo v hlavičke namiesto bývalej jedinej položky „Produkty".
+//   short = label do lišty. Musí byť krátky: na navigáciu zostáva po logu
+//           a pravých akciách ~600px a plné názvy sa doň nezmestia.
+//   pro   = nadpis panelu. Dopovie to, čo sa do lišty nevošlo („Rodiny"
+//           samo o sebe zamlčuje jednotlivcov).
 export const SEGMENTS = [
-  { key: 'rodiny', label: 'Rodiny a jednotlivci', short: 'Rodiny', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
-  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
-  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
+  { key: 'rodiny', label: 'Jednotlivci a rodiny', short: 'Rodiny', pro: 'Pro jednotlivce a rodiny', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
+  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', pro: 'Pro podnikatele a firmy', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
+  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', pro: 'Pro města a obce', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
 ]
 
 // koľko služieb ponúkame danému segmentu (číslo v hlavičke menu)

@@ -9,7 +9,7 @@ export default function SiteFooter() {
       <div className="sfoot-wrap sfoot-top">
         <div className="sfoot-brand">
           <img className="fl" src={asset('/allrisk-logo-white.svg')} alt="Allrisk" />
-          <p>Spolehlivý partner při vašich životních krocích – pojištění, bydlení, financování i investice pod jednou střechou.</p>
+          <p>Spolehlivý partner při vašich životních krocích - pojištění, bydlení, financování i investice pod jednou střechou.</p>
           <div className="soc">
             <a href="#" aria-label="Facebook"><IconBrandFacebook size={20} stroke={1.7} /></a>
             <a href="#" aria-label="Instagram"><IconBrandInstagram size={20} stroke={1.7} /></a>
@@ -26,7 +26,7 @@ export default function SiteFooter() {
         </div>
         <div className="sfoot-col">
           <h4>Allrisk</h4>
-          <a href="#">O nás</a><a href="#">Kariéra</a><a href="#">Magazín</a><Link to="/pobocky">Pobočky</Link><Link to="/kontakt">Kontakt</Link>
+          <a href="#">O nás</a><a href="#">Kariéra</a><Link to="/blog">Blog</Link><Link to="/pobocky">Pobočky</Link><Link to="/kontakt">Kontakt</Link>
         </div>
       </div>
       <div className="sfoot-wrap sfoot-bot">

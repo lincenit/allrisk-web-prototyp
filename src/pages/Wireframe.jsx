@@ -11,7 +11,11 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { ReferenceCarousel } from '../components/References.jsx'
 import { REFERENCES_HOME } from '../data/references.js'
+import { BlogSection } from '../components/ArticleParts.jsx'
+import { ARTICLES } from '../data/blog.js'
 import { SecHead } from '../components/PageParts.jsx'
+import { DebugPanel } from '../components/DebugPanel.jsx'
+import HeaderDebug from '../components/HeaderDebug.jsx'
 import {
   IconCar, IconHome, IconShield, IconWorld, IconBox, IconScale, IconHeart, IconFish,
   IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPhone,
@@ -32,47 +36,47 @@ const RZ_ICONS = {
   mobile: IconDeviceMobile, houseSell: IconHomeDollar, houseSearch: IconHomeSearch,
   houseCheck: IconHomeCheck, chat: IconMessageCircle,
 }
-// Produktové stránky zatiaľ neexistujú – bez vlastnej routy ide položka na kontakt s témou.
+// Produktové stránky zatiaľ neexistujú - bez vlastnej routy ide položka na kontakt s témou.
 const temaHref = (label) => `/kontakt?tema=${encodeURIComponent(label)}`
 const productHref = (p) => p.to || temaHref(p.label)
 // väzba „vybrat z…" žiada genitív, tam je tvar rovnaký pre všetky počty
 const productPickLabel = (n) => `Vybrat z ${n} produktů`
 const FAQ = [
-  ['Kolik mě poradenství stojí?', 'Nic. Poradce vám sjedná pojištění i finance zdarma – naši práci platí pojišťovny a partneři, ne vy. Vy platíte jen samotnou smlouvu, kterou si vyberete.'],
-  ['Jsem vázaný na jednu pojišťovnu?', 'Ne. Spolupracujeme s desítkami pojišťoven a partnerů, takže porovnáme nabídky napříč trhem a vybereme tu, která vám sedne nejlépe – cenou i krytím.'],
-  ['Jak probíhá řešení škody?', 'Škodu likvidujeme interně, vlastním týmem. Stačí jeden kontakt – nepřehazujeme vás mezi pojišťovnami a celý proces hlídáme za vás, rychleji a férově.'],
-  ['Můžu mít poradce nablízku?', 'Ano. Máme širokou síť poboček po celé ČR, takže vždy najdete poradce ve svém okolí. Schůzku zvládneme osobně i online – jak vám to vyhovuje.'],
-  ['Co když už pojištění mám?', 'Rádi vám ho zdarma zrevidujeme. Projdeme stávající smlouvy, ukážeme, kde platíte zbytečně moc nebo kde máte díry v krytí, a navrhneme řešení – bez závazku.'],
+  ['Kolik mě poradenství stojí?', 'Nic. Poradce vám sjedná pojištění i finance zdarma - naši práci platí pojišťovny a partneři, ne vy. Vy platíte jen samotnou smlouvu, kterou si vyberete.'],
+  ['Jsem vázaný na jednu pojišťovnu?', 'Ne. Spolupracujeme s desítkami pojišťoven a partnerů, takže porovnáme nabídky napříč trhem a vybereme tu, která vám sedne nejlépe - cenou i krytím.'],
+  ['Jak probíhá řešení škody?', 'Škodu likvidujeme interně, vlastním týmem. Stačí jeden kontakt - nepřehazujeme vás mezi pojišťovnami a celý proces hlídáme za vás, rychleji a férově.'],
+  ['Můžu mít poradce nablízku?', 'Ano. Máme širokou síť poboček po celé ČR, takže vždy najdete poradce ve svém okolí. Schůzku zvládneme osobně i online - jak vám to vyhovuje.'],
+  ['Co když už pojištění mám?', 'Rádi vám ho zdarma zrevidujeme. Projdeme stávající smlouvy, ukážeme, kde platíte zbytečně moc nebo kde máte díry v krytí, a navrhneme řešení - bez závazku.'],
 ]
 const PHIL = 'Neprodáváme produkty. Jsme partner, který poradí, postará se a stojí při vás v každé životní situaci.'
 
 // Video na pozadí hera. Má to byť tichá značková slučka bez titulkov a bez
-// tvárí — inak text v hero konkuruje deju vo videu.
+// tvárí - inak text v hero konkuruje deju vo videu.
 // hero.mp4 = webový export z 16x9_Allrisk_smycka.mp4 (koreň workspace, 332 MB):
 //   1920×1080, H.264 high, CRF 25 / max 3,2 Mb/s, +faststart → ~20 MB.
 //   Predchádzajúci export mal 1280×720 pri 444 kb/s a na celej obrazovke sa rozpadal.
-// TODO(asset): obsahovo je to stále provizórium — má hovorené slovo aj titulky.
+// TODO(asset): obsahovo je to stále provizórium - má hovorené slovo aj titulky.
 const HERO_VIDEO = '/hero.mp4'
 
-// Banner „revize smluv" – nahrádza zrušený test pojištění.
+// Banner „revize smluv" - nahrádza zrušený test pojištění.
 // Nadpis je len háčik („Věděli jste, že…?"), celé tvrdenie aj vysvetlenie ide do textu,
-// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero) – zámerne
+// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero) - zámerne
 // väčšia než banner, presah oreže overflow:hidden na .banner.
 // TODO(obchod): doplniť reálnu priemernú úsporu z dát Allrisku (zatiaľ placeholder).
 const AVG_SAVING = 'XY 000'
 const REVIEW_TEXT = 'Projdeme je s vámi a ukážeme, kde platíte zbytečně a kde chybí krytí. Zdarma a bez závazku.'
-// Use case k revízii zatiaľ nemá vlastnú stránku – dočasne mieri na kontakt s predvyplnenou témou.
+// Use case k revízii zatiaľ nemá vlastnú stránku - dočasne mieri na kontakt s predvyplnenou témou.
 const REVIEW_CASE = '/kontakt?tema=Revize smluv'
-// ilustrácie poskladané z „komponent" (chips) – fallback, keď blok nemá vlastnú ilustráciu.
-// Musí stáť nad WHY — volá ho už pri vyhodnotení modulu.
+// ilustrácie poskladané z „komponent" (chips) - fallback, keď blok nemá vlastnú ilustráciu.
+// Musí stáť nad WHY - volá ho už pri vyhodnotení modulu.
 const chip = (icon, label, pos, lg) => ({ icon, label, pos, lg })
 const ACCENT = new Set(['partner,', 'poradí,', 'postará', 'stojí', 'vás'])
 
-// „Proč Allrisk" – varianta v štýle feature sekcií (text + ilustrácia, striedavo)
+// „Proč Allrisk" - varianta v štýle feature sekcií (text + ilustrácia, striedavo)
 const WHY = [
   {
     ey: 'Vše pod jednou střechou', t: <>Unikátní <b>ekosystém služeb</b></>,
-    p: 'Pojištění, reality, finance i energie pod jednou střechou – propojené tak, ať spolu dávají smysl a nikde nevznikají díry.',
+    p: 'Pojištění, reality, finance i energie pod jednou střechou - propojené tak, ať spolu dávají smysl a nikde nevznikají díry.',
     cta: 'Prozkoumat ekosystém', alt: false,
     img: '/illus/tabler/ecosystem.png',
     chips: [
@@ -85,7 +89,7 @@ const WHY = [
   },
   {
     ey: 'Vlastní produkty', t: <>Inkasní pojištění, které <b>jinde nedostanete</b></>,
-    p: 'Vyvíjíme vlastní pojistné produkty – řešení šitá na míru situacím, na které běžné pojišťovny nemyslí.',
+    p: 'Vyvíjíme vlastní pojistné produkty - řešení šitá na míru situacím, na které běžné pojišťovny nemyslí.',
     cta: 'Naše produkty', alt: true,
     img: '/illus/tabler/products.png',
     chips: [
@@ -97,7 +101,7 @@ const WHY = [
   },
   {
     ey: 'Vlastní likvidace', t: <>Škodu <b>vyřešíme za vás</b></>,
-    p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně – jeden kontakt, rychleji a férově.',
+    p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně - jeden kontakt, rychleji a férově.',
     cta: 'Jak to funguje', alt: false,
     img: '/illus/tabler/claims.png',
     chips: [
@@ -121,13 +125,13 @@ function Illus({ chips, dark }) {
   )
 }
 
-// Dlaždica rozcestníka – vždy prepínač druhej úrovne, preto nesie aj náznak,
+// Dlaždica rozcestníka - vždy prepínač druhej úrovne, preto nesie aj náznak,
 // že sa pod ňou niečo otvorí („Vybrat z N produktů").
 function NeedTile({ n, open, onToggle }) {
   const C = RZ_ICONS[n.icon] || IconShield
   const inner = (
     <>
-      {/* tá istá ikona ešte raz ako veľký vodoznak vpravo – tretinou vyčnieva von z dlaždice */}
+      {/* tá istá ikona ešte raz ako veľký vodoznak vpravo - tretinou vyčnieva von z dlaždice */}
       <span className="rz-bg" aria-hidden="true"><C size={200} stroke={1.1} /></span>
       <span className="ni"><C size={28} stroke={1.6} /></span>
       <b>{n.t}</b>
@@ -151,7 +155,7 @@ function NeedTile({ n, open, onToggle }) {
   )
 }
 
-// Produktová karta – jediný obsah druhej úrovne. Žiadne popisy navyše, len ponuka.
+// Produktová karta - jediný obsah druhej úrovne. Žiadne popisy navyše, len ponuka.
 // Šípku v rohu nemá: celá karta je odkaz a v rohu robila len šum.
 function ProductCard({ pr }) {
   const C = RZ_ICONS[pr.icon] || IconShield
@@ -164,7 +168,7 @@ function ProductCard({ pr }) {
 }
 
 // Nadpis kroku má modrý akcent ako každá iná hlavička sekcie. Ktorá časť sa zvýrazní,
-// určujú dáta (`accent`) – česky sa to nedá odvodiť pravidlom („Chci se pojistit“ vs „Chci úvěr“).
+// určujú dáta (`accent`) - česky sa to nedá odvodiť pravidlom („Chci se pojistit“ vs „Chci úvěr“).
 function needTitle(n) {
   const i = n.accent ? n.t.lastIndexOf(n.accent) : -1
   if (i === -1) return n.t
@@ -172,27 +176,27 @@ function needTitle(n) {
 }
 
 // Rozcestník ako celok, v dvoch krokoch: mriežka potrieb ustúpi a druhý krok je
-// samostatná obrazovka — šípka späť, názov potreby, produktové karty.
+// samostatná obrazovka - šípka späť, názov potreby, produktové karty.
 // (Varianta „roztažená karta", ktorá produkty otvárala vnútri dlaždice, je zrušená.)
 function NeedFinder() {
   const [openKey, setOpenKey] = useState(null)
   const open = NEED_INTENTS.find((n) => n.key === openKey) || null
 
   // Druhý krok prepíše nadpis aj vetu celej sekcie, takže ju človek musí mať pred
-  // očami – inak by po kliknutí na dlaždicu dolu v mriežke zmenu vôbec nevidel.
+  // očami - inak by po kliknutí na dlaždicu dolu v mriežke zmenu vôbec nevidel.
   // (Scroll-margin rieši sticky header.)
   const toggle = (key) => {
     setOpenKey((k) => (k === key ? null : key))
     document.getElementById('rozcestnik')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // V druhom kroku prevezme hlavičku sekcie zvolená potreba – nadpis aj veta pod ním.
+  // V druhom kroku prevezme hlavičku sekcie zvolená potreba - nadpis aj veta pod ním.
   // Druhý nadpis vnútri kroku tak odpadá a človek má na obrazovke len jednu vec naraz.
   const step = open
   const head = (
     <SecHead
       key={step ? open.key : 'root'}
-      /* v kroku 2 stojí tlačidlo späť na mieste eyebrowu – jeden stĺpec, žiadna šípka zboku.
+      /* v kroku 2 stojí tlačidlo späť na mieste eyebrowu - jeden stĺpec, žiadna šípka zboku.
          Eyebrow tam nechýba: názov sekcie už nesie cesta, po ktorej sa človek prekliká. */
       ey={step ? (
         <button type="button" className="btn rz-back" onClick={() => toggle(openKey)}>
@@ -201,7 +205,7 @@ function NeedFinder() {
         </button>
       ) : 'Potřebový rozcestník'}
       title={step ? needTitle(open) : <>Co právě <b>řešíte?</b></>}
-      lead={step ? open.d : 'Řekněte to svými slovy, ne názvem produktu. Ozve se vám poradce, který danou situaci zná – a zůstane u ní až do konce.'}
+      lead={step ? open.d : 'Řekněte to svými slovy, ne názvem produktu. Ozve se vám poradce, který danou situaci zná - a zůstane u ní až do konce.'}
     />
   )
 
@@ -231,7 +235,7 @@ function NeedFinder() {
       ))}
       </div>
 
-      {/* Škoda nie je nákup – vlastný pás a jediné miesto, kde na tejto sekcii žije AllRed.
+      {/* Škoda nie je nákup - vlastný pás a jediné miesto, kde na tejto sekcii žije AllRed.
           V druhom kroku odpadá: tam už ide o výber produktu, nie o rozhodovanie, čo vlastne riešim. */}
       <Link to={NEED_CLAIM.to} className="rz-claim">
         <span className="ni"><IconAlertTriangle size={28} stroke={1.8} /></span>
@@ -246,18 +250,18 @@ export default function Wireframe() {
   const [faqOpen, setFaqOpen] = useState(0)
 
   /* ---- video v hero ----
-     Video kryje celú sekciu a beží samo a potichu — je to kulisa, nie obsah.
+     Video kryje celú sekciu a beží samo a potichu - je to kulisa, nie obsah.
      Preto je aj bez tlačidla „přehrát": ovládanie je len pauza a zvuk pre
      toho, koho pohyb ruší. */
   const videoRef = useRef(null)
   const heroRef = useRef(null)
   // Video beží aj pod hlavičkou (na každej šírke), takže header nesmie mať vlastnú
-  // plochu — hook ho sprehľadní a plné pozadie mu vráti až scroll.
+  // plochu - hook ho sprehľadní a plné pozadie mu vráti až scroll.
   useHeroHeader()
   const [videoPlaying, setVideoPlaying] = useState(true)
   const [videoMuted, setVideoMuted] = useState(true)
   const [videoFs, setVideoFs] = useState(false)
-  // Hlasitosť je posuvník, nie len prepínač – kulisa má znieť potichu, nie naplno.
+  // Hlasitosť je posuvník, nie len prepínač - kulisa má znieť potichu, nie naplno.
   // Autoplay ale beží stlmene (inak ho prehliadač nespustí), takže je to hodnota
   // „ako nahlas to bude, keď to odtlmíš".
   const [videoVol, setVideoVol] = useState(0.5)
@@ -273,7 +277,7 @@ export default function Wireframe() {
   const toggleMute = () => {
     const v = videoRef.current
     if (!v) return
-    // odtlmiť na nulovej hlasitosti je ticho, ktoré vyzerá ako porucha – vrátime slušnú hodnotu
+    // odtlmiť na nulovej hlasitosti je ticho, ktoré vyzerá ako porucha - vrátime slušnú hodnotu
     if (v.muted && videoVol === 0) { v.volume = 0.5; setVideoVol(0.5) }
     v.muted = !v.muted
     setVideoMuted(v.muted)
@@ -288,7 +292,7 @@ export default function Wireframe() {
     v.muted = val === 0
     setVideoMuted(v.muted)
   }
-  // Pomer stránke nediktujeme natvrdo – berieme ho z videa samotného, nech sedí
+  // Pomer stránke nediktujeme natvrdo - berieme ho z videa samotného, nech sedí
   // aj keď klient nahrá iný export než 16:9.
   const readVideoRatio = () => {
     const v = videoRef.current
@@ -297,7 +301,7 @@ export default function Wireframe() {
     if (v) v.volume = videoVol
     if (!hero || !v?.videoWidth || !v.videoHeight) return
     // Pomer bezrozmerne (calc() so zápisom `16 / 9` ako aspect-ratio pracovať nevie).
-    // Na sekciu, nie na samotný pás – vlastné vlastnosti sa dedia nadol.
+    // Na sekciu, nie na samotný pás - vlastné vlastnosti sa dedia nadol.
     hero.style.setProperty('--vid-arn', String(v.videoWidth / v.videoHeight))
   }
   const toggleFullscreen = () => {
@@ -311,7 +315,7 @@ export default function Wireframe() {
     // vie (Android). Na iOS si telefón otočí človek sám, preto chybu ticho ignorujeme.
     const lockLandscape = () => { screen.orientation?.lock?.('landscape').catch(() => {}) }
     if (box?.requestFullscreen) box.requestFullscreen().then(lockLandscape, () => {})
-    // iOS Safari nevie fullscreen na ľubovoľnom elemente – tam ide do fullscreenu
+    // iOS Safari nevie fullscreen na ľubovoľnom elemente - tam ide do fullscreenu
     // samotné video cez natívny prehrávač (a ten si otočenie rieši sám).
     else if (v?.webkitEnterFullscreen) v.webkitEnterFullscreen()
   }
@@ -367,7 +371,7 @@ export default function Wireframe() {
                 style={{ '--vol': `${videoVol * 100}%` }}
               />
             </div>
-            {/* na telefóne je hero len pás v pomere videa – celá obrazovka je tu, po otočení na šírku */}
+            {/* na telefóne je hero len pás v pomere videa - celá obrazovka je tu, po otočení na šírku */}
             <button onClick={toggleFullscreen} aria-label={videoFs ? 'Ukončit celou obrazovku' : 'Přehrát přes celou obrazovku'}>
               {videoFs ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
             </button>
@@ -375,11 +379,11 @@ export default function Wireframe() {
         </div>
       </section>
 
-      {/* Za videom nič nenasleduje – stránka ide rovno do rozcestníka. */}
+      {/* Za videom nič nenasleduje - stránka ide rovno do rozcestníka. */}
 
       {/* ============ ROZCESTNÍK ============ */}
       <section id="rozcestnik" className="sec wrap">
-        {/* hlavička sekcie žije vnútri rozcestníka – v druhom kroku ju prepíše
+        {/* hlavička sekcie žije vnútri rozcestníka - v druhom kroku ju prepíše
             zvolená potreba, takže veta hore hovorí o tom, čo je práve na obrazovke */}
         <NeedFinder />
       </section>
@@ -411,7 +415,7 @@ export default function Wireframe() {
         </div>
       </section>
 
-      {/* ============ REVIZE SMLUV – banner ============ */}
+      {/* ============ REVIZE SMLUV - banner ============ */}
       <section className="sec wrap">
         <div className="banner">
           <img className="banner-line" src={asset('/brand/line-hero-1.png')} alt="" aria-hidden width="720" height="673" decoding="async" loading="lazy" />
@@ -425,7 +429,7 @@ export default function Wireframe() {
 
 
       {/* ============ KLIENTSKÉ PROFILY ============ */}
-      {/* Dlaždica už nie je tab s panelom – každý profil má vlastnú stránku /profil/:slug. */}
+      {/* Dlaždica už nie je tab s panelom - každý profil má vlastnú stránku /profil/:slug. */}
       <section className="sec wrap">
         <SecHead
           ey="Klientské profily"
@@ -436,13 +440,13 @@ export default function Wireframe() {
       </section>
 
       {/* ============ REFERENCE ============ */}
-      {/* posuvný rad – šípky na desktope, swipe na mobile; celý zoznam žije na /reference */}
+      {/* posuvný rad - šípky na desktope, swipe na mobile; celý zoznam žije na /reference */}
       <section className="sec wrap">
         <ReferenceCarousel items={REFERENCES_HOME} />
       </section>
 
       {/* ============ FAQ ============ */}
-      {/* otázky sú číslované (Inter, nie Magistral) – ikona pri každej otázke pôsobila rušivo */}
+      {/* otázky sú číslované (Inter, nie Magistral) - ikona pri každej otázke pôsobila rušivo */}
       <section className="sec wrap">
         <SecHead ey="Časté dotazy" title={<>Co lidé <b>nejčastěji řeší</b></>} />
         <div className="faq faq-list">
@@ -462,11 +466,28 @@ export default function Wireframe() {
         </div>
       </section>
 
+      {/* ============ BLOG ============ */}
+      {/* Tá istá sekcia ako pod produktom aj pod článkom – rovnaké karty, šípky
+          i odkaz „Zobrazit vše", líši sa len titulok. Berie štyri najnovšie
+          články, takže sa o ňu po pridaní článku netreba starať. */}
+      <section className="sec wrap">
+        <BlogSection
+          items={ARTICLES.slice(0, 4)}
+          title={<>Vysvětlujeme, <b>co se vyplatí vědět</b></>}
+        />
+      </section>
+
       {/* ============ KONTAKT (spoločný banner) ============ */}
       <ContactBand />
 
       {/* ============ FOOTER (spoločný) ============ */}
       <SiteFooter />
+
+      {/* Ladiaci prepínač - hlavička je na každej stránke, takže jej varianty
+          musia ísť prepnúť aj odtiaľto. Táto stránka vlastné varianty nemá. */}
+      <DebugPanel>
+        <HeaderDebug />
+      </DebugPanel>
     </div>
   )
 }

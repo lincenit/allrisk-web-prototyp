@@ -61,11 +61,11 @@ export default function BranchDetail() {
 
       <section className="sec wrap">
         <div className="pd-grid">
-          {/* foto – vľavo hore, na mobile prvé */}
+          {/* foto - vľavo hore, na mobile prvé */}
           <img
             className="pd-photo"
             src={asset('/pobocky/branch.jpg')}
-            alt={`Pobočka ${b.city} – klientské centrum`}
+            alt={`Pobočka ${b.city} - klientské centrum`}
             loading="lazy"
           />
 
@@ -85,13 +85,13 @@ export default function BranchDetail() {
 
             <div className="pcardbox">
               <SectionHead icon={<IconMap />} title="Poloha" />
-              <div className="pd-map" role="img" aria-label={`Mapa – ${b.cityFull}`}>
+              <div className="pd-map" role="img" aria-label={`Mapa - ${b.cityFull}`}>
                 <span className="pin" style={{ left: `${b.map[0]}%`, top: `${b.map[1]}%` }} />
               </div>
             </div>
           </div>
 
-          {/* tím pobočky – v ľavom stĺpci pod fotkou */}
+          {/* tím pobočky - v ľavom stĺpci pod fotkou */}
           {groups.length > 0 && (
             <div className="pd-team">
               {groups.map((g) => (

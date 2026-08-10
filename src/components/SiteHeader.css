@@ -1,8 +1,8 @@
 /* ============================================================
-   SiteHeader — JEDEN spoločný header pre celý prototyp.
+   SiteHeader - JEDEN spoločný header pre celý prototyp.
    Pôvodne inline „hdr" header z homepage, vytiahnutý do komponentu.
    Sticky modrý gradient bar, mega-menu Produkty, hľadanie, mobilný drawer.
-   Premenné berie z :root (index.css) — funguje na ktorejkoľvek stránke.
+   Premenné berie z :root (index.css) - funguje na ktorejkoľvek stránke.
    ============================================================ */
 .hdr{position:sticky;top:0;z-index:200;background:var(--grad-blue);}
 
@@ -10,12 +10,29 @@
    Stránka pridá .hero-hdr na <html> (hook useHeroHeader), .hero-hdr-solid sa prepne pri scrolle. ===== */
 .hero-hdr .hdr{background:transparent;box-shadow:none;transition:background .3s var(--ease,ease),box-shadow .3s;}
 .hero-hdr.hero-hdr-solid .hdr{background:var(--grad-blue);}
+/* Otvorený drawer musí mať pod sebou plnú lištu. Nad foto-hero je hlavička
+   priehľadná, takže cez ňu presvital titulok stránky a nad drawerom visel
+   cudzí text. */
+.hero-hdr .hdr--solid{background:var(--grad-blue);}
 /* Kontrast bieleho loga a navigácie na svetlých snímkach hero videa rieši horný
-   závoj v .wf-hero::after (wireframe.css) — leží na videu, nie na hlavičke. */
+   závoj v .wf-hero::after (wireframe.css) - leží na videu, nie na hlavičke. */
 
-.hdr-bar{display:flex;align-items:center;gap:10px;height:64px;max-width:var(--maxw);margin:0 auto;padding-inline:clamp(14px,4vw,28px);}
-.hdr-logo{display:inline-flex;align-items:center;text-decoration:none;}
-.hdr-logo img{height:26px;width:auto;display:block;}
+/* Výška z tokenu --hdr-h (80px): to isté číslo používajú foto-hero na
+   podliezanie pod lištu aj scroll-margin kotiev, takže sa nesmie rozísť.
+
+   Šírka lišty je predvolene šírka obsahu (--maxw:1180), takže logo lícuje
+   s ľavou hranou stránky. Rozšírenie na 1320 je cena verzie „polozky" a platí
+   LEN pre ňu: päť položiek s plnými názvami pri 16px sadzbe si aj po všetkých
+   ústupkoch pýta ~1157px a do 1124 dostupných sa nevojde. Verzia „prepinac"
+   potrebuje 900px, takže zarovnanie nemá dôvod strácať. */
+.hdr-bar{display:flex;align-items:center;gap:10px;height:var(--hdr-h);max-width:var(--maxw);margin:0 auto;padding-inline:clamp(14px,4vw,28px);}
+.hdr--polozky .hdr-bar{max-width:1320px;}
+/* flex:none je poistka, nie kozmetika. Logo je flex položka a keď navigácia
+   presiahne šírku lišty, flexbox zmenšuje práve jeho - pri verzii „polozky"
+   sa zo značky stala 11px široká čiarka. Radšej nech pretečie navigácia
+   (a je to vidieť), než aby ticho zmizlo logo. */
+.hdr-logo{display:inline-flex;align-items:center;text-decoration:none;flex:none;}
+.hdr-logo img{height:40px;width:auto;display:block;}
 .hdr-spacer{flex:1;}
 /* prúžky ostávajú 20px, ale zásah je 44×44 (na 390px to bolo 26×32) */
 .hdr-burger{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
@@ -24,8 +41,20 @@
 .hdr-burger.on i:nth-child(1){transform:translateY(6px) rotate(45deg);}
 .hdr-burger.on i:nth-child(2){opacity:0;}
 .hdr-burger.on i:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
-.hdr-nav{display:none;align-items:center;gap:8px;}
-.hdr-nav button,.hdr-nav a{border:0;background:none;padding:9px 12px;border-radius:9px;font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.85);position:relative;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit;}
+/* Od rozdelenia na tri publiká (2026-08-10) nesie lišta až šesť položiek, časť
+   z nich s chevronom. Pri 16px sadzbe si pýtali ~700px, kým po logu a pravých
+   akciách zostáva v --maxw:1180px asi 600 - lišta sa lámala. Sadzba je preto
+   14px, čo je zároveň návrat k DESIGN.md §5 (14.5/500); 16px bol drift kódu.
+
+   JEDEN rozostup medzi všetkými položkami, bez výnimky. Publiká mali predtým
+   od zvyšku širšiu medzeru; čítalo sa to ako diera v rade, nie ako skupina -
+   rozdiel vrstiev nesie panel, ktorý sa otvorí, nie prázdne miesto v lište. */
+.hdr-nav{display:none;align-items:center;gap:4px;}
+.hdr-nav button,.hdr-nav a{border:0;background:none;padding:11px 12px;border-radius:9px;font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.85);position:relative;transition:.2s;display:inline-flex;align-items:center;gap:6px;text-decoration:none;cursor:pointer;font-family:inherit;white-space:nowrap;}
+/* Šipka je príznak „otvorí sa panel". Bez flex:none ju flexbox pri tesnej lište
+   stlačí na nulu - teda presne vtedy, keď je navigácia najhustejšia a príznak
+   treba najviac. Zúžiť sa má odsadenie položiek, nie ich obsah. */
+.hdr-nav button svg{flex:none;}
 .hdr-nav button:hover,.hdr-nav a:hover{background:rgba(255,255,255,.12);color:#fff;}
 .hdr-nav button.on,.hdr-nav a.active{color:#fff;background:rgba(255,255,255,.12);}
 .hdr-divider{display:none;width:1px;height:24px;background:rgba(255,255,255,.22);margin:0 6px;}
@@ -36,12 +65,17 @@
 .hdr-nav .hdr-dd a{display:flex;align-items:center;padding:12px 14px;border-radius:10px;font-size:var(--fs-body);font-weight:500;color:var(--g700);background:none;text-decoration:none;transition:.15s;}
 .hdr-nav .hdr-dd a:hover{background:var(--blue-50);color:var(--blue);}
 .hdr-actions{display:flex;align-items:center;gap:8px;}
-.hdr-iconbtn{display:none;width:40px;height:40px;border-radius:10px;border:0;background:transparent;color:#fff;align-items:center;justify-content:center;transition:.2s;cursor:pointer;}
+.hdr-iconbtn{display:none;width:48px;height:48px;border-radius:10px;border:0;background:transparent;color:#fff;align-items:center;justify-content:center;transition:.2s;cursor:pointer;}
 .hdr-iconbtn:hover,.hdr-iconbtn.on{background:rgba(255,255,255,.14);}
-.hdr-mua{display:none;align-items:center;gap:7px;height:40px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:0 15px;font-size:var(--fs-sm);font-weight:600;color:#fff;background:transparent;cursor:pointer;text-decoration:none;}
+/* nowrap ako pri claim tlačidle: „Můj Allrisk" sa v tlačidle s pevnou výškou
+   nesmie zalomiť na dva riadky, keď na lištu tlačí navigácia */
+.hdr-mua{display:none;align-items:center;gap:8px;height:48px;border:1px solid rgba(255,255,255,.5);border-radius:10px;padding:0 18px;font-size:var(--fs-sm);font-weight:600;color:#fff;background:transparent;white-space:nowrap;cursor:pointer;text-decoration:none;}
 .hdr-mua:hover{background:rgba(255,255,255,.12);}
-.hdr-claim{display:inline-flex;align-items:center;gap:7px;height:40px;background:var(--red);color:#fff;border:0;border-radius:10px;padding:0 15px;font-size:var(--fs-sm);font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;text-decoration:none;}
+.hdr-claim{display:inline-flex;align-items:center;gap:8px;height:48px;background:var(--red);color:#fff;border:0;border-radius:10px;padding:0 18px;font-size:var(--fs-sm);font-weight:600;white-space:nowrap;cursor:pointer;transition:.2s;text-decoration:none;}
 .hdr-claim:hover{filter:brightness(1.08);}
+/* ikona v tlačidle sa nesmie stlačiť, keď na lištu tlačí navigácia - rovnaký
+   dôvod ako pri chevrone v .hdr-nav (výstražný trojuholník sa scvrkol na bod) */
+.hdr-claim svg,.hdr-mua svg{flex:none;}
 
 /* ikonka v mega položkách */
 .hdr-ic{width:32px;height:32px;border-radius:9px;background:var(--blue-50);display:flex;align-items:center;justify-content:center;flex:none;transition:.25s;}
@@ -50,7 +84,7 @@
 /* PRODUKTY mega */
 .hdr-mega-wrap{position:absolute;top:calc(100% + 10px);left:0;right:0;display:flex;justify-content:center;z-index:110;pointer-events:none;}
 .hdr-mega{pointer-events:auto;width:min(980px,calc(100vw - 32px));background:var(--box);border:1px solid var(--l);border-radius:18px;box-shadow:0 30px 60px -28px rgba(13,31,91,.45);overflow:hidden;}
-/* .hdr-mega je teraz len rámec pre hľadanie — panel Produkty kreslí MegaMenu */
+/* .hdr-mega je teraz len rámec pre hľadanie - panel Produkty kreslí MegaMenu */
 .hdr-search-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin-bottom:13px;}
 .hdr-mega-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
 .hdr-item{display:flex;gap:11px;align-items:center;border:1px solid transparent;border-radius:10px;padding:10px 11px;background:var(--box);cursor:pointer;transition:.15s;text-decoration:none;}
@@ -74,44 +108,61 @@
 .hdr-search-chips button:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-50);}
 
 /* MOBILE DRAWER */
-.hdr-drawer{position:fixed;left:0;right:0;top:64px;bottom:0;z-index:190;background:var(--box);overflow-y:auto;transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);}
+.hdr-drawer{position:fixed;left:0;right:0;top:var(--hdr-h);bottom:0;z-index:190;background:var(--box);overflow-y:auto;transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);}
 .hdr-drawer.open{transform:none;}
-/* bez spoločného gap — odsadenie nesú jednotlivé bloky. Zoznam kategórií
+/* bez spoločného gap - odsadenie nesú jednotlivé bloky. Zoznam kategórií
    a zoznam odkazov na seba musia nadviazať flush, aby ich deliace linky
    držali jeden rytmus; spoločný gap medzi ne vkladal medzeru navyše. */
 .hdr-drawer-in{padding:16px clamp(14px,4vw,28px) 40px;display:flex;flex-direction:column;}
 .hdr-mfield{height:44px;border:1px solid var(--g300);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--mut);font-size:var(--fs-sm);background:none;width:100%;margin-bottom:14px;}
-/* výber segmentu — raz nad zoznamom kategórií, rovnaká reč ako modrý panel
-   v desktopovom mega-menu: biele tlačidlo neaktívne, plná modrá aktívne */
+/* ---- výber publika v drawri (len verzia „prepinac") ----
+   Rovnaká reč ako modrý bočný panel na desktope: biele tlačidlo neaktívne,
+   plná modrá aktívne. Podnikatelé sú v rade tiež, ale ako odkaz so šípkou -
+   nie sú výber obsahu, vedú na vlastnú stránku. */
 .hdr-mseg{background:var(--blue-50);border-radius:var(--r-card);padding:14px;margin-bottom:14px;}
-/* rovnaký rez ako .mm-side-h v desktopovom paneli – jeden titulok, jedna reč */
 .hdr-mseg-h{font-family:var(--sans);font-size:var(--fs-h3);font-weight:700;line-height:1.15;
   letter-spacing:-.025em;color:var(--ink);margin:0 0 6px;}
 .hdr-mseg-tx{margin:0 0 12px;font-size:var(--fs-sm);line-height:1.5;color:var(--g600);}
-.hdr-segtabs{display:flex;gap:6px;}
-.hdr-segtabs button{flex:1;min-height:44px;border:0;background:#fff;border-radius:var(--r-btn);
-  padding:10px 4px;font-family:inherit;font-size:var(--fs-label);font-weight:600;color:var(--g700);cursor:pointer;
-  transition:background .18s,color .18s;}
+/* Jeden pod druhým, nie vedľa seba: publiká idú plnými názvami a
+   „Jednotlivci a rodiny" sa do polovice 390px displeja nezmestí bez lámania.
+   Text vľavo a šípka odkazu vpravo, rovnako ako v bočnom paneli na desktope. */
+.hdr-segtabs{display:flex;flex-direction:column;gap:8px;}
+.hdr-segtabs button,.hdr-segtabs .hdr-seg-link{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;
+  border:0;background:#fff;border-radius:var(--r-btn);padding:12px 16px;
+  font-family:inherit;font-size:var(--fs-sm);font-weight:600;color:var(--g700);
+  text-align:left;text-decoration:none;cursor:pointer;transition:background .18s,color .18s;}
 .hdr-segtabs button.on{background:var(--blue);color:#fff;}
+.hdr-segtabs .hdr-seg-link svg{flex:none;}
 
+/* Akordeón má od 2026-08-10 dve úrovne - publikum, v ňom kategórie -
+   presne ako lišta na desktope. Prvá úroveň musí byť čitateľne silnejšia
+   než druhá, inak sa päť kategórií a tri publiká zlejú do jedného zoznamu
+   ôsmich rovnakých riadkov. */
 .hdr-acc{display:flex;flex-direction:column;}
 .hdr-acc-row{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:14px 4px;
   font-size:var(--fs-body);font-weight:600;color:var(--ink);font-family:inherit;border-bottom:1px solid var(--l2);
   text-align:left;cursor:pointer;}
-/* chevron je ikona, nie znak „▾" z fontu — ten sa kreslil v inej mierke
+/* chevron je ikona, nie znak „▾" z fontu - ten sa kreslil v inej mierke
    než zvyšok ikon a pôsobil ako preklep */
 .hdr-acc-ch{margin-left:auto;flex:none;color:var(--g400);transition:transform .25s var(--ease),color .18s;}
 .hdr-acc-row.open{color:var(--blue);}
 .hdr-acc-row.open .hdr-acc-ch{transform:rotate(180deg);color:var(--blue);}
-/* produkty idú pod sebou na plnú šírku — v drawri nie je na mriežku miesto */
-.hdr-acc-sub{display:flex;flex-direction:column;border-bottom:1px solid var(--l2);padding:4px 0 12px;}
-.hdr-acc-sub .hdr-item{min-height:48px;}
-/* produkty v akordeóne = rovnaké karty ako v desktop mega (.hdr-item) */
+
+/* prvá úroveň: publikum. Väčšia sadzba a Magistral ho odlíšia od kategórií
+   pod ním - odsadenie samo o sebe by nestačilo, riadky sú rovnako dlhé. */
+.hdr-acc-seg{font-family:var(--display);font-size:var(--fs-body);font-weight:700;letter-spacing:-.01em;padding:17px 4px;}
+/* Druhá úroveň je odsadená a drží ju zvislá linka. Bez nej čítal používateľ
+   kategórie ako pokračovanie prvej úrovne, nie ako jej vnútro - riadky sú
+   rovnako dlhé a samotné odsadenie sa v skrolovanom zozname stratí. */
+.hdr-acc-sub2{padding-left:12px;border-left:2px solid var(--blue-50);margin:2px 0 6px;}
+.hdr-acc-sub2 .hdr-acc-row{font-size:var(--fs-sm);padding:12px 4px;}
+
 .hdr-mlinks{display:flex;flex-direction:column;}
 .hdr-mlinks a{padding:13px 4px;font-size:var(--fs-body);font-weight:600;color:var(--ink);border-bottom:1px solid var(--l2);text-decoration:none;}
 .hdr-mfoot{display:flex;flex-direction:column;gap:9px;margin-top:18px;}
 /* „Nahlásit škodu" je v lište len na desktope. Na mobile žije v drawri (nižšie),
-   nech úzka lišta nesúperí o miesto s logom a burgerom — a nech nad videom
+   nech úzka lišta nesúperí o miesto s logom a burgerom - a nech nad videom
    na úvode nevisí červená plocha, keď je hlavička zámerne bez pozadia. */
 .hdr-actions .hdr-claim{display:none;}
 .hdr-mfoot .hdr-claim{display:inline-flex;justify-content:center;height:46px;}
@@ -129,11 +180,63 @@
   .hdr-mega-grid{grid-template-columns:repeat(3,1fr);}
 }
 
+/* Šesť položiek v lište (tri publiká + Společnost + Blog + Kontakt) sa medzi
+   980 a 1180 px nezmestí v plnom odsadení. Uberáme na paddingu položiek a na
+   medzere medzi skupinami - nemizne žiadny odkaz ani tlačidlo. */
+@media(min-width:980px) and (max-width:1319px){
+  .hdr-nav button,.hdr-nav a{padding-inline:9px;gap:4px;}
+  /* Verzia „polozky" nesie o dve položky viac, takže v tomto pásme na širší
+     hover miesto nemá. Uvedené zvlášť aj kvôli špecificite: bez toho by
+     vyhralo pravidlo verzie nižšie (0,2,1). */
+  .hdr--polozky .hdr-nav button,.hdr--polozky .hdr-nav a{padding-inline:8px;gap:4px;}
+}
+/* Verzia „polozky" nesie plné názvy publík („Jednotlivci a rodiny"), takže je
+   z oboch tesnejšia. Kým bol Blog samostatnou položkou lišty, musel jej ustúpiť
+   účet aj „Nahlásit škodu" (ikona bez popisku, pod 1120px účet mizol úplne).
+   Odkedy je Blog pod „Společnost" (−79px), stačí miernejšie odsadenie položiek
+   a nič sa neobetuje. Ak by do lišty pribudla ďalšia položka, vráti sa to. */
+/* Až od 1180px. Nižšie platí spoločné stiahnutie odsadenia vyššie - keby toto
+   pravidlo siahalo od 980px, prebilo by ho špecificitou (0,2,1 proti 0,1,1)
+   a lišta by sa roztiahla presne tam, kde je najtesnejšie. */
+@media(min-width:1320px){
+  .hdr--polozky .hdr-nav button,.hdr--polozky .hdr-nav a{padding-inline:12px;gap:5px;}
+}
+/* Účet je jediný prvok lišty, ktorý nevedie do obsahu webu, takže vo verzii
+   „polozky" ustupuje ako prvý: najprv stratí popisok (ikona aj funkcia
+   zostávajú, meno drží aria-label), pod 1240px zmizne. Navigácia ani
+   „Nahlásit škodu" neobetujú nič v žiadnej šírke. */
+@media(min-width:980px){
+  .hdr--polozky .hdr-mua{padding-inline:0;width:48px;justify-content:center;}
+  .hdr--polozky .hdr-mua span{display:none;}
+}
+/* Jediné, čo verzii „polozky" ešte chýba, je pásmo pod ~1100px: odmerané 1045px
+   lišty proti 934px pri 990. Ustupuje účet - jediný prvok, ktorý nevedie do
+   obsahu webu a v drawri pod 980px zostáva. Navigácia ani „Nahlásit škodu"
+   neobetujú nič v žiadnej šírke.
+   Hranica je 1140, nie 1101, kde to matematicky prestáva vychádzať: na hrane
+   by rezerva bola nulová a stačilo by dlhšie slovo v preklade. */
+/* Pod 1100px verzia „polozky" na plnú lištu nemá miesto ani po všetkých
+   ústupkoch: samotné položky s plnými názvami pri 16px sadzbe si pýtajú
+   1088px z 968 dostupných. Namiesto drobenia navigácie sa preto celá zloží
+   do burgera, ako na mobile. Verzia „prepinac" sa v tomto pásme zmestí,
+   takže jej lišta zostáva. */
+@media(min-width:980px) and (max-width:1099px){
+  .hdr--polozky .hdr-nav,
+  .hdr--polozky .hdr-divider,
+  .hdr--polozky .hdr-iconbtn,
+  .hdr--polozky .hdr-actions .hdr-mua{display:none;}
+  .hdr--polozky .hdr-burger{display:flex;}
+  .hdr--polozky + .hdr-drawer{display:block;}
+}
+@media(min-width:980px) and (max-width:1240px){
+  .hdr--polozky .hdr-actions .hdr-mua{display:none;}
+}
+
 /* ============ DOTYK ============
-   DESIGN.md dokumentuje claim button na 40px — to platí pre myš. Kde sa ovláda prstom,
+   DESIGN.md dokumentuje claim button na 40px - to platí pre myš. Kde sa ovláda prstom,
    dvíhame zásah na 44px, bez zmeny dokumentovanej desktopovej mierky. */
 @media(pointer:coarse){
-  .hdr-logo{min-height:44px;}   /* logo je odkaz na domov — 26px vysoký obrázok, zásah musí byť 44 */
+  .hdr-logo{min-height:44px;}   /* logo je odkaz na domov - 26px vysoký obrázok, zásah musí byť 44 */
   .hdr-claim,.hdr-mua{height:44px;}
   .hdr-iconbtn{width:44px;height:44px;}
   .hdr-search-clear{width:44px;height:44px;}

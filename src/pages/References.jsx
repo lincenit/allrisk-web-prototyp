@@ -8,7 +8,7 @@ import { SecHead } from '../components/PageParts.jsx'
 import { REFERENCES } from '../data/references.js'
 import { IconChevronRight, IconStarFilled } from '@tabler/icons-react'
 
-// Filtre podľa oblasti služby – zoznam sa skladá z dát, nech nezostarne pri pridaní referencie.
+// Filtre podľa oblasti služby - zoznam sa skladá z dát, nech nezostarne pri pridaní referencie.
 const ALL = 'Vše'
 
 export default function References() {
@@ -25,7 +25,7 @@ export default function References() {
           <nav className="page-crumb">
             <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} /><b>Reference</b>
           </nav>
-          {/* ten istý blok ako hlavička ktorejkoľvek sekcie – len s h1 (titulok stránky) */}
+          {/* ten istý blok ako hlavička ktorejkoľvek sekcie - len s h1 (titulok stránky) */}
           <SecHead
             level={1}
             ey="Reference"
