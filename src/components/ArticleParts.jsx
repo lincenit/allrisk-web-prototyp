@@ -189,7 +189,7 @@ export function BlogSection({ items, ey = 'Blog', title }) {
 //   hlavni - prvý článok naplno, zvyšok ako odkazy (rozpracovaná alternatíva)
 export function ProductArticles({
   productKey, variant = 'rad', limit = 4,
-  ey = 'Blog', title = <>Přečtěte si, <b>než něco podepíšete</b></>,
+  ey = 'Blog', title = <>Souvislosti, <b>které rozhodují</b></>,
 }) {
   const items = articlesFor(productKey).slice(0, limit)
   if (!items.length) return null
