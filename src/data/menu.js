@@ -39,10 +39,12 @@ export const CATS = [
 //           a pravých akciách ~600px a plné názvy sa doň nezmestia.
 //   pro   = nadpis panelu. Dopovie to, čo sa do lišty nevošlo („Rodiny"
 //           samo o sebe zamlčuje jednotlivcov).
+//   icon  = kľúč ikony publika (mapuje ju SiteHeader). Prepínač publika v lište
+//           ňou dáva výber najavo aj bez čítania textu.
 export const SEGMENTS = [
-  { key: 'rodiny', label: 'Jednotlivci a rodiny', short: 'Rodiny', pro: 'Pro jednotlivce a rodiny', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
-  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', pro: 'Pro podnikatele a firmy', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
-  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', pro: 'Pro města a obce', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
+  { key: 'rodiny', label: 'Jednotlivci a rodiny', short: 'Rodiny', pro: 'Pro jednotlivce a rodiny', icon: 'users', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
+  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', pro: 'Pro podnikatele a firmy', icon: 'briefcase', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
+  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', pro: 'Pro města a obce', icon: 'city', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
 ]
 
 // koľko služieb ponúkame danému segmentu (číslo v hlavičke menu)

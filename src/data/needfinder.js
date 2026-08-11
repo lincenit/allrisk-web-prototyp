@@ -1,7 +1,13 @@
 // Potřebový rozcestník na landing page - dve úrovne.
 // 1. úroveň = „nákupný zámer" v prvej osobe (dlaždica), 2. úroveň = konkrétne produkty.
-// Produkty držia rovnaké názvy ako mega-menu (data/menu.js, segment „rodiny"), aby si
-// klient po kliku z rozcestníka a z menu prišiel na to isté.
+// Produkty držia rovnaké názvy ako mega-menu (data/menu.js), aby si klient po kliku
+// z rozcestníka a z menu prišiel na to isté.
+//
+// Rozcestník je od 2026-08-11 podľa PUBLIKA (src/segment.js) - to je to, čo sa na úvode
+// zmení, keď človek prepne publikum v hlavičke. Podnikatelia tu vlastný zoznam NEMAJÚ
+// a mať nesmú: klient výslovne nechcel podnikateľom tlačiť katalóg produktov, ich vstupom
+// je systém péče na /podnikatele. Úvod im preto namiesto rozcestníka ukáže cestu
+// spolupráce (data/care.js STEPS).
 // Ikony sú kľúče (string) - mapuje ich stránka. `to` je nepovinné; bez neho ide položka
 // na /kontakt?tema=<label>, lebo produktové stránky zatiaľ neexistujú.
 
@@ -14,6 +20,47 @@ export const NEED_CLAIM = {
   to: '/kontakt?tema=Nahlásit škodu',
 }
 
+// ---- města a obce ----
+// Tri zámery, nie päť: obec nemá toľko druhov rozhodnutí a každá dlaždica má mať
+// v druhej úrovni aspoň dva produkty. Pokrývajú celé menu segmentu „mesta" okrem
+// likvidácie škody - tá stojí mimo mriežky v pásiku NEED_CLAIM, rovnako ako u rodín.
+export const NEED_MESTA = [
+  {
+    key: 'obec', icon: 'building', t: 'Chci pojistit obec', accent: 'obec', d: 'Majetek, bytové domy i zastupitelé',
+    tema: 'Pojištění obce',
+    lead: 'Od budov po odpovědnost za výkon funkce.',
+    products: [
+      p('Majetek měst a obcí', 'building', 'Budovy, technika i veřejná prostranství'),
+      p('Bytové domy', 'house', 'Obecní bytový fond'),
+      p('Zastupitelé', 'shieldCheck', 'Odpovědnost za výkon funkce'),
+      p('Nájem bez rizika', 'key', 'Nájem na účtu každý měsíc'),
+    ],
+  },
+  {
+    key: 'provoz', icon: 'truck', t: 'Chci vyřešit provoz a vozový park', accent: 'provoz a vozový park', d: 'Vozidla, technika i energie',
+    tema: 'Provoz obce',
+    lead: 'To, co obec platí každý měsíc - levněji a bez starostí.',
+    products: [
+      p('Vozidla', 'car', 'Od osobních po techniku', '/vozidla'),
+      p('Operativní leasing', 'truck', 'Auto na paušál, vše v ceně'),
+      p('Energie', 'bolt', 'Elektřina a plyn pro obecní budovy'),
+    ],
+  },
+  {
+    key: 'finance', icon: 'bank', t: 'Chci spravovat finance obce', accent: 'finance obce', d: 'Účty, investice i kurzy',
+    tema: 'Finance obce',
+    lead: 'Volné prostředky, účty i platby do zahraničí.',
+    products: [
+      p('Bankovní produkty', 'card', 'Účty a spořicí produkty'),
+      p('Investice', 'chart', 'Zhodnocení volných prostředků'),
+      p('Leasing', 'truck', 'Technika a vozy na splátky'),
+      p('Měnové konverze', 'coin', 'Lepší kurz než v bance'),
+      p('Privátní bankovnictví', 'bank', 'Správa většího objemu'),
+    ],
+  },
+]
+
+// ---- jednotlivci a rodiny ----
 export const NEED_INTENTS = [
   {
     key: 'pojisteni', icon: 'shield', t: 'Chci se pojistit', accent: 'pojistit', d: 'Auto, bydlení, rodina i cesty',
@@ -87,3 +134,7 @@ export const NEED_INTENTS = [
     ],
   },
 ]
+
+// `podnikatele` tu zámerne nie sú - vracia sa prázdno a stránka podľa toho vie, že
+// im má ukázať cestu spolupráce, nie katalóg.
+export const intentsFor = (seg) => (seg === 'mesta' ? NEED_MESTA : seg === 'podnikatele' ? null : NEED_INTENTS)

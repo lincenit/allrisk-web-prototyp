@@ -92,6 +92,40 @@
 .mm-tags button.on:hover{background:var(--blue-800);color:#fff;}
 
 /* ============================================================
+   PUBLIKÁ AKO KARTY - len verzia hlavičky „karty".
+   Prvý riadok panelu namiesto úzkeho bočného stĺpca: publikum je prvé,
+   čo v paneli vidno, a karta unesie aj jeho popis. Neaktívna karta je biela
+   s rámom, aktívna plná modrá - blue-50 nesie hover produktového riadku
+   a ako výplň by sa s ním zliala.
+
+   Bez sivého podkladu a bez deliacej čiary pod radom (user, 2026-08-11):
+   dve plochy nad sebou robili z panelu dve stránky a názvy publík sa v tom
+   strácali. Rad teraz oddeľuje od katalógu len medzera - a nesie ho veľkosť
+   názvu, ktorý je o stupeň nad nadpismi stĺpcov (17,5 proti 16). Je to prvá
+   úroveň panelu, takže nesmie byť drobnejšia než druhá.
+   ============================================================ */
+.mm-cards{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
+  padding:24px 24px 4px;
+}
+.mm-card{
+  display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;
+  background:#fff;border:1px solid var(--l);border-radius:var(--r-btn);padding:15px 17px;
+  font-family:inherit;cursor:pointer;text-decoration:none;
+  transition:background .18s,border-color .18s,color .18s;
+}
+.mm-card b{display:flex;align-items:center;gap:8px;font-size:var(--fs-card);font-weight:700;
+  letter-spacing:-.015em;line-height:1.2;color:var(--ink);}
+.mm-card small{font-size:var(--fs-sm);line-height:1.45;color:var(--g500);}
+/* Šípka dedí currentColor rovnako ako v bočnom paneli - odkaz a záložka
+   sa líšia príznakom „odídeš odtiaľto", nie vlastnou farbou. */
+.mm-card svg{flex:none;}
+.mm-card:hover{border-color:var(--blue);}
+.mm-card:hover b{color:var(--blue);}
+.mm-card.on{background:var(--blue);border-color:var(--blue);}
+.mm-card.on b,.mm-card.on small{color:#fff;}
+
+/* ============================================================
    STĹPCE
    Stĺpce nedelia linky - drží ich medzera. Musí byť výrazne širšia
    než presah hover-plochy položky (margin-inline:-10px), inak sa
@@ -152,5 +186,7 @@
   .mm-body{grid-template-columns:212px minmax(0,1fr);}
   .mm-side{padding:20px 16px;}
   .mm-head{padding:16px 20px 14px;}
+  /* rovnaké odsadenie ako stĺpce pod ním - inak rad kariet vyčnieva o 4px */
+  .mm-cards{padding:20px 20px 2px;}
   .mm-cols{gap:0 26px;padding:20px;}
 }

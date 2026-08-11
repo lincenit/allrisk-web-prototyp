@@ -15,7 +15,7 @@ export default function HeaderDebug() {
   return (
     <DebugGroup
       icon={IconMenu2} label="Horní menu" value={hdrStyle} onChange={setHdrStyle}
-      options={HDR_VARIANTS}
+      options={HDR_VARIANTS} wrap
     />
   )
 }

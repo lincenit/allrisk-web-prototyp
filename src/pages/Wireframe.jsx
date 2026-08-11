@@ -6,7 +6,10 @@ import { asset } from '../asset.js'
 import { useHeroHeader } from '../useHeroHeader.js'
 import { ProfileCards } from '../components/ProfileParts.jsx'
 import { PROFILES, countGen } from '../data/profiles.js'
-import { NEED_INTENTS, NEED_CLAIM } from '../data/needfinder.js'
+import { intentsFor, NEED_CLAIM } from '../data/needfinder.js'
+import { STEPS } from '../data/care.js'
+import { SEGMENTS } from '../data/menu.js'
+import { useSegment, SEG_DEFAULT } from '../segment.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { ReferenceCarousel } from '../components/References.jsx'
@@ -14,8 +17,9 @@ import { REFERENCES_HOME } from '../data/references.js'
 import { BlogSection } from '../components/ArticleParts.jsx'
 import { ARTICLES } from '../data/blog.js'
 import { SecHead } from '../components/PageParts.jsx'
-import { DebugPanel } from '../components/DebugPanel.jsx'
+import { DebugPanel, useDebugOption } from '../components/DebugPanel.jsx'
 import HeaderDebug from '../components/HeaderDebug.jsx'
+import { HDR_DEFAULT, hdrVariant } from '../headerVariants.js'
 import {
   IconCar, IconHome, IconShield, IconWorld, IconBox, IconScale, IconHeart, IconFish,
   IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPhone,
@@ -178,9 +182,9 @@ function needTitle(n) {
 // Rozcestník ako celok, v dvoch krokoch: mriežka potrieb ustúpi a druhý krok je
 // samostatná obrazovka - šípka späť, názov potreby, produktové karty.
 // (Varianta „roztažená karta", ktorá produkty otvárala vnútri dlaždice, je zrušená.)
-function NeedFinder() {
+function NeedFinder({ intents, eyebrow }) {
   const [openKey, setOpenKey] = useState(null)
-  const open = NEED_INTENTS.find((n) => n.key === openKey) || null
+  const open = intents.find((n) => n.key === openKey) || null
 
   // Druhý krok prepíše nadpis aj vetu celej sekcie, takže ju človek musí mať pred
   // očami - inak by po kliknutí na dlaždicu dolu v mriežke zmenu vôbec nevidel.
@@ -203,7 +207,7 @@ function NeedFinder() {
           <IconArrowLeft size={18} stroke={2.2} aria-hidden="true" />
           Zpět na výběr
         </button>
-      ) : 'Potřebový rozcestník'}
+      ) : eyebrow}
       title={step ? needTitle(open) : <>Co právě <b>řešíte?</b></>}
       lead={step ? open.d : 'Řekněte to svými slovy, ne názvem produktu. Ozve se vám poradce, který danou situaci zná - a zůstane u ní až do konce.'}
     />
@@ -225,7 +229,7 @@ function NeedFinder() {
     <>
       {head}
       <div className="rz-grid">
-      {NEED_INTENTS.map((n) => (
+      {intents.map((n) => (
         <NeedTile
           key={n.key}
           n={n}
@@ -246,8 +250,51 @@ function NeedFinder() {
   )
 }
 
+// Podnikatelia na úvode NEDOSTANÚ rozcestník produktov - klient výslovne nechcel
+// tlačiť im katalóg a ich vstupom je systém péče. Tá istá plocha im preto ukáže,
+// ako spolupráca prebieha: päť krokov z data/care.js (názvy, celé znenie je na
+// ich stránke) a preklik tam. Je to zároveň to, čo na úvode vidno hneď po prepnutí
+// publika - preto sedí v sekcii rozcestníka, nie niekde nižšie.
+function BizPath() {
+  return (
+    <>
+      <SecHead
+        ey="Pro podnikatele a firmy"
+        title={<>Nezačínáme produktem, <b>ale vaší firmou</b></>}
+        lead="Firmám neposíláme ceník pojištění. Projdeme s vámi rizika, vybereme řešení na trhu a zůstaneme u toho i po podpisu."
+      />
+      <ol className="bizpath">
+        {STEPS.map((s, i) => (
+          <li key={s.key}>
+            <span className="bizpath-n">{String(i + 1).padStart(2, '0')}</span>
+            <b>{s.label}</b>
+          </li>
+        ))}
+      </ol>
+      <Link to="/podnikatele" className="btn bizpath-cta">
+        Systém péče pro podnikatele <IconArrowRight size={18} stroke={2.2} />
+      </Link>
+    </>
+  )
+}
+
 export default function Wireframe() {
   const [faqOpen, setFaqOpen] = useState(0)
+  // Úvod reaguje na publikum LEN vo verzii hlavičky „kontext" - teda len vtedy,
+  // keď je na obrazovke prepínač, ktorým sa to dá vrátiť. Inak by stačilo prísť
+  // z /podnikatele (tá si publikum nastaví sama) a úvod by ostal ich, bez toho,
+  // aby mal človek čím prepnúť späť. Ostatné verzie preto vidia úvod tak, ako
+  // vyzeral vždy.
+  const [hdrRaw] = useDebugOption('header', HDR_DEFAULT)
+  const [siteSeg] = useSegment()
+  const ctx = hdrVariant(hdrRaw) === 'kontext'
+  const seg = ctx ? siteSeg : SEG_DEFAULT
+  const intents = intentsFor(seg)
+  // Názov publika v eyebrowe je odpoveď prepínača - bez neho patrí na to miesto
+  // pôvodný názov sekcie, nie publikum, ktoré nikto nevyberal.
+  const segName = ctx
+    ? (SEGMENTS.find((s) => s.key === seg)?.pro || 'Potřebový rozcestník')
+    : 'Potřebový rozcestník'
 
   /* ---- video v hero ----
      Video kryje celú sekciu a beží samo a potichu - je to kulisa, nie obsah.
@@ -384,8 +431,12 @@ export default function Wireframe() {
       {/* ============ ROZCESTNÍK ============ */}
       <section id="rozcestnik" className="sec wrap">
         {/* hlavička sekcie žije vnútri rozcestníka - v druhom kroku ju prepíše
-            zvolená potreba, takže veta hore hovorí o tom, čo je práve na obrazovke */}
-        <NeedFinder />
+            zvolená potreba, takže veta hore hovorí o tom, čo je práve na obrazovke.
+            `key` je publikum zámerne: pri prepnutí sa rozcestník musí vrátiť na
+            prvý krok, lebo otvorená potreba v novom publiku neexistuje. */}
+        {intents
+          ? <NeedFinder key={seg} intents={intents} eyebrow={segName} />
+          : <BizPath />}
       </section>
 
       {/* ============ FILOZOFIA ============ */}

@@ -17,6 +17,7 @@ import './wireframe.css'
 import './business.css'
 import { asset } from '../asset.js'
 import { useHeroHeader } from '../useHeroHeader.js'
+import { useSegmentPage } from '../segment.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { DebugPanel } from '../components/DebugPanel.jsx'
@@ -58,6 +59,9 @@ const PRINCIPLE_ICONS = {
 
 export default function Business() {
   useHeroHeader()
+  // Táto stránka JE publikum - kto sem príde z vyhľadávača, nemá dôvod ešte niečo
+  // prepínať a prepínač v lište by inak tvrdil niečo iné, než čo má pred sebou.
+  useSegmentPage('podnikatele')
 
   return (
     <div className="site">

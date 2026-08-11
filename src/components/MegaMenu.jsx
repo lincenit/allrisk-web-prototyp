@@ -95,6 +95,38 @@ function SegSide({ seg, setSeg, onNavigate }) {
   )
 }
 
+/* ---------- výber segmentu ako karty (verzia hlavičky „karty") ----------
+
+   Tá istá reč ako bočný panel - neaktívne biele, aktívne plná modrá,
+   Podnikatelé odkaz so šípkou - ale na plnú šírku a v prvom riadku panelu.
+   Karta navyše unesie popis publika, ktorý sa do 256px stĺpca nezmestil.
+   Nie je to tablist: Podnikatelé v rade nie sú záložka a role="tab" by
+   sľuboval prepnutie obsahu, ktoré neurobia. */
+function SegCards({ seg, setSeg, onNavigate }) {
+  return (
+    <div className="mm-cards" role="group" aria-label="Pro koho">
+      {SEGMENTS.map((s) => (s.key === BIZ_KEY ? (
+        <Link key={s.key} className="mm-card mm-card--link" to={BIZ} onClick={onNavigate}>
+          {/* Šípka je väčšia než v stĺpcovej podobe menu (user, 2026-08-11):
+              na karte je to jediný rozdiel medzi „prepne obsah" a „odídeš
+              odtiaľto" a v 16px sa strácala. */}
+          <b>{s.label} <IconArrowUpRight size={22} stroke={2.2} /></b>
+          <small>{s.desc}</small>
+        </Link>
+      ) : (
+        <button
+          key={s.key} type="button" aria-pressed={s.key === seg}
+          className={`mm-card ${s.key === seg ? 'on' : ''}`}
+          onClick={() => setSeg(s.key)}
+        >
+          <b>{s.label}</b>
+          <small>{s.desc}</small>
+        </button>
+      )))}
+    </div>
+  )
+}
+
 /* ---------- katalóg ---------- */
 
 function ItemList({ items, onNavigate }) {
@@ -138,9 +170,18 @@ function Columns({ seg, onNavigate }) {
 
 /* ---------- panel ---------- */
 
-export default function MegaMenu({ seg, setSeg, onNavigate }) {
+export default function MegaMenu({ seg, setSeg, cards, onNavigate }) {
   const s = SEGMENTS.find((x) => x.key === seg)
   const body = <Columns seg={seg} onNavigate={onNavigate} />
+
+  if (setSeg && cards) {
+    return (
+      <div className="mm">
+        <SegCards seg={seg} setSeg={setSeg} onNavigate={onNavigate} />
+        {body}
+      </div>
+    )
+  }
 
   if (setSeg) {
     return (

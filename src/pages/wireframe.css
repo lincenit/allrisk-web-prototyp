@@ -380,6 +380,23 @@
   .site .rz-grid .rz-tile b{margin-top:16px;}
 }
 
+/* --- cesta spolupráce - tá istá plocha, keď je zvolené publikum „podnikatelé" ---
+   Nie je to rozcestník: klient nechcel podnikateľom tlačiť katalóg, takže tu nie je
+   čo vyberať, len poradie krokov (preto <ol> a čísla). Karty sú zámerne nekliknuteľné -
+   celé znenie krokov je na /podnikatele a dva vstupy do toho istého by sekciu rozdrobili. */
+.site .bizpath{list-style:none;margin:0;padding:0;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(12px,1.5vw,18px);}
+.site .bizpath li{display:flex;flex-direction:column;gap:10px;
+  padding:clamp(18px,2vw,22px);border:1px solid var(--l);border-radius:var(--r-card);
+  background:var(--box);box-shadow:0 1px 3px rgba(13,31,91,.04);}
+/* Číslo nesie poradie, nie dôraz - preto svetlá modrá, nie značková: krok sa má
+   čítať podľa názvu, číslo je len rytmus radu. */
+.site .bizpath-n{font-family:var(--display);font-size:var(--fs-stat);font-weight:700;
+  line-height:1;color:var(--blue-200);}
+.site .bizpath li b{font-family:var(--display);font-weight:700;font-size:clamp(16px,1.5vw,18px);
+  line-height:1.2;letter-spacing:-.015em;color:var(--ink);text-wrap:balance;}
+.site .bizpath-cta{margin-top:clamp(18px,2.4vw,26px);}
+
 /* --- 2. úroveň: karty produktov ---
    Dve varianty (DebugPanel → „Rozcestník"): „krok" - mriežka ustúpi samostatnému druhému
    kroku (šípka späť, názov, karty), „karta" - kliknutá dlaždica sa roztiahne na celú šírku
