@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 432" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+  <!-- Hlavička podstránky (namerané 3,2-4,6). Jedna veľká zdola, jedna malá
+       zhora - obe presahujú von, celú kružnicu vidno len výnimočne. -->
+  <g vector-effect="non-scaling-stroke">
+    <circle cx="160" cy="423" r="512" stroke-opacity=".135"/>
+    <circle cx="160" cy="423" r="401" stroke-opacity=".135"/>
+    <circle cx="1488" cy="35" r="336" stroke-opacity=".09"/>
+    <circle cx="1488" cy="35" r="263" stroke-opacity=".09"/>
+  </g>
+</svg>

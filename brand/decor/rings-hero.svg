@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 470" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+  <!-- Kružnice značky. Dvojica je SÚSTREDNÁ a nevyplnená, r_vnút : r_vonk = 0,784
+       (namerané z tlače, viď DESIGN.md). Plátno má pomer typického hero pásu
+       (namerané 3,1-4,1 na desktope), lebo sa vkladá cez object-fit:cover - na
+       inom pomere sa okraje orežú a rozostavenie sa posunie.
+       Hero: text vľavo → kružnice držia pravú polovicu a vrch. -->
+  <g vector-effect="non-scaling-stroke">
+    <circle cx="1376" cy="28" r="592" stroke-opacity=".15"/>
+    <circle cx="1376" cy="28" r="464" stroke-opacity=".15"/>
+    <circle cx="1056" cy="498" r="368" stroke-opacity=".105"/>
+    <circle cx="1056" cy="498" r="288" stroke-opacity=".105"/>
+    <circle cx="1664" cy="301" r="240" stroke-opacity=".083"/>
+    <circle cx="1664" cy="301" r="188" stroke-opacity=".083"/>
+  </g>
+</svg>

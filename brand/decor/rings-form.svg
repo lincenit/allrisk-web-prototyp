@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 755" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+  <!-- Kontaktný pás (namerané 2,12 - je najvyšší zo všetkých). Vpravo stojí
+       biely formulár, kružnice preto zdola a zhora. -->
+  <g vector-effect="non-scaling-stroke">
+    <circle cx="1552" cy="695" r="480" stroke-opacity=".128"/>
+    <circle cx="1552" cy="695" r="376" stroke-opacity=".128"/>
+    <circle cx="192" cy="-60" r="288" stroke-opacity=".075"/>
+    <circle cx="192" cy="-60" r="226" stroke-opacity=".075"/>
+  </g>
+</svg>
