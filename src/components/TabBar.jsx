@@ -6,7 +6,6 @@
 // `variant` mení iba vizuál (definície v wireframe.css), nikdy nie správanie:
 //   seg  - segmentový prepínač v svetlomodrej schránke (predvolený)
 //   card - dlaždice s ikonou v odznaku a špičkou do panelu
-//   pill - pôvodné pilulky, referencia
 import { useTabBar } from '../useTabBar.js'
 
 // väčší variant kreslí ikonu väčšiu - v dlaždici by 18px pôsobilo stratene

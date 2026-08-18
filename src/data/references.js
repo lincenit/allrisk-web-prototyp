@@ -5,6 +5,10 @@ const L1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eius
 const L2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud.'
 const L3 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
 
+// Foto pod hlavičkou /reference - dočasne z Unsplashe, rovnako ako fotky blogu
+// a pobočiek. Až budú vlastné fotky Allrisku, mení sa jediný riadok.
+export const HERO_PHOTO = 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1800&q=70'
+
 // Pod menom je dátum recenzie, nie „klient od 2019" - u referencie je podstatné, kdy
 // hodnocení vzniklo (jak je čerstvé), ne jak dlouho u nás klient je.
 // Poradie je od najnovšej - tak sa referencie čítajú aj v carouseli na úvode.

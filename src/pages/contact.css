@@ -21,7 +21,7 @@
 .site .phero p{margin-top:12px;color:rgba(255,255,255,.82);font-size:var(--fs-lead);max-width:62ch;}
 
 /* späť - hranaté tlačidlo, rovnaký tvar ako .btn inde na webe */
-.site .phero-back{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 18px 0 14px;
+.site .phero-back{display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 22px 0 18px;
   margin-bottom:clamp(16px,2.4vw,22px);border:1px solid rgba(255,255,255,.5);border-radius:var(--r-btn);
   background:rgba(255,255,255,.08);color:#fff;font-size:var(--fs-sm);font-weight:600;transition:background .2s,border-color .2s;}
 .site .phero-back:hover{background:rgba(255,255,255,.18);border-color:#fff;}
@@ -30,7 +30,7 @@
 /* identita s fotkou/avatarom vedľa textu (detail poradce) */
 .site .phero-id{display:flex;flex-direction:column;gap:clamp(18px,2.6vw,28px);}
 .site .phero-av{flex:none;width:clamp(112px,16vw,152px);height:clamp(112px,16vw,152px);border-radius:var(--r-card);
-  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;
+  background:var(--tile-blue);backdrop-filter:var(--tile-blur);border:0;color:#fff;
   display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:800;
   font-size:clamp(34px,5vw,46px);letter-spacing:.02em;}
 @media(min-width:760px){.site .phero-id{flex-direction:row;align-items:center;}}
@@ -38,7 +38,7 @@
 /* kontaktné čipy v hero - tvar podľa reality webu: hranatý rám v plnej bielej,
    žiadna výplň, ikona rovno v riadku. Hover prevráti farby. */
 .site .hchips{display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(18px,3vw,26px);}
-.site .hchip{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;
+.site .hchip{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;
   border:1px solid #fff;border-radius:var(--r-btn);color:#fff;
   font-size:var(--fs-body);font-weight:600;line-height:1.5;transition:background .2s,color .2s;max-width:100%;}
 .site .hchip svg{flex:none;stroke:currentColor;}
@@ -116,7 +116,8 @@
    --cmap-gap je medzera, ktorá mape ostane nad ňou aj pod ňou, keď je pripnutá:
    hore ju odsadí od sticky hlavičky, dole od spodnej hrany okna. Preto vstupuje
    do výpočtu dvakrát (výška) aj raz do `top` - keby sa rozišli, mapa by sa
-   o spodnú hranu orezala. 20 px sedí s doterajším `top:84px` (64 hlavička + 20). */
+   o spodnú hranu orezala. Odsadenie počíta z --hdr-stick, teda z výšky, ktorá pri
+   scrolle naozaj zostane - tá je iná pri každom variante lepivosti. */
 .site .contact-layout{--cmap-gap:20px;--cmap-min:340px;}
 .site .cmap-wrap{width:100%;}
 .site .cmap{position:relative;height:var(--cmap-min);border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
@@ -150,13 +151,13 @@
   .site .cmap-wrap{width:400px;flex:none;align-self:stretch;min-height:var(--cmap-min);}
   /* --cmap-min je podlaha: pri vyfiltrovanom zozname by sa mapa inak stiahla na výšku
      jednej kartičky a ostal by z nej prúžok. */
-  .site .cmap{position:sticky;top:calc(var(--hdr-h) + var(--cmap-gap));
-    height:max(var(--cmap-min), min(100%, calc(100vh - var(--hdr-h) - 2 * var(--cmap-gap))));}
+  .site .cmap{position:sticky;top:calc(var(--hdr-stick) + var(--cmap-gap));
+    height:max(var(--cmap-min), min(100%, calc(100vh - var(--hdr-stick) - 2 * var(--cmap-gap))));}
   /* dvh počíta so zaťahovacími lištami prehliadača, vh nie - s vh by mapa na
      prehliadači s plávajúcou lištou presiahla pod spodnú hranu okna. Cez @supports,
      nech to na starších prehliadačoch spadne späť na vh. */
   @supports (height:100dvh){
-    .site .cmap{height:max(var(--cmap-min), min(100%, calc(100dvh - var(--hdr-h) - 2 * var(--cmap-gap))));}
+    .site .cmap{height:max(var(--cmap-min), min(100%, calc(100dvh - var(--hdr-stick) - 2 * var(--cmap-gap))));}
   }
 }
 
@@ -187,7 +188,7 @@
 @media(min-width:980px){
   .site .pd-grid{grid-template-columns:minmax(0,1fr) 400px;align-items:start;}
   .site .pd-photo{grid-column:1;grid-row:1;}
-  .site .pd-side{grid-column:2;grid-row:1 / span 2;position:sticky;top:84px;}
+  .site .pd-side{grid-column:2;grid-row:1 / span 2;position:sticky;top:calc(var(--hdr-stick) + 4px);}
   .site .pd-team{grid-column:1;grid-row:2;}
 }
 
@@ -210,7 +211,7 @@
 .site .ad-form .btn.fill{align-self:stretch;justify-content:center;}
 @media(min-width:980px){
   .site .ad-grid{grid-template-columns:minmax(0,1fr) 400px;}
-  .site .ad-side{position:sticky;top:84px;}
+  .site .ad-side{position:sticky;top:calc(var(--hdr-stick) + 4px);}
 }
 
 /* ===== nenájdené ===== */

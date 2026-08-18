@@ -5,13 +5,13 @@ import { useHeroHeader } from '../useHeroHeader.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { SecHead } from '../components/PageParts.jsx'
-import { DebugPanel } from '../components/DebugPanel.jsx'
-import HeaderDebug from '../components/HeaderDebug.jsx'
+import { Decor } from '../components/Decor.jsx'
+import { Line } from '../components/Line.jsx'
 import {
   ArticleBody, ArticleToc, AuthorCard, BlogSection, ArticleProductCard, ArticleMeta,
 } from '../components/ArticleParts.jsx'
 import { articleBySlug, relatedArticles } from '../data/blog.js'
-import { IconArrowLeft, IconArrowRight } from '@tabler/icons-react'
+import { IconArrowLeft, IconArrowUpRight } from '@tabler/icons-react'
 
 export default function ArticleDetail() {
   const { slug } = useParams()
@@ -24,7 +24,7 @@ export default function ArticleDetail() {
         <section className="wrap notfound">
           <h1>Článek nenalezen</h1>
           <p>Takový článek na blogu nemáme - možná se přejmenoval.</p>
-          <Link to="/blog" className="btn fill">Zpět na blog <IconArrowRight size={18} stroke={2.2} /></Link>
+          <Link to="/blog" className="btn fill">Zpět na blog <IconArrowUpRight size={18} stroke={2.2} /></Link>
         </section>
         <SiteFooter />
       </div>
@@ -40,8 +40,10 @@ export default function ArticleDetail() {
       {/* Fotka článku je podklad hlavičky, nie samostatný pás pod ňou - nadpis tak
           stojí rovno v nej. Hore len tlačidlo späť; eyebrow ani autor tu nie sú,
           rubriku aj dátum nesie jeden riadok metadát pod perexom. */}
-      <section className="page-head photo-hero blog-art-head">
+      <section className="page-head photo-hero">
         <div className="photo-hero-bg" style={{ backgroundImage: `url(${a.img})` }} aria-hidden="true" />
+        <Decor />
+        <Line pos="hero" />
         <div className="wrap">
           <Link to="/blog" className="blog-back">
             <IconArrowLeft size={18} stroke={2.2} aria-hidden="true" /> Zpět na blog
@@ -81,10 +83,6 @@ export default function ArticleDetail() {
 
       <ContactBand />
       <SiteFooter />
-
-      <DebugPanel>
-        <HeaderDebug />
-      </DebugPanel>
     </div>
   )
 }

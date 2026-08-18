@@ -7,11 +7,11 @@ import { useHeroHeader } from '../useHeroHeader.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import { SecHead } from '../components/PageParts.jsx'
+import { Decor } from '../components/Decor.jsx'
+import { Line } from '../components/Line.jsx'
 import { ArticleCard } from '../components/ArticleParts.jsx'
-import { DebugPanel } from '../components/DebugPanel.jsx'
-import HeaderDebug from '../components/HeaderDebug.jsx'
 import { ARTICLES, RUBRICS, PRINT, HERO_PHOTO } from '../data/blog.js'
-import { IconChevronRight, IconDownload, IconArrowRight } from '@tabler/icons-react'
+import { IconChevronRight, IconDownload, IconArrowUpRight } from '@tabler/icons-react'
 
 // Filtre podľa rubriky - zoznam sa skladá z dát, nech nezostarne pri pridaní článku.
 const ALL = 'Vše'
@@ -31,8 +31,10 @@ export default function Blog() {
       {/* Foto pod modrým gradientom - ten istý recept ako každý foto-hero na webe
           (.photo-hero z wireframe.css). Bez eyebrowu: „Blog" už nesie drobečková
           navigácia aj titulok, tretíkrát to isté slovo je len šum. */}
-      <section className="page-head photo-hero blog-head">
+      <section className="page-head photo-hero">
         <div className="photo-hero-bg" style={{ backgroundImage: `url(${HERO_PHOTO})` }} aria-hidden="true" />
+        <Decor />
+        <Line pos="hero" />
         <div className="wrap">
           <nav className="page-crumb">
             <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} /><b>Blog</b>
@@ -52,7 +54,8 @@ export default function Blog() {
           značková linka vpravo. Žiadna vlastná varianta banneru. */}
       <section className="sec wrap">
         <div className="banner">
-          <img className="banner-line" src={asset('/brand/line-hero-1.png')} alt="" aria-hidden width="720" height="673" decoding="async" loading="lazy" />
+          <Decor />
+          <Line />
           <div className="banner-tx">
             <h2>{PRINT.title}</h2>
             <p>{PRINT.lead}</p>
@@ -62,7 +65,7 @@ export default function Blog() {
               </a>
               {/* TODO(obsah): archív ročeniek zatiaľ nemá vlastnú stránku */}
               <a className="btn line" href="#archiv">
-                Archiv <IconArrowRight size={18} stroke={2.2} />
+                Archiv <IconArrowUpRight size={18} stroke={2.2} />
               </a>
             </div>
           </div>
@@ -93,10 +96,6 @@ export default function Blog() {
 
       <ContactBand />
       <SiteFooter />
-
-      <DebugPanel>
-        <HeaderDebug />
-      </DebugPanel>
     </div>
   )
 }

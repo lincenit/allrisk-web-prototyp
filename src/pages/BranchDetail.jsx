@@ -7,7 +7,7 @@ import SiteFooter from '../components/SiteFooter.jsx'
 import { PageHero, HeroChip, SectionHead, PersonCard } from '../components/PageParts.jsx'
 import { branchBySlug, advisorsForBranch, initials } from '../data/branches.js'
 import {
-  IconMapPin, IconClockHour4, IconPhone, IconMail, IconArrowRight,
+  IconMapPin, IconClockHour4, IconPhone, IconMail, IconArrowUpRight,
   IconMap, IconUsers, IconUsersGroup,
 } from '@tabler/icons-react'
 
@@ -27,7 +27,7 @@ export default function BranchDetail() {
         <section className="wrap notfound">
           <h1>Pobočka nenalezena</h1>
           <p>Tuto pobočku se nám nepodařilo najít.</p>
-          <Link to="/kontakt" className="btn fill">Zpět na kontakty <IconArrowRight size={18} stroke={2.2} /></Link>
+          <Link to="/kontakt" className="btn fill">Zpět na kontakty <IconArrowUpRight size={18} stroke={2.2} /></Link>
         </section>
         <SiteFooter />
       </div>

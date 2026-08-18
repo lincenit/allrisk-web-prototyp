@@ -26,7 +26,7 @@ export default function SiteFooter() {
         </div>
         <div className="sfoot-col">
           <h4>Allrisk</h4>
-          <a href="#">O nás</a><a href="#">Kariéra</a><Link to="/blog">Blog</Link><Link to="/pobocky">Pobočky</Link><Link to="/kontakt">Kontakt</Link>
+          <Link to="/o-nas">O nás</Link><a href="#">Kariéra</a><Link to="/blog">Blog</Link><Link to="/pobocky">Pobočky</Link><Link to="/kontakt">Kontakt</Link>
         </div>
       </div>
       <div className="sfoot-wrap sfoot-bot">

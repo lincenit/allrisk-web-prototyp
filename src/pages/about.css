@@ -1,0 +1,833 @@
+/* ============================================================
+   /o-nas - profil společnosti (pages/About.jsx)
+
+   Stránka je webová podoba tlačenej brožúry, takže tu nevzniká nová
+   vizuálna reč: pásy, karty, čísla aj modré bloky sú tie isté prvky ako
+   na úvode, len s obrazovým materiálom z tlače. Veľkosti, rádiusy,
+   odsadenia a rytmus berie zo systému (--fs-*, --r-*, --pad-*, --sec-pad) -
+   žiadne vlastné čísla, aby stránka klesala a rástla s prepínačom veľkostí
+   rovnako ako zvyšok webu.
+   ============================================================ */
+
+/* ============ HERO - obálka brožúry (balón) ============
+   Rovnaký mechanizmus ako /vozidla: hero podlieza priehľadnú hlavičku,
+   preto zápor + rovnaký padding späť. Farbu závoja nad fotkou drží
+   --hero-tint (index.css), tu je len geometria a poloha záberu. */
+.site .ab-hero{margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+/* Balón je vpravo hore. Na mobile by pri strede zmizol za textom, preto
+   sa záber drží pravého okraja - text tak sedí na čistej oblohe. */
+.site .ab-hero-bg{background-position:78% 22%;}
+/* Tint zostáva v úzkom okne PRESNE taký, aký je v systéme: text tam leží cez
+   celú šírku, teda aj cez balón, a alfa pod ním rozhoduje o kontraste. Prácu
+   s ním rieši až desktopový blok dole, kde je pravá polovica pásu prázdna. */
+.site .ab-hero-in{grid-template-columns:1fr;min-height:auto;padding-block:0;align-items:start;
+  gap:clamp(30px,4vw,48px);}
+.site .ab-hero .hero-tx{max-width:660px;gap:0;}
+.site .ab-hero .hero-tx p{max-width:52ch;}
+
+/* Hero čísla NEMÁ (user, 2026-08-12). Všetkých sedem údajov stojí na modrom
+   páse „Čísla, která za nás mluví" hneď pod ním - dva výpisy tých istých čísel
+   pod sebou boli jeden údaj dvakrát. Hero je tým pádom jednostĺpcový a pravú
+   polovicu drží balón z obálky. */
+
+/* ============ JSME ALLRISK ============ */
+.site .ab-intro{display:grid;grid-template-columns:1fr;gap:clamp(24px,4vw,44px);align-items:start;}
+.site .ab-intro-photo{margin:0;border-radius:var(--r-card);overflow:hidden;background:var(--blue-50);
+  box-shadow:var(--shadow-card);}
+.site .ab-intro-photo img{width:100%;height:100%;object-fit:cover;aspect-ratio:3 / 4;}
+.site .ab-intro-tx{display:flex;flex-direction:column;}
+.site .ab-intro-tx .sec-h{margin-bottom:var(--gap-sechead);}
+/* Celý blok je jeden subtext (user, 2026-08-17): prvý odstavec mal predtým
+   lead (väčší a svetlejší) a farba tým v strede textu „utekala" - štyri
+   odstavce toho istého hlasu majú mať jeden stupeň aj jednu šeď. */
+.site .ab-intro-tx p{color:var(--g600);font-size:var(--fs-body);line-height:1.65;max-width:62ch;}
+.site .ab-intro-tx p + p{margin-top:14px;}
+
+/* Podpis pod textom: jeden riadok s menami a pod ním už len dva ťahy pera
+   (user, 2026-08-17). PNG majú alfu, kladú sa priamo na stránku - žiadna
+   doska pod nimi. Výška je pevná, aby dva rôzne veľké ťahy sedeli na jednej
+   linke; na úzkom okne sa zalomia pod seba. */
+/* Mená sú OBYČAJNÝ TEXT ako odstavce nad nimi (user, 2026-08-17) - žiadny
+   displejový rez, žiadna drobná šeď. Je to podpis pod listom, nie popisok:
+   nesie ho `.ab-intro-tx p`, tu je len odsadenie. */
+.site .ab-intro-tx p.ab-sign-who{margin-top:clamp(22px,3vw,32px);}
+.site .ab-sign{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 48px;}
+/* Ťahy pera sú väčšie než popisok pod nimi kedysi býval (user, 2026-08-17):
+   sú to dva podpisy, nie dva loga. Výška je pevná, aby dva rôzne veľké ťahy
+   sedeli na jednej linke; na úzkom okne sa zalomia pod seba. */
+.site .ab-sign img{display:block;height:clamp(60px,7vw,84px);width:auto;max-width:300px;opacity:.85;}
+
+/* ============ ČÍSLA + REGISTROVÉ ÚDAJE ============
+   Modrý pás je spoločný .banner (pozadie, rádius, žiara, tieň aj sadzba
+   nadpisu žijú tam) - tu je len jeho vnútorný rozvrh. Kopírovať recept
+   pásu do stránkového CSS sa nesmie: v prototype sú takéto pásy štyri
+   a druhá kópia gradientu by sa raz rozišla s prvou. */
+/* Obsah pásu nad jeho vlastnú žiaru. Dekorácie sú z toho vyňaté: majú rovnakú
+   špecifickosť ako `.site .decor`, ale about.css sa načítava po index.css, takže
+   by im to prebilo position:absolute a kresba by spadla do toku ako obrázok. */
+.site .ab-band>*:not(.decor):not(.decor-line){position:relative;z-index:1;}
+.site .ab-band-head{margin-bottom:clamp(26px,3.5vw,40px);}
+.site .ab-band .ey{display:block;margin-bottom:22px;}
+/* ZMAZANÉ 2026-08-17 (user): tiráž s registrovými údajmi (.ab-facts) aj s jej
+   dvoma rozvrhmi. Pás nesie čísla, ktoré niečo tvrdia - údaje z rejstříku
+   vedľa nich argument neniesli. */
+
+/* Rozvrh dlaždíc je z tlače: „2003" je vysoká dlaždica vľavo cez dva riadky,
+   zvyšných šesť čísel je mriežka vedľa nej. Preto pevný počet stĺpcov a nie
+   auto-fit - pri ňom vychádzalo sedem dlaždíc ako 6 + 1 osamotená. */
+.site .ab-nums{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,1.2vw,14px);}
+.site .ab-num{display:flex;flex-direction:column;gap:6px;padding:var(--pad-card);
+  border-radius:var(--r-card);background:var(--tile-blue);backdrop-filter:var(--tile-blur);}
+.site .ab-num b{font-family:var(--display);font-weight:800;font-size:var(--fs-stat);line-height:1.05;color:#fff;}
+/* popis je o stupeň väčší než systémový popisok pod hodnotou (user, 2026-08-17):
+   na modrom páse s veľkými číslami sa 12px stráca, 14px sa ešte číta ako popis */
+.site .ab-num .c{font-size:var(--fs-sm);color:rgba(255,255,255,.72);line-height:1.4;}
+/* „na trhu již od roku 2003" - v tlači samostatná veľká dlaždica vľavo:
+   popis je nad číslom, dlaždica je vyššia a má opačný kontrast než rad okolo nej.
+
+   JEDINÝ ROZDIEL PROTI RADU JE MIERKA SADZBY (user, 2026-08-17). Značkové gesto
+   na nej neskončilo: dlaždica je to isté sklo ako susedia, len väčšie. Rok drží
+   --fs-title (mierka h1 podstránky, o dva stupne nad --fs-stat radu) a popis
+   stúpa zo 14 na 16px, aby veta „na trhu již od roku 2003" niesla váhu aj
+   v hornom riadku. Žiadne vlastné čísla - obe hodnoty sú systémové tokeny,
+   takže dlaždica rastie a klesá s prepínačom veľkostí ako zvyšok webu. */
+.site .ab-num--lead{grid-row:span 2;justify-content:center;
+  background:var(--tile-blue-h);}
+.site .ab-num--lead .c{font-size:var(--fs-body);}
+.site .ab-num--lead b{font-size:var(--fs-title);}
+
+/* ============ SYSTÉM PÉČE O KLIENTA ============
+   Štyri kroky na stúpajúcej vlásočnici. Prečo NIE prekreslená tlačová stuha
+   (a čo z nej zostalo) je v components/CareSteps.jsx - je to rozhodnutie
+   z briefu, nie z vkusu, tak nech stojí pri kóde, ktorý ho nesie.
+
+   Kroky sú JEDEN prvok pre obe podoby (linka / schody). Líši sa len to, kam
+   sa postavia; dve sady kariet by sa rozišli pri prvej úprave.
+
+   ZÁKLAD = úzke okno: kroky pod sebou, linka je zvislá. Nie je to náhradný
+   rozvrh - stúpanie zľava doprava sa na 380px nedá zahrať a zvislá cesta
+   zhora nadol hovorí to isté. */
+.site .care{position:relative;}
+.site .care-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;}
+.site .care-step{position:relative;padding:0 0 clamp(22px,3vw,30px) 30px;}
+.site .care-step:last-child{padding-bottom:0;}
+/* Zvislá cesta cez celý stĺpec krokov - značkový prechod zhora nadol.
+   Pri poslednom kroku končí, cesta sa nekreslí do prázdna pod textom.
+   Hrúbku nesie premenná, aby si ju hrubá podoba `vlna` mohla zmeniť na
+   jednom mieste a nekopírovala pritom celý prechod. */
+.site .care--linka,
+.site .care--vlna{--rail:2px;}
+.site .care--linka .care-steps::before,
+.site .care--vlna .care-steps::before{content:"";position:absolute;top:6px;bottom:0;
+  left:calc(6px - var(--rail) / 2);
+  width:var(--rail);border-radius:var(--r-pill);
+  background:linear-gradient(180deg,var(--line-1) 0%,var(--line-2) 35%,
+    var(--line-3) 70%,var(--line-4) 100%);}
+.site .care--linka .care-step:last-child,
+.site .care--vlna .care-step:last-child{padding-bottom:0;}
+/* Hrubá podoba nesie hrúbku aj v úzkom okne - inak by z nej po zalomení
+   zostala tá istá vlásočnica ako z `linka` a rozdiel by zmizol. Zastávka je
+   na nej biely bod, nie farebný: na osempixelovej stuhe je farba už v nej. */
+.site .care--vlna{--rail:8px;}
+.site .care--vlna .care-step{padding-left:36px;}
+.site .care--vlna .care-tick{left:1px;width:10px;height:10px;background:#fff;box-shadow:none;}
+/* Čiarka pri kroku je jediné farebné miesto textu. V úzkom okne je to bod na
+   zvislej ceste, v širokom zvislý zásek visiaci z linky. */
+.site .care-tick{position:absolute;left:0;top:6px;width:12px;height:12px;border-radius:50%;
+  background:var(--tone);box-shadow:0 0 0 4px var(--page);}
+/* Číslo je MODRÉ, nie vo farbe kroku - presne ako v tlači. Značková linka je
+   podľa index.css farba na plochy, nie na text: azúrová #01C7FF dáva na bielej
+   2,1:1 a ako číslo kroku by bola nečitateľná. */
+.site .care-no{display:block;font-family:var(--display);font-weight:800;
+  font-size:var(--fs-h3);line-height:1;color:var(--blue);}
+.site .care-step b{display:block;margin-top:10px;font-family:var(--display);font-weight:700;
+  font-size:var(--fs-card);line-height:1.2;color:var(--ink);text-wrap:balance;}
+.site .care-step small{display:block;margin-top:6px;font-size:var(--fs-sm);
+  line-height:1.55;color:var(--g600);text-wrap:pretty;}
+/* Vlásočnica sa v širokom okne kreslí zľava doprava, keď sekcia príde do
+   záberu. Jedno gesto, nič viac: je to cesta klienta, tak nech ju vidno
+   vzniknúť. Bez `care--reveal` (žiadny JS) je linka rovno celá. */
+.site .care-line{display:none;}
+/* Odsadenie orezu je ZÁPORNÉ na troch stranách. `inset(0 0 0 0)` je oreza na
+   schránku, a tá je menšia než kresba: hrubá stuha z nej vytŕča o polovicu
+   ťahu hore aj dole a o zaoblený koniec vľavo - orez by ich odsekol a z konca
+   stuhy by bola rovná hrana s vykúsnutým bielym bodom zastávky. */
+.site .care--reveal .care-line{clip-path:inset(-30px 100% -30px -30px);}
+.site .care--reveal.is-in .care-line{clip-path:inset(-30px -30px -30px -30px);
+  transition:clip-path 1.1s cubic-bezier(.22,1,.36,1);}
+.site .care--reveal .care-tick{opacity:0;transform:scale(.4);}
+.site .care--reveal.is-in .care-tick{opacity:1;transform:none;
+  transition:opacity .4s ease-out calc(var(--i)*.16s + .25s),
+             transform .5s cubic-bezier(.22,1,.36,1) calc(var(--i)*.16s + .25s);}
+@media(prefers-reduced-motion:reduce){
+  .site .care--reveal .care-line{clip-path:none;}
+  .site .care--reveal .care-tick{opacity:1;transform:none;transition:none;}
+}
+
+/* ---- ŠIROKÉ OKNO ---------------------------------------------------------
+   Zlom je vlastný (780px), nie spoločných 980: štyri krátke kroky vedľa seba
+   sa zmestia skôr než dvojstĺpcové sekcie stránky. */
+@media(min-width:780px){
+  /* --- podoba `linka` ---
+     Stúpanie nesie odsadenie zhora: stĺpec `i` má (3-i)·rise, takže vrchy
+     všetkých štyroch stĺpcov ležia na JEDNEJ priamke. Linka je preto obyčajná
+     úsečka z rohu do rohu schránky vysokej 4·rise, posunutej o -rise nahor -
+     v každom stĺpci pretne text presne tam, kde stĺpec začína. */
+  .site .care--linka{--rise:clamp(16px,2.2vw,26px);}
+  .site .care--linka .care-steps{grid-template-columns:repeat(4,1fr);
+    gap:clamp(20px,2.6vw,38px);align-items:start;}
+  .site .care--linka .care-steps::before{display:none;}
+  /* stúpanie nesie MARGIN, nie padding: čiarka je v kroku absolútna a `top:0`
+     by pri paddingu mierilo nad text, teda mimo linky */
+  .site .care--linka .care-step{padding:0;margin-top:calc((3 - var(--i)) * var(--rise));}
+  /* Schránka linky sa roztiahne na akúkoľvek šírku (`preserveAspectRatio:none`),
+     ťah si pritom drží dva pixely (`non-scaling-stroke`).
+     Vľavo linka začína ostro na okraji stĺpca, teda pri prvom kroku a v jednej
+     zvislici s nadpisom sekcie. Vpravo sa stráca do stránky - „následná péče"
+     je práve o tom, že cesta posledným krokom nekončí. Blednutie preto nie je
+     symetrické; symetrické by z toho urobilo len ozdobu. */
+  /* `width:100%` je povinné: <svg> je nahradený prvok, takže pri `left/right`
+     bez šírky si vezme vlastnú prirodzenú (300px) a `right` sa zahodí */
+  .site .care--linka .care-line{display:block;position:absolute;left:0;width:100%;
+    top:calc(-1 * var(--rise));height:calc(4 * var(--rise));}
+  .site .care--linka .care-line path{stroke-width:2;}
+  /* zásek visí z linky nadol, nie je to bod na ceste - preto obdĺžnik a bez
+     bieleho prstenca, linku prekrývať nemá čo */
+  .site .care--linka .care-tick{top:0;left:0;width:3px;height:18px;border-radius:0;
+    box-shadow:none;}
+  .site .care--linka .care-no{margin-top:26px;}
+
+  /* --- podoba `vlna`: tá istá cesta, ale hrubá a vlnitá ---
+     Zastávky sedia rovnako ako pri `linka` (stĺpec `i` má margin (3-i)·rise),
+     mení sa len trasa medzi nimi a jej hrúbka. Schránka je preto o stupeň
+     vyššia (5·rise namiesto 4), aby sa do nej výkyv zmestil - a zastávky tým
+     padnú na 80/60/40/20 percenta jej výšky, nie do rohov. Krivka je
+     v components/CareSteps.jsx aj s výpočtom výkyvu. */
+  .site .care--vlna{--rise:clamp(26px,3.4vw,40px);
+    /* medzera medzi zastávkou a textom pod ňou. Musí byť väčšia než najhlbší
+       výkyv vlny (24 jednotiek z 5·rise ≈ 0,7·rise) plus polovica hrúbky ťahu,
+       inak stuha pretne číslo kroku. */
+    --dip:clamp(56px,6.4vw,78px);
+    /* vlna siaha aj NAD prvý riadok krokov, tak si pod nadpisom robí miesto.
+       Margin, nie padding: schránka ťahu je absolútna a padding by jej posunul
+       počiatok, takže by sa rozišla so zastávkami. */
+    margin-top:clamp(20px,2.5vw,32px);}
+  .site .care--vlna .care-steps{grid-template-columns:repeat(4,1fr);
+    gap:clamp(20px,2.6vw,38px);align-items:start;}
+  .site .care--vlna .care-steps::before{display:none;}
+  .site .care--vlna .care-step{padding:var(--dip) 0 0;
+    margin-top:calc((3 - var(--i)) * var(--rise));}
+  .site .care--vlna .care-line{display:block;position:absolute;left:0;width:100%;
+    top:calc(-1 * var(--rise));height:calc(5 * var(--rise));overflow:visible;}
+  /* Hrúbka a zaoblené konce sú na ťahu, nie na atribúte v JSX - je to jediné,
+     čím sa obe podoby líšia v kresbe. */
+  .site .care--vlna .care-line path{stroke-width:20;stroke-linecap:round;}
+  /* Zastávka je biely bod NA stuhe, ako na mape linky. Farbu kroku už nesie
+     samotná stuha pod ním, druhá farba na tom istom mieste by si konkurovali. */
+  .site .care--vlna .care-tick{top:-6px;left:-6px;width:12px;height:12px;
+    border-radius:50%;background:#fff;box-shadow:none;}
+
+  /* --- podoba `schody`: to isté bez linky ---
+     Štyri karty v rade, každá o stupeň vyššie. Je tu ako tichšia možnosť pre
+     prípad, že by značková linka mala v bielej sekcii ostať vypnutá. */
+  .site .care--schody .care-steps{grid-template-columns:repeat(4,1fr);
+    gap:clamp(14px,1.6vw,20px);align-items:start;}
+  .site .care--schody .care-step{padding:var(--pad-card);border-radius:var(--r-card);
+    background:#fff;box-shadow:var(--shadow-card);}
+  .site .care--schody .care-tick{position:static;display:block;width:44px;height:4px;
+    border-radius:var(--r-pill);box-shadow:none;margin-bottom:16px;}
+  .site .care--schody .care-step:nth-child(1){margin-top:clamp(36px,5vw,66px);}
+  .site .care--schody .care-step:nth-child(2){margin-top:clamp(24px,3.4vw,44px);}
+  .site .care--schody .care-step:nth-child(3){margin-top:clamp(12px,1.7vw,22px);}
+}
+
+/* ---- pôvodný výrez z PDF (podoba `obrazek`) ----
+   Sedí na bielej ako v tlači, bez rámu a bez tieňa - je to kresba, nie fotka.
+   Strop šírky drží mieru: cez celých 1180px by čísla krokov boli väčšie než
+   nadpisy okolo. */
+.site .ab-care-img{margin:0;}
+/* Kresba je od 2026-08-17 večer `care-system.png` a biele pozadie má vypálené
+   do priehľadnosti priamo v súbore, takže pod ňou nie je čo čistiť -
+   `mix-blend-mode:multiply` je preč aj s obmedzením „len na svetlom podklade",
+   ktoré so sebou niesol. */
+.site .ab-care-img img{width:100%;max-width:1000px;height:auto;margin-inline:auto;
+  display:block;}
+/* Na telefóne by sa 1600px široká kresba zmenšila na nečitateľné písmo, takže
+   si drží minimálnu šírku a posúva sa vodorovne vo vlastnej schránke. Posúvať
+   sa smie LEN ona - stránka pod ňou nie (preto overflow na figure, nie na sekcii). */
+@media(max-width:719px){
+  .site .ab-care-img{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .site .ab-care-img img{width:auto;min-width:680px;max-width:none;}
+}
+/* ZMAZANÉ 2026-08-17: `.vis-hidden`. Skrývalo nadpis sekcie „Systém péče",
+   pokiaľ ho niesol obrázok - ten má teraz vlastnú viditeľnú hlavičku a triedu
+   nič iné nepoužívalo. */
+
+/* ============ EKOSYSTÉM ============
+   DVE PODOBY (`dbg:eko4`), mechanika v components/Ecosystem.jsx:
+     kolo     PÔVODNÝ NÁVRH, vrátený 2026-08-18 na žiadosť usera: kružnica na
+              bielej sekcii, bubliny s fotkou línie, text NALIEHA na vybraný
+              kruh a beží pri ňom značková linka.
+     sloupec  vľavo zoznam kategórií so stuhou narovnanou do stĺpca, vpravo
+              detail. Fotka línie je v kategórii, nie v detaile.
+
+   ZMAZANÉ 2026-08-18 (user: „iba si vytvoril kopec ďalších zbytočných variant"):
+   podoby, ktoré menili LEN PODKLAD POD TEXTOM (`sklo` / `deska` / `vypis` /
+   `velky` a fotka ako podklad karty vo `foto`), a po nich aj `pas` - modrý pás
+   cez celú šírku okna s kolesom prečnievajúcim za okraj obsahu.
+
+   ROZMERY KRUŽNICE A VZŤAH MEDZI NIMI:
+     --eco-rad   polomer dráhy
+     --eco-node  priemer kľudovej bubliny
+     --eco-hero  priemer vybranej - len O TROCHU väčšia (user, 2026-08-17),
+                 a rastie LEN KRUH: ikona ani názov v nej veľkosť nemenia,
+                 preto je hero odvodené od node a nie samostatné číslo.
+   Vzdialenosť stredov dvoch susedných bublín je pri šiestich polohách presne
+   polomer, takže `hero/2 + node/2` musí zostať pod ním - inak sa vybraná
+   dotkne susedov. Pri 196 / 124 / 144 je to 134 proti 196; v úzkom okne
+   124 / 84 / 97 je to 90 proti 124. Kto mení jedno číslo, prepočíta nerovnosť.
+
+   Kotva je miesto na kružnici, kam sa vybraná línia dotočí, a je to zároveň
+   miesto, kde sa kružnica a text dotýkajú: text začína PRESNE v strede
+   vybraného kruhu, takže kruh sedí polovicou na dráhe a polovicou na ňom.
+   Na ploche mieri kotva doprava, v úzkom okne dole. Ten istý uhol je aj
+   začiatkom gradientu na stuhe - viď `.eco-track`. */
+/* Sekcia je len schránka rozvrhu - `overflow` sa jej NEDÁVA: vybraný kruh
+   zámerne prečnieva k textu a tieň pod ním by sa v úzkom okne orezal. */
+.site .eco-sec{position:relative;}
+.site .eco{--eco-anchor:180deg;--eco-turn:.55s;
+  --eco-rad:clamp(124px,16.5vw,196px);
+  --eco-node:clamp(84px,10.4vw,124px);
+  --eco-w:calc(var(--eco-rad) * .175);
+  --eco-hero:calc(var(--eco-node) * 1.16);
+  /* O koľko text USTUPUJE od stredu kruhu (user, 2026-08-17: „posuň tú dosku
+     ďalej od kruhu"). Kruh naň stále nalieha, len menšou časťou. */
+  --eco-off:clamp(18px,2.6vw,44px);
+  /* odstup textu od kruhu, ktorý naň nalieha - polomer kruhu a medzera */
+  --eco-gap:calc(var(--eco-hero) / 2 + clamp(18px,2.2vw,32px) - var(--eco-off));
+  display:grid;grid-template-columns:1fr;align-items:center;}
+.site .eco-sec--sloupec .eco{gap:clamp(26px,4vw,44px);}
+
+/* ---- kružnica (len v podobe `kolo`) ----
+   Schránka drží kľudové uzly; vybraný kruh z nej zámerne prečnieva, preto sa
+   nesmie orezať. Klikať sa dá len na uzly - preto pointer-events až na nich.
+   Stred zostáva PRÁZDNY (user, 2026-08-17): značka z neho odišla a náhrada sa
+   doň nekreslí. */
+.site .eco-ring{position:relative;z-index:2;width:100%;aspect-ratio:1;
+  max-width:calc(2 * var(--eco-rad) + var(--eco-node));
+  margin:clamp(16px,2vw,24px) auto 0;pointer-events:none;}
+
+/* STUHA. Farba beží PO DRÁHE, nie cez štvorec okolo nej: kužeľový gradient
+   otočený do kotvy, orezaný maskou na prstenec. SVG `stroke` to nevedelo -
+   lineárny gradient v schránke kružnice dal vodorovný preliv a stuha z neho
+   brala len to, čo jej na danej súradnici padlo pod ťah.
+   Gradient sa v kotve zatvára do seba (rovnaká farba na 0 % aj 100 %), takže
+   šev nikde nevidno - a kotvu aj tak prekrýva kruh vybranej línie. */
+.site .eco{--eco-seam:#2A0FB4;
+  --eco-mask:radial-gradient(circle at 50% 50%,
+    transparent calc(var(--eco-rad) - var(--eco-w) / 2 - .6px),
+    #000 calc(var(--eco-rad) - var(--eco-w) / 2),
+    #000 calc(var(--eco-rad) + var(--eco-w) / 2),
+    transparent calc(var(--eco-rad) + var(--eco-w) / 2 + .6px));}
+.site .eco-track{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from var(--eco-anchor),
+    var(--eco-seam) 0%,var(--line-1) 10%,var(--line-2) 35%,
+    var(--line-3) 62%,var(--line-4) 88%,var(--eco-seam) 100%);
+  -webkit-mask:var(--eco-mask);mask:var(--eco-mask);}
+
+.site .eco-wheel{position:absolute;inset:0;
+  transform:rotate(calc(var(--eco-anchor) + var(--eco-rot,0deg)));
+  transition:transform var(--eco-turn) var(--ease);}
+/* Uzol je len BOD na kružnici: schránka má veľkosť najväčšieho kruhu a kreslí
+   sa v nej na stred, takže rast a scvrkávanie nepotrebujú prepočítavať okraje.
+   Zväčšenie ide cez rozmer vnútra, NIE cez `scale` - tá sa podľa poradia
+   (translate → rotate → scale → transform) skladá nad `transform` uzla
+   a vynásobila by aj posun o polomer, takže by uzol odletel z dráhy von. */
+.site .eco-node{position:absolute;left:50%;top:50%;
+  width:var(--eco-hero);height:var(--eco-hero);margin:calc(var(--eco-hero) / -2);
+  display:grid;place-items:center;padding:0;border:0;background:none;cursor:pointer;
+  pointer-events:none;
+  transform:rotate(var(--a)) translateY(calc(-1 * var(--eco-rad)));}
+.site .eco-node.on{z-index:1;}
+
+/* Bublina: fotka línie pod modrým závojom, BIELY PRSTENEC (user, 2026-08-17),
+   ktorý jej vyreže miesto v stuhe - má ho každá vrátane vybranej a je to
+   jediná vec, ktorá ich okolo dokola drží rovnaké. Fotku si každá bublina
+   berie VLASTNÝM OREZOM (`cover`); spoločné plátno cez bublinu aj kartu odišlo
+   s tým, že bubliny sú takmer rovnako veľké.
+   Závoj je značková modrá z hero sekcií - nie kozmetika, ale kontrast: biela
+   sadzba potrebuje pod sebou rovnaký podklad bez ohľadu na to, čo na fotke
+   práve je. Tmavá námornícka fotku len zhasla (user, 2026-08-17).
+   Ikona 32 px a názov 18 px v Magistrale (user, 2026-08-17). */
+.site .eco{--eco-tint:linear-gradient(115deg,rgba(0,70,200,.8),rgba(0,48,150,.88));
+  --eco-tint-n:linear-gradient(rgba(0,70,200,.68),rgba(0,70,200,.68));
+  --eco-tint-hover:linear-gradient(rgba(0,70,200,.5),rgba(0,70,200,.5));}
+.site .eco-node-in{position:relative;pointer-events:auto;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(4px,.55vw,7px);
+  width:var(--eco-node);height:var(--eco-node);padding:clamp(8px,1.1vw,14px);
+  border-radius:50%;color:#fff;box-shadow:0 0 0 3px #fff;
+  background:var(--eco-tint-n),var(--eco-img) center / cover no-repeat,var(--blue);
+  transform:rotate(calc(-1 * (var(--a) + var(--eco-anchor) + var(--eco-rot,0deg))));
+  /* Prechádza sa LEN kontraotočenie a farba. Rozmer bubliny sa prepína naraz
+     (user, 2026-08-17): nafukovanie počas otáčky bolo pohyb navyše a ťahalo
+     oko preč od kolesa, ktoré je vlastným pohybom sekcie. */
+  transition:transform var(--eco-turn) var(--ease),
+    background .35s var(--ease),box-shadow .35s var(--ease);}
+.site .eco-node svg{flex:none;width:clamp(24px,2.2vw,32px);height:auto;}
+.site .eco-node-lb{font-family:var(--display);font-weight:700;
+  font-size:clamp(13px,1.25vw,18px);line-height:1.15;
+  text-align:center;letter-spacing:-.01em;text-wrap:balance;}
+.site .eco-node:hover .eco-node-in{
+  background:var(--eco-tint-hover),var(--eco-img) center / cover no-repeat,var(--blue);}
+
+/* Vybraná línia: veľký kruh, do ktorého stuha vteká. Preliv je vedený
+   V SMERE JAZDY po dráhe - farba, ktorá do kotvy prichádza, je na tej strane,
+   z ktorej prichádza, a tá odchádzajúca oproti. Rozmer sa PREPÍNA NARAZ (nie
+   je v prechode); rastie len kruh, ikona aj názov si držia svoju veľkosť. */
+.site .eco{--eco-hero-grad:linear-gradient(270deg,var(--line-4),var(--line-1));}
+.site .eco-node.on .eco-node-in{width:var(--eco-hero);height:var(--eco-hero);
+  background:var(--eco-tint),var(--eco-img) center / cover no-repeat,var(--blue);
+  box-shadow:0 0 0 3px #fff,0 16px 34px -16px rgba(13,31,91,.6);}
+.site .eco-node.on .eco-node-lb{font-weight:800;}
+.site .eco-node:focus-visible{outline:0;}
+.site .eco-node:focus-visible .eco-node-in{outline:2px solid var(--blue);outline-offset:6px;}
+
+/* ---- podoba `sloupec`: kategórie vľavo ----
+   KRUŽNICA JE POD KATEGÓRIAMI (user, 2026-08-18: „nech je vidno tú linku
+   v pozadí, že ide kruh - stačí polkruh; kategórie by boli v podstate pod
+   sebou, len trochu bokom, a tá stredná najväčšia, ostatné menšie").
+   Stuha teda nie je dekorácia pridaná dodatočne - je to tá istá dráha ako na
+   kružnici, len iný jej výsek: koliesko línie je jej uzol, prstenec vo farbe
+   stránky mu v nej vyrezáva miesto a do vybraného stuha vteká prstencom
+   z prelivu. Koliesko nesie FOTKU línie s modrým závojom a ikonou nad ním,
+   teda to isté zloženie ako bublina na kružnici. Fotka je súčasť KATEGÓRIE,
+   nie detailu (user, ten istý deň).
+
+   NA ÚZKOM OKNE oblúk nie je: na 360 px šírky by z neho zostala takmer rovná
+   čiara a posun do strany by zožral text. Tam ide stuha zvisle a kategórie sú
+   normálny stĺpec - podoba oblúka začína až na ploche (viď RESPONSIVE). */
+.site .eco-rail{--eco-dot:clamp(46px,4.6vw,56px);
+  --eco-dot-on:clamp(60px,6.2vw,76px);
+  --eco-thread:6px;--eco-rail-px:12px;
+  position:relative;display:flex;flex-direction:column;}
+.site .eco-arc{display:none;}
+.site .eco-rail::before{content:"";position:absolute;top:0;bottom:0;
+  left:calc(var(--eco-rail-px) + var(--eco-dot-on) / 2 - var(--eco-thread) / 2);
+  width:var(--eco-thread);border-radius:var(--r-pill);
+  background:linear-gradient(180deg,var(--line-1),var(--line-2) 34%,
+    var(--line-3) 66%,var(--line-4));
+  /* Konce sa strácajú, nie useknú: stuha vedie stredmi koliesok a nad prvým
+     (pod posledným) jej zostáva pol riadku navyše. */
+  -webkit-mask:linear-gradient(180deg,transparent,#000 7%,#000 93%,transparent);
+  mask:linear-gradient(180deg,transparent,#000 7%,#000 93%,transparent);}
+
+/* Os koliesok musí sedieť v každom riadku rovnako, inak stuha nevedie stredmi:
+   prvý stĺpec mriežky má preto pevnú šírku najväčšieho kolieska (`--eco-dot-on`)
+   a koliesko sa v ňom centruje. Keby bola šírka `auto`, väčší riadok by bol
+   širší a os by sa v ňom zlomila. */
+.site .eco-rail-b{position:relative;
+  display:grid;grid-template-columns:var(--eco-dot-on) 1fr auto;align-items:center;
+  gap:16px;width:100%;padding:8px var(--eco-rail-px);border:0;border-radius:var(--r-card);
+  background:none;color:var(--ink);font-family:var(--display);font-weight:500;
+  font-size:var(--fs-card);text-align:left;cursor:pointer;
+  transition:color .2s var(--ease);}
+/* Vybraný riadok NEMÁ PODFARBENIE (user, 2026-08-18: „nepotrebujeme ten
+   background card efekt na select"). Na ploche ho označuje poloha vo vrchole
+   oblúka a najväčšie koliesko, v úzkom okne väčšie koliesko a modré meno -
+   pole pod textom by k tomu bolo tretie označenie toho istého. */
+.site .eco-rail-b.on{color:var(--blue);font-weight:700;}
+.site .eco-rail-b:hover{color:var(--blue);}
+
+/* Koliesko: fotka dole, závoj nad ňou, ikona navrchu - poradie je napísané
+   z-indexom, nie poradím v strome (`::after` by sa inak kreslilo nad ikonu). */
+.site .eco-rail-b .pic{position:relative;isolation:isolate;justify-self:center;
+  display:grid;place-items:center;width:var(--eco-dot);height:var(--eco-dot);
+  border-radius:50%;padding:3px;background:var(--page);
+  transition:width .5s var(--ease),height .5s var(--ease),background .3s var(--ease);}
+.site .eco-rail-b .pic img{position:absolute;inset:3px;z-index:0;
+  width:calc(100% - 6px);height:calc(100% - 6px);
+  border-radius:50%;object-fit:cover;}
+.site .eco-rail-b .pic::after{content:"";position:absolute;inset:3px;z-index:1;
+  border-radius:50%;background:linear-gradient(150deg,rgba(0,70,200,.72),rgba(0,33,97,.82));}
+.site .eco-rail-b .pic svg{position:relative;z-index:2;color:#fff;}
+.site .eco-rail-b:hover .pic::after{background:linear-gradient(150deg,rgba(0,70,200,.5),rgba(0,33,97,.62));}
+/* Prstenec vybraného kolieska je preliv stuhy - stuha doň vteká rovnako ako
+   do vybranej bubliny na kružnici. */
+.site .eco-rail-b.on .pic{background:linear-gradient(180deg,var(--line-4),var(--line-1));
+  box-shadow:0 14px 28px -14px rgba(13,31,91,.7);}
+.site .eco-rail-b.on .pic::after{background:linear-gradient(150deg,rgba(0,70,200,.42),rgba(0,33,97,.6));}
+/* Na úzkom okne (stĺpec bez oblúka) nesie výber aj VEĽKOSŤ - na ploche to robí
+   poloha na oblúku, tam by sa dve mierky bili. */
+.site .eco-rail-b.on .pic{width:var(--eco-dot-on);height:var(--eco-dot-on);}
+
+.site .eco-rail-b b{font-weight:inherit;font-size:inherit;line-height:1.25;
+  text-wrap:balance;}
+.site .eco-rail-b .ar{color:var(--mut);opacity:0;translate:-6px 0;
+  transition:opacity .2s var(--ease),translate .2s var(--ease);}
+.site .eco-rail-b:hover .ar{opacity:1;translate:0 0;}
+.site .eco-rail-b.on .ar{color:var(--blue);opacity:1;translate:0 0;}
+.site .eco-rail-b:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
+
+/* ---- detail vybranej línie (spoločný obom podobám) ----
+   NADPIS NEMÁ (user, 2026-08-18): meno línie stojí v bubline alebo vo vybranom
+   riadku zoznamu. Detail preto otvára POPIS a ten si po nadpise berie sadzbu -
+   Magistral medium. */
+.site .eco-lead{color:var(--ink);font-family:var(--display);font-weight:500;
+  font-size:24px;line-height:1.4;max-width:44ch;text-wrap:pretty;}
+/* Zoznam služieb je spoločný `.biz-list--lg` (pages/business.css) - ten istý
+   prvok ako výpočty služby a odborné skúšky nižšie na stránke. Tu sa dopĺňa
+   UŽ LEN odstup. */
+.site .eco-rows{margin-top:clamp(22px,2.8vw,34px);}
+
+/* ---- podoba `kolo`: text nalieha na vybraný kruh ----
+   Text začína V STREDE vybraného kruhu a leží pod ním (z-index), takže sa kruh
+   a text prekrývajú a čítajú ako jeden predmet; `--eco-off` ho od stredu kruhu
+   o kus posúva späť (user, 2026-08-17: „posuň tú dosku ďalej od kruhu").
+   Miesto pre kruh drží JEDNA premenná (`--eco-gap`) - keby si odsadenie písal
+   rozvrh na ploche zvlášť, prebil by ten základný.
+   ZMAZANÉ 2026-08-18 (user): zvislá značková linka pri texte. Bola to náhrada
+   za doskou, ktorú tu už nikto nechce - text drží pri kružnici to, že na neho
+   vybraný kruh nalieha, nie ďalšia kresba vedľa neho.
+   Zoznam zostáva bez vodorovných liniek: bez dosky robia z výpisu tabuľku.
+   Zostáva odstup riadkov a modrá fajka. */
+.site .eco-sec--kolo .eco-detail{position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  margin-top:calc(var(--eco-node) / -2 + var(--eco-off));}
+.site .eco-sec--kolo .eco-detail-in{padding-top:var(--eco-gap);}
+.site .eco-sec--kolo .eco-rows{border-top:0;}
+.site .eco-sec--kolo .eco-rows li{border-bottom:0;padding:9px 0;}
+
+/* Šípky sú ikonové, teda ŠTVORCE - to isté pravidlo ako v hlavičke. Rozmer
+   zadal user (2026-08-17): 48 × 48, teda plnohodnotné tlačidlo, nie ovládací
+   prvok - preto `.btn` bez `.btn-sm` a obe strany písané ručne (výška `.btn`
+   je v prototype 48, šírku by si inak vzalo z odsadenia).
+   Číslovanie strán tu nie je - polohu v šestici ukazuje kružnica sama. */
+.site .eco-nav{display:flex;align-items:center;gap:10px;margin-top:clamp(20px,2.6vw,28px);}
+.site .eco-nav-b{width:48px;height:48px;padding:0;flex:none;}
+
+/* Prepnutie línie je zmena obsahu, nie prekreslenie stránky: detail nabehne
+   ako celok a výpočet sa vysype po položkách, takže oko vie, kam sa pozerať.
+   `both` drží koncový stav, ktorý je zároveň prirodzený - keď sa animácia
+   nespustí (vypnutý pohyb), detail je normálne vidieť. */
+@keyframes eco-in{from{opacity:0;translate:0 8px;}to{opacity:1;translate:0 0;}}
+.site .eco-detail-in{animation:eco-in .4s var(--ease) both;}
+.site .eco-rows li{animation:eco-in .4s var(--ease) both;
+  animation-delay:calc(var(--i,0) * 32ms + 60ms);}
+
+/* WCAG 2.3.3 menuje točiace sa prvky ako typický spúšťač vestibulárnych
+   ťažkostí, takže tu nejde o kozmetiku - výber prepne rovno. */
+@media(prefers-reduced-motion:reduce){
+  .site .eco{--eco-turn:.01ms;}
+  .site .eco-node-in{transition:none;}
+  .site .eco-rail-b,.site .eco-rail-b .pic{transition:none;}
+  .site .eco-detail-in,.site .eco-rows li{animation:none;}
+}
+
+/* ============ FORMY MODERNÍ KOMUNIKACE ============
+   Opäť spoločný .banner, v rovnakom rozvrhu ako pás „O společnosti" (user,
+   2026-08-17): hlavička hore cez celú šírku, dlaždice pod ňou. */
+.site .ab-chan-band{display:grid;grid-template-columns:1fr;gap:clamp(26px,3.5vw,40px);align-items:start;}
+.site .ab-chan-tx{position:relative;z-index:1;}
+.site .ab-chan-tx .ey{display:block;margin-bottom:22px;}
+/* Kartičky idú do radu, tak ako čísla na páse o společnosti. Pod hlavičkou má
+   každá tretinu celej šírky pásu - dôvod, prečo predtým stáli pod sebou (v
+   pravej polovici z nich boli tri úzke stĺpčeky s popisom na päť riadkov),
+   tu už neplatí. Na úzkej ploche padajú pod seba. */
+.site .ab-chans{position:relative;z-index:1;display:grid;grid-template-columns:1fr;gap:10px;}
+/* Ten istý tvar ako kartičky krytia na páse „Autopojištění Allrisk"
+   (.biz-perks li v business.css, user 2026-08-17): sklo bez obrysu, ikona NAD
+   textom, názov v Interi a popis pod ním. Dva takmer rovnaké tvary kartičky na
+   modrom sa nemajú kde rozísť, keď majú rovnaký recept. */
+.site .ab-chan{display:flex;flex-direction:column;gap:6px;padding:14px;
+  border-radius:var(--r-card);background:var(--tile-blue);backdrop-filter:var(--tile-blur);}
+.site .ab-chan svg{color:#fff;}
+.site .ab-chan b{font-family:var(--sans);font-weight:600;font-size:var(--fs-sm);color:#fff;line-height:1.3;}
+.site .ab-chan small{font-size:var(--fs-label);color:rgba(255,255,255,.72);line-height:1.45;}
+
+/* ============ CERTIFIKACE V OBORU - záložky ============
+   Rad záložiek je spoločný TabBar celého webu, tu je len panel pod ním.
+   ZMAZANÉ 2026-08-15: `karty` aj `akordeon` - viď poznámku pri ExamTabs.
+
+   Zoznam skúšok je JEDEN stĺpec na každej šírke (user, 2026-08-15). Skúšali sa
+   tri stĺpce aj dva; oboje boli úzke natoľko, že sa názvy skúšok lámali na dva
+   a tri riadky, a zalomený názov v susedstve nezalomeného číta ako dve položky.
+   Jeden stĺpec je dlhší, ale každá skúška je jeden riadok. Nepridávať `columns`
+   späť ani na širokom okne. */
+/* Podobu nesie .biz-list--lg (pages/business.css) - ten istý zoznam ako výpočty
+   služby v sekciách pre podnikateľov. Tu zostáva len odstup od radu záložiek. */
+.site .ab-exam-panel{margin-top:clamp(18px,2.4vw,26px);}
+
+/* ============ ALLRISK POMÁHÁ - tri modré karty ============
+   TEXT DO MODREJ KARTY K LOGU (user, 2026-08-17). Do toho dňa stálo logo ako
+   samostatná modrá dlaždica a názov s popisom pod ňou na bielej stránke - boli
+   to dva predmety pod sebou, nie jedna karta.
+
+   Karta je preto modrá celá a logo je jej vrchná časť. Modrá sa TRAFÍ, hoci je
+   obrázok raster: pozadie všetkých troch výrezov je značková #0046C8 (namerané
+   v pravej polovici všetkých troch súborov, 2026-08-17), teda presne `--blue`.
+   Ľavý okraj výrezov má v sebe jemné zosvetlenie z tlače (~#0B4DC6), rozdiel
+   je na hrane sotva viditeľný a prekresľovať kvôli nemu logá nemá zmysel. */
+.site .ab-helps{display:grid;grid-template-columns:1fr;gap:clamp(14px,2vw,20px);}
+.site .ab-help-item{margin:0;display:flex;flex-direction:column;
+  border-radius:var(--r-card);overflow:hidden;background:var(--blue);}
+.site .ab-help-item img{display:block;width:100%;height:auto;
+  aspect-ratio:66 / 25;object-fit:cover;}
+/* Odsadenie textu je karta, nie pás - preto --pad-card. Zhora menšie: obrázok
+   má okolo loga vlastný vzduch, takže plná hodnota by dole otvorila dieru. */
+.site .ab-help-item figcaption{padding:14px var(--pad-card) var(--pad-card);}
+/* Názov je dvojriadkový ako v tlači: veľký riadok a pod ním menší dovetok.
+   Menší riadok je časť názvu, preto je biely so znížením krytia, nie sivý -
+   sivá by z neho na modrej urobila nečitateľnú poznámku. */
+.site .ab-help-item b{display:block;font-family:var(--display);font-weight:700;
+  font-size:var(--fs-card);color:#fff;line-height:1.2;text-wrap:balance;}
+.site .ab-help-item span{display:block;margin-top:2px;font-family:var(--display);
+  font-size:var(--fs-sm);color:rgba(255,255,255,.78);line-height:1.35;}
+.site .ab-help-item p{margin-top:10px;font-size:var(--fs-sm);
+  color:rgba(255,255,255,.82);line-height:1.55;text-wrap:pretty;}
+
+/* ============ CERTIFIKÁTY ============
+   Každé ocenenie je vlastná sekcia v tvare `.ab-split` (text oproti obrázku),
+   preto tu nezostáva žiadna karta ani mriežka - len telo textového stĺpca. */
+.site .ab-cert-body{display:grid;grid-template-columns:1fr;gap:clamp(14px,2vw,22px);
+  align-items:start;margin-top:clamp(16px,2vw,22px);}
+/* Certifikát je hotová strana z tlače - stojí voľne, bez rámu aj bez podkladu
+   (user, 2026-08-12). Rovnaké pravidlo ako pri archoch log a pri mape. */
+/* Certifikát je na výšku (2:3), takže bez stropu prerastie text vedľa seba.
+   Strop je preto nižší než šírka stĺpca (user, 2026-08-12) a obrázok stojí
+   v strede stĺpca - zvislé zarovnanie s textom drží `align-items:center`
+   na `.ab-split`. */
+.site .ab-cert-img{margin:0;display:flex;justify-content:center;}
+.site .ab-cert-img img{width:100%;max-width:300px;height:auto;}
+.site .ab-cert-tx p{font-size:var(--fs-body);color:var(--g600);line-height:1.6;}
+.site .ab-cert-tx p + p{margin-top:12px;}
+/* SecHead certifikátu nemá `lead`, takže úvodnú vetu nesie prvý odstavec.
+   Väčší je, ale šeď má tú istú ako odstavec pod ním (user, 2026-08-17) -
+   dve šede v jednom texte čítali ako uniknutá farba. V „Jsme Allrisk" sa to
+   isté pravidlo od toho dňa nepoužíva vôbec: pri štyroch odstavcoch skákal
+   aj stupeň písma. */
+.site .ab-cert-tx p:first-of-type{font-size:var(--fs-lead);}
+/* Roky udelenia: deväť za sebou je samo o sebe argument, preto stačí riadok
+   modrých čísel pod textom (user, 2026-08-12) - žiadne pilulky ani ikony. */
+.site .ab-years{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;
+  gap:4px 14px;color:var(--blue);font-weight:700;font-variant-numeric:tabular-nums;}
+
+/* ============ PARTNEŘI + REFERENCE - dva logotypové archy ============
+   Sú to hotové strany z tlače (user, 2026-08-12), takže sa nesadzujú znova:
+   žiadna mriežka, žiadny rám. Mená sú v `alt`, aby arch niečo hovoril aj
+   čítačke a vyhľadávaču.
+   Dve samostatné sekcie, text oproti obrázku (user, 2026-08-12): u partnerov
+   je arch vpravo, u referencií vľavo. Zrkadlenie robí `order` na desktope -
+   v HTML zostáva text prvý, takže na telefóne sa stĺpce poskladajú pod seba
+   v poradí nadpis → arch.
+   TODO(loga): archy sú rastrové výrezy z PDF. Keď klient dodá logá po jednom
+   (SVG), z toho istého poľa `PARTNERS` vznikne skutočná mriežka. */
+/* Spoločný tvar „text oproti obrázku". Pomer stĺpcov drží dvojica premenných,
+   aby ho `.rev` vedelo prehodiť spolu s poradím - inak by sa pri zrkadlení
+   obrázok dostal do užšieho stĺpca. Archy log chcú plochu, dlhý text
+   certifikátu naopak (`.cert`). */
+.site .ab-split{--split-tx:.85fr;--split-img:1.15fr;
+  display:grid;grid-template-columns:1fr;gap:clamp(24px,4vw,52px);align-items:center;}
+.site .ab-split.cert{--split-tx:1.2fr;--split-img:.8fr;}
+/* Biele pozadie archu preč (user, 2026-08-17). Sú to JPG výrezy z tlače, teda
+   bez alfy - biela plocha okolo log tak na stránke (--page #F8F9FA) svietila
+   ako obdĺžnik svetlejší než sekcia. `multiply` je na to presne: biela × pozadie
+   = pozadie, takže sa arch položí priamo na stránku, a farebné logo × biela
+   = logo, teda značky ostávajú nedotknuté. Nie `screen` ani opacity - tie by
+   logá vyblednutím poškodili, a to sú cudzie značky.
+   Pozor pri presune archu na modré pole: `multiply` počíta s podkladom
+   SVETLEJŠÍM než kresba, na tmavom by logá zmizli. Tam treba dodané logá
+   s alfou (viď TODO vyššie), nie iný blend. */
+.site .ab-logo-sheet{width:100%;height:auto;mix-blend-mode:multiply;}
+.site .ab-logos-foot{margin-top:clamp(18px,2.4vw,26px);}
+
+/* ============ DEVELOPERSKÉ PROJEKTY ============
+   ZMAZANÉ 2026-08-17 (user): `.ab-proj-tx` - sprievodné odstavce medzi
+   hlavičkou a dlaždicami. Text aj jeho dáta (PROJECTS_INTRO) sú preč. */
+/* ZMAZANÉ 2026-08-17 (user, ten istý deň): `.ab-proj` - rozvrh „hlavička vľavo,
+   karty vpravo". Karty sú zase POD hlavičkou cez celú šírku, ako v ostatných
+   sekciách stránky; vizualizácia je dôkaz a v polovičnom stĺpci z nej bol
+   úzky výrez. Wrapper zmizol aj z markupu (About.jsx), zostala samotná mriežka. */
+.site .ab-projects{display:grid;grid-template-columns:1fr;gap:clamp(14px,2vw,22px);}
+/* Karta projektu je prevzatý tvar z realitného webu (user, 2026-08-12):
+   vysoká vizualizácia a v nej biela schránka odsadená od hrán. Preto pevná
+   výška namiesto pomeru strán - obe karty tak stoja v rovnakej línii bez
+   ohľadu na to, aký je výrez vysoký. */
+.site .ab-project{position:relative;margin:0;border-radius:var(--r-card);overflow:hidden;
+  background:var(--blue-50);height:clamp(320px,34vw,440px);}
+.site .ab-project img{width:100%;height:100%;object-fit:cover;}
+/* Schránka je MODRÁ, nie biela (user, 2026-08-17) - prevzaté z karty projektu
+   na realitnom webe (ProjectCard.tsx: `absolute bottom-4 left-4 right-4
+   bg-blue-700 rounded-xl p-4`). Text stojí na vlastnom podklade, takže
+   nezávisí od toho, čo je práve pod ním vo vizualizácii.
+   Rádiusy zostávajú na tokenoch prototypu (8px), nie na 16/12 z realitného
+   webu - ten má vlastnú škálu a prebrať z nej jedno číslo by rozbilo systém. */
+/* Odsadenie textu je 16px (`p-4` na realitnom webe), nie --pad-card: schránka
+   je chip vo vnútri obrázku, nie telo karty, a 24px v nej zabralo tretinu
+   výšky vizualizácie. */
+.site .ab-project figcaption{--proj-inset:clamp(12px,1.4vw,16px);
+  position:absolute;inset:auto var(--proj-inset) var(--proj-inset);
+  padding:16px;border-radius:var(--r-btn);background:var(--blue);color:#fff;}
+/* Názov v Interi, nie v Magistrale - tak ho sadzí aj realitný web (CardTitleLocation
+   `font-bold text-base`), displejový rez robil z popisku karty nadpis sekcie. */
+.site .ab-project figcaption b{display:block;font-family:var(--sans);font-weight:700;
+  font-size:var(--fs-body);line-height:1.3;text-wrap:balance;}
+/* miesto je svetlomodré (--blue-200 = `text-blue-200`), nikdy sivé - na modrom
+   podklade by sivá stratila kontrast */
+.site .ab-project figcaption small{display:flex;align-items:center;gap:6px;margin-top:4px;
+  font-size:var(--fs-sm);color:var(--blue-200);}
+
+/* ZMAZANÉ 2026-08-16 (user): pás „Kde všude Allrisk najdete" s tlačovou mapou
+   (.ab-map-band / -tx / -cta / -img) aj so svojím breakpointom. */
+
+/* ============ RESPONSIVE ============ */
+@media(min-width:620px){
+  .site .ab-helps{grid-template-columns:repeat(3,1fr);}
+  .site .ab-projects{grid-template-columns:repeat(2,1fr);}
+  .site .ab-nums{grid-template-columns:repeat(3,1fr);}
+  .site .ab-chans{grid-template-columns:repeat(3,1fr);}
+}
+@media(min-width:980px){
+  .site .ab-hero-bg{background-position:78% 26%;}
+  /* Na desktope stojí text len v ľavej polovici, takže vpravo nie je čo chrániť
+     a balón z obálky sa môže ukázať. Ľavý koniec preto zostáva na systémovej
+     hodnote (.80 = kontrast bieleho textu aj proti bielemu miestu vo fotke),
+     pravý klesá až na .3 - tam už žiadny text nie je.
+     Zlom je na 58 %: textový stĺpec končí na ~51 % šírky pásu. */
+  .site .ab-hero{--hero-tint:linear-gradient(to right,
+    rgba(0,70,200,.82) 0%,rgba(0,48,150,.86) 40%,rgba(0,40,130,.8) 58%,
+    rgba(0,24,84,.44) 82%,rgba(0,24,84,.3) 100%);}
+  .site .ab-intro{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:54px;}
+  /* 4 stĺpce × 2 riadky = 8 buniek; vysoká dlaždica „2003" berie dve, zvyšných
+     šesť čísel vyplní mriežku presne - žiadna prázdna bunka na konci */
+  .site .ab-nums{grid-template-columns:repeat(4,1fr);}
+
+  /* ---- rozvrh pásu: jeden variant proti základnému „nadpis nad dlaždicami".
+     Mení pás na mriežku, takže dekorácie musia zostať mimo toku -
+     `.decor` aj `.decor-line` sú absolútne, mriežka o nich nevie.
+     ZMAZANÉ 2026-08-17: `vedla` (tiráž ako stĺpec vpravo) - odišla s tiráží. */
+
+  /* nadpis = nadpis pásu vľavo, dlaždice vpravo */
+  .site .ab-band--nadpis{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);
+    gap:clamp(28px,3.4vw,48px);align-items:start;}
+  .site .ab-band--nadpis .ab-band-head{margin-bottom:0;}
+  /* dva stĺpce × 4 riadky = 8 buniek: vysoká „2003" berie dve a šesť čísel
+     zvyšné - mriežka vyjde presne a v pravej polovici pásu má popis miesto */
+  .site .ab-band--nadpis .ab-nums{grid-template-columns:repeat(2,1fr);}
+
+  /* ---- EKOSYSTÉM na ploche ----
+     Kotva sa otáča doprava, takže vybraná línia stojí pri detaile - a preliv
+     v nej ide v smere jazdy po dráhe zhora nadol: farba, ktorá do kotvy
+     prichádza (fialová), je hore, tá odchádzajúca (modrá) dole. */
+  .site .eco{--eco-anchor:90deg;
+    --eco-hero-grad:linear-gradient(180deg,var(--line-4),var(--line-1));}
+
+  /* KOLO: kružnica aj text sedia v JEDNEJ bunke mriežky a obe zvisle na stred,
+     takže stred kružnice a stred textu padnú na tú istú výšku a kotva vyjde
+     presne na ľavú hranu textu. Odsadenie textu = priemer dráhy plus polovica
+     kľudového uzla, teda súradnica stredu vybraného kruhu - odvodená, nie
+     odhadnutá. Text si drží výšku aspoň na kruh, aby z neho kruh netrčal. */
+  .site .eco-sec--kolo .eco-ring{grid-area:1/1;justify-self:start;align-self:center;margin:0;}
+  .site .eco-sec--kolo .eco-detail{grid-area:1/1;align-self:center;
+    margin:0 0 0 calc(2 * var(--eco-rad) + var(--eco-node) / 2 + var(--eco-off));}
+  .site .eco-sec--kolo .eco-detail-in{padding:0 0 0 var(--eco-gap);
+    min-height:calc(var(--eco-hero) + clamp(28px,3.6vw,52px));
+    display:flex;flex-direction:column;justify-content:center;}
+
+  /* STĹPEC NA OBLÚKU. Kategórie stoja na kružnici, ktorej stred leží VĽAVO
+     mimo stĺpca: vidno z nej výsek 108° (`ARC` v Ecosystem.jsx), vrchol mieri
+     doprava k detailu a kraje sa odsúvajú doľava - „v podstate pod sebou, len
+     trochu bokom". Kruh sa nedokresľuje: `overflow` stĺpca ho oreže zhora,
+     zdola aj zľava, takže je vidieť, že pokračuje von.
+
+     Oblúk sa OTÁČA: vybraná kategória stojí vždy vo vrchole (viď `arcAt`
+     v Ecosystem.jsx), takže krajné viditeľné sú dve nad ňou a dve pod ňou na
+     ±60°. Šiesta je za rámom a čaká, kým ju obeh privedie späť.
+
+     Tri čísla, ktoré musia sedieť spolu, inak sa kolieska rozídu so stuhou:
+       --eco-arc-r   polomer osi stuhy (posun uzlov ho násobí sínusom/kosínusom)
+       výška stĺpca  2·r·sin(60°) = 1,74 · r, plus jedno koliesko na okraje
+       ľavé vnútro   r·(1 - cos 60°) = 0,5 · r, teda miesto pre odsun krajov
+     Uhly a ich sínusy počíta komponent (konštanty na index), mierku drží tento
+     polomer - preto sa posun skladá až tu v `calc`. */
+  .site .eco-sec--sloupec .eco{
+    grid-template-columns:minmax(400px,.95fr) minmax(0,1.75fr);
+    gap:clamp(30px,3.6vw,56px);align-items:center;}
+  .site .eco-rail{--eco-arc-r:clamp(240px,24vw,360px);
+    --eco-dot:clamp(44px,4.2vw,54px);--eco-dot-on:clamp(64px,6.6vw,82px);
+    /* Vrchol oblúka: odsun krajov (0,41 · r) plus polomer najväčšieho kolieska,
+       aby sa krajné koliesko celé zmestilo a nezrezalo ho orezanie stĺpca.
+       Z tohto jedného čísla vychádza poloha oblúka aj poloha riadkov. */
+    --eco-apex:calc(.5 * var(--eco-arc-r) + var(--eco-dot-on) / 2);
+    /* Na oblúku je stuha o kúsok hrubšia než v zvislom stĺpci - pri polomere
+       360 px by 6px linka vedľa 82px kolieska zmizla. */
+    --eco-thread:9px;
+    display:block;overflow:hidden;
+    height:calc(1.74 * var(--eco-arc-r) + var(--eco-dot-on));}
+  /* rovná stuha je len pre úzke okno */
+  .site .eco-rail::before{content:none;}
+  /* Oblúk: celý kruh s tou istou kresbou ako dráha na kružnici - kužeľový
+     preliv orezaný maskou na prstenec. Preliv je stlačený do výseku, ktorý je
+     vidieť (34 % obvodu od 28°, teda tých 108° oblúka aj s rezervou), takže po
+     ňom prebehne celý a šev zostane v orezanej časti. */
+  .site .eco-arc{display:block;position:absolute;top:50%;
+    left:calc(var(--eco-apex) - 2 * var(--eco-arc-r) - var(--eco-thread) / 2);
+    width:calc(2 * var(--eco-arc-r) + var(--eco-thread));
+    height:calc(2 * var(--eco-arc-r) + var(--eco-thread));
+    margin-top:calc(-1 * var(--eco-arc-r) - var(--eco-thread) / 2);
+    border-radius:50%;
+    background:conic-gradient(from 24deg,var(--line-1) 0%,var(--line-2) 12%,
+      var(--line-3) 25%,var(--line-4) 37%,var(--line-4) 100%);
+    -webkit-mask:radial-gradient(circle at 50% 50%,
+      transparent calc(var(--eco-arc-r) - var(--eco-thread) / 2 - .6px),
+      #000 calc(var(--eco-arc-r) - var(--eco-thread) / 2),
+      #000 calc(var(--eco-arc-r) + var(--eco-thread) / 2),
+      transparent calc(var(--eco-arc-r) + var(--eco-thread) / 2 + .6px));
+    mask:radial-gradient(circle at 50% 50%,
+      transparent calc(var(--eco-arc-r) - var(--eco-thread) / 2 - .6px),
+      #000 calc(var(--eco-arc-r) - var(--eco-thread) / 2),
+      #000 calc(var(--eco-arc-r) + var(--eco-thread) / 2),
+      transparent calc(var(--eco-arc-r) + var(--eco-thread) / 2 + .6px));}
+  /* Riadok sadá na svoj bod oblúka: `--x` / `--y` sú hotové vzdialenosti od
+     vrcholu (komponent ich zložil z polomeru), zvislý stred riadku je bod
+     samotný - preto `-50%` navyše. */
+  .site .eco-rail-b{position:absolute;top:50%;right:0;width:auto;
+    left:calc(var(--eco-apex) - var(--eco-dot-on) / 2);padding-left:0;
+    translate:var(--x) calc(var(--y) - 50%);
+    /* Prechod PO DRÁHE je celý pohyb sekcie: kolieska sa presunú na svoje nové
+       miesto na oblúku a s nimi aj mierka, takže to vyzerá, že sa kruh otočil. */
+    transition:translate .5s var(--ease),opacity .35s var(--ease),color .2s var(--ease);}
+  /* Kategória, ktorá práve obieha zospodu nahor, musí byť NEVIDITEĽNÁ: jej
+     posun vedie naprieč rámom a bez tohto by preletela cez stred. */
+  .site .eco-rail-b.out{opacity:0;pointer-events:none;transition:opacity .2s var(--ease);}
+  /* Meno vybranej ide o stupeň vyššie - to isté „väčší" ako pri koliesku,
+     len v sadzbe. Susedia zostávajú na stupni karty, aby oblúk nekolísal. */
+  .site .eco-rail-b.on b{font-size:var(--fs-h3);line-height:1.15;}
+  /* Šípka je náznak „dá sa sem kliknúť", takže na vybranej nemá čo robiť -
+     tá je vybraná. Bez podfarbenia riadku by navyše visela v prázdne. */
+  .site .eco-rail-b.on .ar{opacity:0;}
+  /* Veľkosť kolieska nesie POLOHA na oblúku - a keďže vybraná kategória stojí
+     vždy vo vrchole, je to zároveň označenie výberu (`--d` je vzdialenosť od
+     vrcholu, 0 až 1). Preto pod vybraným riadkom nie je žiadne pole. */
+  .site .eco-rail-b .pic,
+  .site .eco-rail-b.on .pic{
+    width:calc(var(--eco-dot-on) - var(--d) * (var(--eco-dot-on) - var(--eco-dot)));
+    height:calc(var(--eco-dot-on) - var(--d) * (var(--eco-dot-on) - var(--eco-dot)));}
+  /* Zoznam služieb zostáva JEDNOSTĹPCOVÝ - v zozname sa každá služba číta ako
+     služba; dva stĺpce z neho spravia tabuľku (user, 2026-08-17). */
+
+  .site .ab-split{grid-template-columns:minmax(0,var(--split-tx)) minmax(0,var(--split-img));}
+  /* zrkadlenie: obrázok do prvého stĺpca aj s jeho šírkou */
+  .site .ab-split.rev{grid-template-columns:minmax(0,var(--split-img)) minmax(0,var(--split-tx));}
+  .site .ab-split.rev>.ab-split-tx{order:2;}
+  .site .ab-split.rev>:not(.ab-split-tx){order:1;}
+
+  /* ZMAZANÉ 2026-08-17 (user, ten istý deň): desktopový rozvrh developerských
+     projektov (hlavička vľavo, karty vpravo) aj nižšia karta k nemu. Karty sú
+     zase pod hlavičkou cez celú šírku, takže tu nie je čo prepínať - výšku
+     karty drží jedna hodnota pri `.ab-project`. */
+}
+
+/* Editoriál drží popis aj výpočet v jednom stĺpci textu, takže tu netreba nič
+   prepínať - šírku mu strop `max-width` v znakoch. Vejár ani pás tiež nie. */

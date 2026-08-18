@@ -1,147 +1,97 @@
-import { useState, useEffect, useRef, Fragment } from 'react'
+/* ============================================================
+   Úvodná stránka. Od 2026-08-11 je celá riadená PUBLIKOM (src/segment.js) -
+   pás záložiek v hlavičke nemení len menu, ale všetko pod ním.
+
+   Čo publikum mení:
+     rozcestník  - rodiny a obce dostanú „Co právě řešíte?", podnikatelia
+                   namiesto neho „Proč si vybrat Allrisk" (systém péče)
+     filozofia   - jedna veta na publikum
+     Proč Allrisk- tri bloky pre rodiny a obce; podnikatelia majú na tom
+                   mieste celý systém péče zo zrušenej stránky /podnikatele
+     banner      - revize smluv / pojistného programu
+     profily     - archetypy daného publika; obce ich nemajú vôbec
+     FAQ         - iné otázky, nie tie isté inými slovami
+
+   Čo publikum NEMENÍ (rozhodnutie usera, 2026-08-11): hero video, reference,
+   blog a kontaktný formulár. Video je značková slučka, nie argument; ostatné
+   tri sú dôkaz a obsah o firme ako celku.
+
+   Obsah samotný žije v data/home.js a data/care.js - tu je len poskladanie.
+   ============================================================ */
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './wireframe.css'
 import './profile.css'
+import './business.css'
 import { asset } from '../asset.js'
 import { useHeroHeader } from '../useHeroHeader.js'
 import { ProfileCards } from '../components/ProfileParts.jsx'
-import { PROFILES, countGen } from '../data/profiles.js'
+import { profilesFor, countGen } from '../data/profiles.js'
 import { intentsFor, NEED_CLAIM } from '../data/needfinder.js'
-import { STEPS } from '../data/care.js'
-import { SEGMENTS } from '../data/menu.js'
-import { useSegment, SEG_DEFAULT } from '../segment.js'
+import { segmentBy } from '../data/menu.js'
+import { useSegment } from '../segment.js'
+import { PHIL, WHY, BANNER, PROFILES_HEAD, FAQ, homeFor } from '../data/home.js'
+import { BizPrinciples, BizCare } from '../components/BizCare.jsx'
+import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
+import { WHY_VARIANTS, WHY_VARIANT_DEFAULT, whyVariant } from '../bizVariants.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
+import Illus from '../components/Illus.jsx'
 import { ReferenceCarousel } from '../components/References.jsx'
 import { REFERENCES_HOME } from '../data/references.js'
 import { BlogSection } from '../components/ArticleParts.jsx'
 import { ARTICLES } from '../data/blog.js'
 import { SecHead } from '../components/PageParts.jsx'
-import { DebugPanel, useDebugOption } from '../components/DebugPanel.jsx'
-import HeaderDebug from '../components/HeaderDebug.jsx'
-import { HDR_DEFAULT, hdrVariant } from '../headerVariants.js'
+import { Decor } from '../components/Decor.jsx'
+import { Line } from '../components/Line.jsx'
 import {
   IconCar, IconHome, IconShield, IconWorld, IconBox, IconScale, IconHeart, IconFish,
-  IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle, IconFileText, IconPhone,
-  IconArrowRight, IconArrowLeft, IconChevronDown,
-  IconTruck, IconPigMoney, IconCreditCard, IconDeviceMobile, IconGavel, IconMessageCircle,
+  IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle,
+  IconArrowUpRight, IconArrowLeft, IconChevronDown,
+  IconTruck, IconPigMoney, IconCreditCard, IconDeviceMobile, IconGavel, IconChecklist,
   IconHomeDollar, IconHomeSearch, IconHomeCheck,
   IconLicense, IconShieldCheck,
   IconPlayerPlayFilled, IconPlayerPauseFilled, IconVolume, IconVolumeOff,
-  IconMaximize, IconMinimize,
+  IconMaximize, IconMinimize, IconLayoutGrid,
 } from '@tabler/icons-react'
 
-// Ikony rozcestníka: kľúč z data/needfinder.js -> tabler komponent (dáta zostávajú bez Reactu).
+// Ikony rozcestníka a ilustračné fallbacky: kľúč z dát -> tabler komponent
+// (dáta zostávajú bez Reactu). Jedna mapa pre obe miesta - sú to tie isté kľúče.
 const RZ_ICONS = {
   car: IconCar, house: IconHome, box: IconBox, shield: IconShield, shieldCheck: IconShieldCheck,
   scale: IconScale, heart: IconHeart, globe: IconWorld, fish: IconFish, bank: IconBuildingBank,
   coin: IconCoin, piggy: IconPigMoney, card: IconCreditCard, truck: IconTruck, chart: IconChartLine,
   building: IconBuildingSkyscraper, key: IconKey, gavel: IconGavel, bolt: IconBolt,
   mobile: IconDeviceMobile, houseSell: IconHomeDollar, houseSearch: IconHomeSearch,
-  houseCheck: IconHomeCheck, chat: IconMessageCircle,
+  houseCheck: IconHomeCheck, license: IconLicense, checklist: IconChecklist,
 }
 // Produktové stránky zatiaľ neexistujú - bez vlastnej routy ide položka na kontakt s témou.
 const temaHref = (label) => `/kontakt?tema=${encodeURIComponent(label)}`
 const productHref = (p) => p.to || temaHref(p.label)
 // väzba „vybrat z…" žiada genitív, tam je tvar rovnaký pre všetky počty
 const productPickLabel = (n) => `Vybrat z ${n} produktů`
-const FAQ = [
-  ['Kolik mě poradenství stojí?', 'Nic. Poradce vám sjedná pojištění i finance zdarma - naši práci platí pojišťovny a partneři, ne vy. Vy platíte jen samotnou smlouvu, kterou si vyberete.'],
-  ['Jsem vázaný na jednu pojišťovnu?', 'Ne. Spolupracujeme s desítkami pojišťoven a partnerů, takže porovnáme nabídky napříč trhem a vybereme tu, která vám sedne nejlépe - cenou i krytím.'],
-  ['Jak probíhá řešení škody?', 'Škodu likvidujeme interně, vlastním týmem. Stačí jeden kontakt - nepřehazujeme vás mezi pojišťovnami a celý proces hlídáme za vás, rychleji a férově.'],
-  ['Můžu mít poradce nablízku?', 'Ano. Máme širokou síť poboček po celé ČR, takže vždy najdete poradce ve svém okolí. Schůzku zvládneme osobně i online - jak vám to vyhovuje.'],
-  ['Co když už pojištění mám?', 'Rádi vám ho zdarma zrevidujeme. Projdeme stávající smlouvy, ukážeme, kde platíte zbytečně moc nebo kde máte díry v krytí, a navrhneme řešení - bez závazku.'],
-]
-const PHIL = 'Neprodáváme produkty. Jsme partner, který poradí, postará se a stojí při vás v každé životní situaci.'
 
 // Video na pozadí hera. Má to byť tichá značková slučka bez titulkov a bez
-// tvárí - inak text v hero konkuruje deju vo videu.
+// tvárí - inak text v hero konkuruje deju vo videu. Je zámerne rovnaké pre
+// všetky tri publiká: je to značka, nie argument pre konkrétne publikum.
 // hero.mp4 = webový export z 16x9_Allrisk_smycka.mp4 (koreň workspace, 332 MB):
 //   1920×1080, H.264 high, CRF 25 / max 3,2 Mb/s, +faststart → ~20 MB.
-//   Predchádzajúci export mal 1280×720 pri 444 kb/s a na celej obrazovke sa rozpadal.
 // TODO(asset): obsahovo je to stále provizórium - má hovorené slovo aj titulky.
 const HERO_VIDEO = '/hero.mp4'
 
-// Banner „revize smluv" - nahrádza zrušený test pojištění.
-// Nadpis je len háčik („Věděli jste, že…?"), celé tvrdenie aj vysvetlenie ide do textu,
-// pod tým tlačidlo. Vpravo značková linka (rovnaká ako v hero) - zámerne
-// väčšia než banner, presah oreže overflow:hidden na .banner.
-// TODO(obchod): doplniť reálnu priemernú úsporu z dát Allrisku (zatiaľ placeholder).
-const AVG_SAVING = 'XY 000'
-const REVIEW_TEXT = 'Projdeme je s vámi a ukážeme, kde platíte zbytečně a kde chybí krytí. Zdarma a bez závazku.'
-// Use case k revízii zatiaľ nemá vlastnú stránku - dočasne mieri na kontakt s predvyplnenou témou.
-const REVIEW_CASE = '/kontakt?tema=Revize smluv'
-// ilustrácie poskladané z „komponent" (chips) - fallback, keď blok nemá vlastnú ilustráciu.
-// Musí stáť nad WHY - volá ho už pri vyhodnotení modulu.
-const chip = (icon, label, pos, lg) => ({ icon, label, pos, lg })
-const ACCENT = new Set(['partner,', 'poradí,', 'postará', 'stojí', 'vás'])
-
-// „Proč Allrisk" - varianta v štýle feature sekcií (text + ilustrácia, striedavo)
-const WHY = [
-  {
-    ey: 'Vše pod jednou střechou', t: <>Unikátní <b>ekosystém služeb</b></>,
-    p: 'Pojištění, reality, finance i energie pod jednou střechou - propojené tak, ať spolu dávají smysl a nikde nevznikají díry.',
-    cta: 'Prozkoumat ekosystém', alt: false,
-    img: '/illus/tabler/ecosystem.png',
-    chips: [
-      chip(<IconWorld size={24} stroke={1.6} />, 'Pod jednou střechou', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
-      chip(<IconShield size={18} stroke={1.7} />, 'Pojištění', { left: '6%', top: '16%' }),
-      chip(<IconBuildingSkyscraper size={18} stroke={1.7} />, 'Reality', { right: '6%', top: '20%' }),
-      chip(<IconChartLine size={18} stroke={1.7} />, 'Finance', { left: '10%', bottom: '16%' }),
-      chip(<IconBolt size={18} stroke={1.7} />, 'Energie', { right: '8%', bottom: '14%' }),
-    ],
-  },
-  {
-    ey: 'Vlastní produkty', t: <>Inkasní pojištění, které <b>jinde nedostanete</b></>,
-    p: 'Vyvíjíme vlastní pojistné produkty - řešení šitá na míru situacím, na které běžné pojišťovny nemyslí.',
-    cta: 'Naše produkty', alt: true,
-    img: '/illus/tabler/products.png',
-    chips: [
-      chip(<IconLicense size={24} stroke={1.6} />, 'Vlastní produkt', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
-      chip(<IconFileText size={18} stroke={1.7} />, 'Na míru', { left: '8%', top: '18%' }),
-      chip(<IconShieldCheck size={18} stroke={1.7} />, 'Kryje víc', { right: '7%', top: '24%' }),
-      chip(<IconCoin size={18} stroke={1.7} />, 'Férová cena', { left: '14%', bottom: '15%' }),
-    ],
-  },
-  {
-    ey: 'Vlastní likvidace', t: <>Škodu <b>vyřešíme za vás</b></>,
-    p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně - jeden kontakt, rychleji a férově.',
-    cta: 'Jak to funguje', alt: false,
-    img: '/illus/tabler/claims.png',
-    chips: [
-      chip(<IconShieldCheck size={24} stroke={1.6} />, 'Likvidace', { left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }, true),
-      chip(<IconAlertTriangle size={18} stroke={1.7} />, 'Nahlášeno', { left: '6%', top: '14%' }),
-      chip(<IconPhone size={18} stroke={1.7} />, 'Jeden kontakt', { right: '6%', top: '22%' }),
-      chip(<IconCar size={18} stroke={1.7} />, 'Vyřešeno', { left: '12%', bottom: '14%' }),
-    ],
-  },
-]
-
-function Illus({ chips, dark }) {
-  return (
-    <div className={`ill ${dark ? 'dark' : ''}`}>
-      {chips.map((c, i) => (
-        <div key={i} className={`chip ${c.lg ? 'lg' : ''}`} style={c.pos}>
-          <span className="i">{c.icon}</span>{c.label && <span>{c.label}</span>}
-        </div>
-      ))}
-    </div>
-  )
+// Modrý akcent v nadpise. Ktorá časť sa zvýrazní, určujú dáta (`accent`) -
+// česky sa to nedá odvodiť pravidlom („Chci se pojistit" vs „Chci úvěr").
+// Rovnaký mechanizmus pre rozcestník aj pre „Proč Allrisk".
+function accentTitle(text, accent) {
+  const i = accent ? text.lastIndexOf(accent) : -1
+  if (i === -1) return text
+  return <>{text.slice(0, i)}<b>{accent}</b>{text.slice(i + accent.length)}</>
 }
 
 // Dlaždica rozcestníka - vždy prepínač druhej úrovne, preto nesie aj náznak,
 // že sa pod ňou niečo otvorí („Vybrat z N produktů").
 function NeedTile({ n, open, onToggle }) {
   const C = RZ_ICONS[n.icon] || IconShield
-  const inner = (
-    <>
-      {/* tá istá ikona ešte raz ako veľký vodoznak vpravo - tretinou vyčnieva von z dlaždice */}
-      <span className="rz-bg" aria-hidden="true"><C size={200} stroke={1.1} /></span>
-      <span className="ni"><C size={28} stroke={1.6} /></span>
-      <b>{n.t}</b>
-      <small>{n.d}</small>
-    </>
-  )
   return (
     <button
       type="button"
@@ -150,7 +100,11 @@ function NeedTile({ n, open, onToggle }) {
       aria-controls={`rz-open-${n.key}`}
       onClick={onToggle}
     >
-      {inner}
+      {/* tá istá ikona ešte raz ako veľký vodoznak vpravo - tretinou vyčnieva von z dlaždice */}
+      <span className="rz-bg" aria-hidden="true"><C size={200} stroke={1.1} /></span>
+      <span className="ni"><C size={28} stroke={1.6} /></span>
+      <b>{n.t}</b>
+      <small>{n.d}</small>
       <span className="rz-more">
         {productPickLabel(n.products.length)}
         <IconChevronDown className="cv" size={16} stroke={2.2} aria-hidden="true" />
@@ -171,17 +125,12 @@ function ProductCard({ pr }) {
   )
 }
 
-// Nadpis kroku má modrý akcent ako každá iná hlavička sekcie. Ktorá časť sa zvýrazní,
-// určujú dáta (`accent`) - česky sa to nedá odvodiť pravidlom („Chci se pojistit“ vs „Chci úvěr“).
-function needTitle(n) {
-  const i = n.accent ? n.t.lastIndexOf(n.accent) : -1
-  if (i === -1) return n.t
-  return <>{n.t.slice(0, i)}<b>{n.accent}</b>{n.t.slice(i + n.accent.length)}</>
-}
-
-// Rozcestník ako celok, v dvoch krokoch: mriežka potrieb ustúpi a druhý krok je
-// samostatná obrazovka - šípka späť, názov potreby, produktové karty.
-// (Varianta „roztažená karta", ktorá produkty otvárala vnútri dlaždice, je zrušená.)
+// Rozcestník ako celok: mriežka dlaždíc a druhý krok s produktmi.
+// PODOBA JE JEDNA (user, 2026-08-18: „daj preč tie varianty okrem dlaždíc").
+// Skúšané a zmazané: `seznam` (riadok s ikonou a šípkou), `panel` (lišta zámerov
+// vľavo, karta s produktmi vpravo), `index` (číslovaný rejstřík s ponukou pod
+// riadkom) a `veta` (šesť slovies ako jedna veta). Prepínač zanikol s nimi -
+// voľba s jednou hodnotou nie je voľba.
 function NeedFinder({ intents, eyebrow }) {
   const [openKey, setOpenKey] = useState(null)
   const open = intents.find((n) => n.key === openKey) || null
@@ -208,7 +157,7 @@ function NeedFinder({ intents, eyebrow }) {
           Zpět na výběr
         </button>
       ) : eyebrow}
-      title={step ? needTitle(open) : <>Co právě <b>řešíte?</b></>}
+      title={step ? accentTitle(open.t, open.accent) : <>Co právě <b>řešíte?</b></>}
       lead={step ? open.d : 'Řekněte to svými slovy, ne názvem produktu. Ozve se vám poradce, který danou situaci zná - a zůstane u ní až do konce.'}
     />
   )
@@ -229,14 +178,14 @@ function NeedFinder({ intents, eyebrow }) {
     <>
       {head}
       <div className="rz-grid">
-      {intents.map((n) => (
-        <NeedTile
-          key={n.key}
-          n={n}
-          open={openKey === n.key}
-          onToggle={() => toggle(n.key)}
-        />
-      ))}
+        {intents.map((n) => (
+          <NeedTile
+            key={n.key}
+            n={n}
+            open={openKey === n.key}
+            onToggle={() => toggle(n.key)}
+          />
+        ))}
       </div>
 
       {/* Škoda nie je nákup - vlastný pás a jediné miesto, kde na tejto sekcii žije AllRed.
@@ -244,57 +193,54 @@ function NeedFinder({ intents, eyebrow }) {
       <Link to={NEED_CLAIM.to} className="rz-claim">
         <span className="ni"><IconAlertTriangle size={28} stroke={1.8} /></span>
         <span className="tx"><b>{NEED_CLAIM.t}</b><small>{NEED_CLAIM.d}</small></span>
-        <span className="rz-claim-go">Nahlásit teď <IconArrowRight size={18} stroke={2.2} aria-hidden="true" /></span>
+        <span className="rz-claim-go">Nahlásit teď <IconArrowUpRight size={18} stroke={2.2} aria-hidden="true" /></span>
       </Link>
     </>
   )
 }
 
-// Podnikatelia na úvode NEDOSTANÚ rozcestník produktov - klient výslovne nechcel
-// tlačiť im katalóg a ich vstupom je systém péče. Tá istá plocha im preto ukáže,
-// ako spolupráca prebieha: päť krokov z data/care.js (názvy, celé znenie je na
-// ich stránke) a preklik tam. Je to zároveň to, čo na úvode vidno hneď po prepnutí
-// publika - preto sedí v sekcii rozcestníka, nie niekde nižšie.
-function BizPath() {
+// Časté dotazy. Vlastný komponent kvôli stavu: pri prepnutí publika je otvorená
+// otázka iná otázka, takže sa musí zavrieť. Rieši to `key={seg}` na tomto
+// komponente - React ho odmontuje aj so stavom. Efekt, ktorý index resetuje,
+// by robil to isté o jeden render neskôr (a react-hooks to právom hlási).
+function FaqList({ items }) {
+  const [open, setOpen] = useState(0)
   return (
-    <>
-      <SecHead
-        ey="Pro podnikatele a firmy"
-        title={<>Nezačínáme produktem, <b>ale vaší firmou</b></>}
-        lead="Firmám neposíláme ceník pojištění. Projdeme s vámi rizika, vybereme řešení na trhu a zůstaneme u toho i po podpisu."
-      />
-      <ol className="bizpath">
-        {STEPS.map((s, i) => (
-          <li key={s.key}>
-            <span className="bizpath-n">{String(i + 1).padStart(2, '0')}</span>
-            <b>{s.label}</b>
-          </li>
-        ))}
-      </ol>
-      <Link to="/podnikatele" className="btn bizpath-cta">
-        Systém péče pro podnikatele <IconArrowRight size={18} stroke={2.2} />
-      </Link>
-    </>
+    <div className="faq faq-list">
+      {items.map(([q, a], i) => {
+        const on = open === i
+        return (
+          <div className={`acc-item ${on ? 'open' : ''}`} key={q}>
+            <button className="acc-q" onClick={() => setOpen(on ? -1 : i)} aria-expanded={on}>
+              <span className="acc-n">{i + 1}</span>
+              <span className="acc-q-tx">{q}</span>
+              <span className="acc-ch"><IconChevronDown size={18} stroke={2.2} /></span>
+            </button>
+            <div className="acc-a"><p>{a}</p></div>
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
 export default function Wireframe() {
-  const [faqOpen, setFaqOpen] = useState(0)
-  // Úvod reaguje na publikum LEN vo verzii hlavičky „kontext" - teda len vtedy,
-  // keď je na obrazovke prepínač, ktorým sa to dá vrátiť. Inak by stačilo prísť
-  // z /podnikatele (tá si publikum nastaví sama) a úvod by ostal ich, bez toho,
-  // aby mal človek čím prepnúť späť. Ostatné verzie preto vidia úvod tak, ako
-  // vyzeral vždy.
-  const [hdrRaw] = useDebugOption('header', HDR_DEFAULT)
-  const [siteSeg] = useSegment()
-  const ctx = hdrVariant(hdrRaw) === 'kontext'
-  const seg = ctx ? siteSeg : SEG_DEFAULT
+  // Publikum. Prepínač je v hlavičke na každej stránke, takže úvod naň môže
+  // reagovať bez podmienok - do 2026-08-11 to platilo len vo verzii lišty
+  // „kontext", lebo inde nebolo čím prepnúť späť.
+  const [seg] = useSegment()
+  const segObj = segmentBy(seg)
   const intents = intentsFor(seg)
-  // Názov publika v eyebrowe je odpoveď prepínača - bez neho patrí na to miesto
-  // pôvodný názov sekcie, nie publikum, ktoré nikto nevyberal.
-  const segName = ctx
-    ? (SEGMENTS.find((s) => s.key === seg)?.pro || 'Potřebový rozcestník')
-    : 'Potřebový rozcestník'
+  const phil = homeFor(PHIL, seg)
+  const why = homeFor(WHY, seg)
+  const banner = homeFor(BANNER, seg)
+  const faq = homeFor(FAQ, seg)
+  const profHead = homeFor(PROFILES_HEAD, seg)
+  const profiles = profilesFor(seg)
+  // Podoba sekcie „Proč si vybrat Allrisk". Prepínač je v ladiacom paneli a ten
+  // je na úvode len pre podnikateľov - ostatné publiká tú sekciu nemajú.
+  const [whyRaw, setWhy] = useDebugOption('bizWhy', WHY_VARIANT_DEFAULT)
+  const whyStyle = whyVariant(whyRaw)
 
   /* ---- video v hero ----
      Video kryje celú sekciu a beží samo a potichu - je to kulisa, nie obsah.
@@ -339,6 +285,47 @@ export default function Wireframe() {
     v.muted = val === 0
     setVideoMuted(v.muted)
   }
+  /* ---- ovládanie priamo na ploche videa ----
+     Klik = pauza/beh, vodorovný ťah = pretáčanie (doľava späť, doprava vpred).
+     Mierka: ťah cez CELÚ šírku prejde celé video, takže sa nemá čo učiť - to,
+     ako ďaleko si zašiel, sedí s tým, koľko plochy si prešiel.
+     Rad tlačidiel vpravo dole zostáva: je to jediná cesta pre klávesnicu a pre
+     toho, kto ťahanie neobjaví. */
+  const dragRef = useRef(null)
+  const onVideoDown = (e) => {
+    const v = videoRef.current
+    const box = videoBoxRef.current
+    if (!v || !box) return
+    dragRef.current = { x: e.clientX, t: v.currentTime, w: box.clientWidth, was: !v.paused, moved: false }
+    e.currentTarget.setPointerCapture?.(e.pointerId)
+  }
+  const onVideoMove = (e) => {
+    const d = dragRef.current
+    const v = videoRef.current
+    if (!d || !v) return
+    const dx = e.clientX - d.x
+    // Prah 6px: bez neho by sa z každého klepnutia stalo pretočenie o pár snímok
+    // a klik by prestal spoľahlivo pauzovať.
+    if (!d.moved && Math.abs(dx) < 6) return
+    // Počas pretáčania video stojí - inak sa čas posúva pod rukou aj sám od seba
+    // a snímka nesedí s tým, kde človek drží prst.
+    if (!d.moved) { d.moved = true; v.pause() }
+    const dur = v.duration
+    if (!Number.isFinite(dur) || dur <= 0 || !d.w) return
+    v.currentTime = Math.min(dur, Math.max(0, d.t + (dx / d.w) * dur))
+  }
+  const onVideoUp = (e) => {
+    const d = dragRef.current
+    const v = videoRef.current
+    dragRef.current = null
+    e.currentTarget.releasePointerCapture?.(e.pointerId)
+    if (!d || !v) return
+    // Po pretáčaní sa prehrávanie vráti do stavu spred ťahu - kto si video
+    // predtým zastavil, nechce, aby mu ho pretočenie zase rozbehlo.
+    if (d.moved) { if (d.was) playVideo(); return }
+    if (v.paused) playVideo(); else pauseVideo()
+  }
+
   // Pomer stránke nediktujeme natvrdo - berieme ho z videa samotného, nech sedí
   // aj keď klient nahrá iný export než 16:9.
   const readVideoRatio = () => {
@@ -376,10 +363,12 @@ export default function Wireframe() {
     return () => document.removeEventListener('fullscreenchange', onFsChange)
   }, [])
 
+  // Filozofia sa rozsvecuje po slovách podľa scrollu. Sekcia existuje len pre
+  // rodiny, takže `el` môže byť null - efekt sa vtedy ticho neprihlási.
   const philRef = useRef(null)
   useEffect(() => {
     const el = philRef.current
-    if (!el) return
+    if (!el) return undefined
     const words = el.querySelectorAll('.w')
     const onScroll = () => {
       const r = el.getBoundingClientRect()
@@ -391,7 +380,9 @@ export default function Wireframe() {
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [phil?.text])
+
+  const philAccent = new Set(phil?.accent)
 
   return (
     <div className="site">
@@ -399,7 +390,9 @@ export default function Wireframe() {
       <section className="hero wf-hero" ref={heroRef}>
         <div className="hero-bgvid" ref={videoBoxRef}>
           <video ref={videoRef} className="hero-video-el" muted loop playsInline autoPlay
-                 onLoadedMetadata={readVideoRatio}>
+                 onLoadedMetadata={readVideoRatio}
+                 onPointerDown={onVideoDown} onPointerMove={onVideoMove}
+                 onPointerUp={onVideoUp} onPointerCancel={onVideoUp}>
             <source src={asset(HERO_VIDEO)} type="video/mp4" />
           </video>
           <div className="hero-video-ctrls">
@@ -424,71 +417,97 @@ export default function Wireframe() {
             </button>
           </div>
         </div>
+        {/* Videohero nemá ani jednu dekoráciu. Stuha tu bola skúšaná 2026-08-16
+            a padla: záber si nesie vlastnú sadzbu („Vítejte ve finanční…") a
+            stuha jej ide rovno cez ňu. Kružnice cez pohyblivý záber sú šmuha.
+            Prvú stuhu úvodu preto nesie až banner nižšie. */}
       </section>
 
       {/* Za videom nič nenasleduje - stránka ide rovno do rozcestníka. */}
 
-      {/* ============ ROZCESTNÍK ============ */}
+      {/* ============ ROZCESTNÍK / PROČ ALLRISK PRO FIRMY ============ */}
+      {/* Prvá vec po videu odpovedá na „co tu pro mě je". Rodinám a obciam je
+          to rozcestník potrieb, podnikateľom systém péče - klient výslovne
+          nechcel, aby firmy dostali ako prvé katalóg produktov.
+          `key` je publikum zámerne: pri prepnutí sa rozcestník musí vrátiť na
+          prvý krok, lebo otvorená potreba v novom publiku neexistuje. */}
       <section id="rozcestnik" className="sec wrap">
-        {/* hlavička sekcie žije vnútri rozcestníka - v druhom kroku ju prepíše
-            zvolená potreba, takže veta hore hovorí o tom, čo je práve na obrazovke.
-            `key` je publikum zámerne: pri prepnutí sa rozcestník musí vrátiť na
-            prvý krok, lebo otvorená potreba v novom publiku neexistuje. */}
         {intents
-          ? <NeedFinder key={seg} intents={intents} eyebrow={segName} />
-          : <BizPath />}
+          ? <NeedFinder key={seg} intents={intents} eyebrow={segObj.pro} />
+          : <BizPrinciples variant={whyStyle} />}
       </section>
 
       {/* ============ FILOZOFIA ============ */}
-      <section className="phil">
-        <div className="wrap">
-          <span className="ey">Naše filozofie</span>
-          <p className="phil-text" ref={philRef}>
-            {PHIL.split(' ').map((w, i) => (<span key={i}><span className={`w${ACCENT.has(w) ? ' acc' : ''}`}>{w}</span>{' '}</span>))}
-          </p>
-        </div>
-      </section>
+      {/* Len jednotlivci a rodiny (user, 2026-08-11). Firma ani obec sa
+          nerozhodujú podľa vety o životných situáciách. */}
+      {phil && (
+        <section className="phil">
+          <div className="wrap">
+            <span className="ey">Naše filozofie</span>
+            <p className="phil-text" ref={philRef}>
+              {phil.text.split(' ').map((w, i) => (
+                <span key={`${w}-${i}`}><span className={`w${philAccent.has(w) ? ' acc' : ''}`}>{w}</span>{' '}</span>
+              ))}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* ============ PROČ ALLRISK ============ */}
-      <section className="sec wrap">
-        <div className="why-feats">
-          {WHY.map((f) => (
-            <div className={`feature ${f.alt ? 'alt' : ''}`} key={f.ey}>
-              <div className="feature-tx">
-                <span className="ey">{f.ey}</span>
-                <h2>{f.t}</h2>
-                <p>{f.p}</p>
-                <span className="btn fill" style={{ background: 'var(--blue)', borderColor: 'var(--blue)', color: '#fff' }}>{f.cta} <IconArrowRight size={18} stroke={2.2} /></span>
+      {/* Rodiny a obce: tri bloky text + ilustrácia, striedavo.
+          Podnikatelia: celý systém péče zo zrušenej stránky /podnikatele. */}
+      {why ? (
+        <section className="sec wrap">
+          <div className="why-feats">
+            {why.map((f, i) => (
+              <div className={`feature ${i % 2 ? 'alt' : ''}`} key={f.key}>
+                <div className="feature-tx">
+                  <span className="ey">{f.ey}</span>
+                  <h2>{accentTitle(f.t, f.accent)}</h2>
+                  <p>{f.p}</p>
+                  <span className="btn fill">{f.cta} <IconArrowUpRight size={18} stroke={2.2} /></span>
+                </div>
+                <Illus src={f.img} icon={RZ_ICONS[f.ic] || IconShield} />
               </div>
-              <div className="illus">{f.img ? <img className="illus-img" src={asset(f.img)} alt="" aria-hidden /> : <Illus chips={f.chips} />}</div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      ) : (
+        /* Systém péče je celý blok sekcií, nie jedna - biele pole sa mu
+           nepodsúva zvonku, rozhodovalo by sa vždy len o jeho prvej sekcii. */
+        <BizCare />
+      )}
 
-      {/* ============ REVIZE SMLUV - banner ============ */}
+      {/* ============ REVIZE - banner ============ */}
+      {/* Nadpis je len háčik („Věděli jste, že…?"), celé tvrdenie aj vysvetlenie
+          ide do textu, pod tým tlačidlo. Vpravo značková linka (rovnaká ako
+          v hero) - zámerne väčšia než banner, presah oreže overflow:hidden. */}
       <section className="sec wrap">
         <div className="banner">
-          <img className="banner-line" src={asset('/brand/line-hero-1.png')} alt="" aria-hidden width="720" height="673" decoding="async" loading="lazy" />
+          <Decor />
+          <Line />
           <div className="banner-tx">
-            <h2>Věděli jste, že…?</h2>
-            <p>Pravidelnou revizí smluv ušetříte <b>v průměru {AVG_SAVING} Kč ročně.</b> {REVIEW_TEXT}</p>
-            <Link to={REVIEW_CASE} className="btn">Jak revize probíhá <IconArrowRight size={18} stroke={2.2} /></Link>
+            <h2>{banner.h}</h2>
+            <p><b>{banner.claim}</b> {banner.p}</p>
+            {/* revízia nemá vlastnú stránku - mieri na kontakt s predvyplnenou témou */}
+            <Link to={temaHref(banner.tema)} className="btn">{banner.cta} <IconArrowUpRight size={18} stroke={2.2} /></Link>
           </div>
         </div>
       </section>
 
-
       {/* ============ KLIENTSKÉ PROFILY ============ */}
-      {/* Dlaždica už nie je tab s panelom - každý profil má vlastnú stránku /profil/:slug. */}
-      <section className="sec wrap">
-        <SecHead
-          ey="Klientské profily"
-          title={<>Najděte se v <b>jednom ze {countGen(PROFILES.length)} profilů</b></>}
-          lead="Vyberte typ klienta, který je vám nejblíž. Ukážeme, co je v jeho situaci dobré mít vyřešeno a co se stane, když to chybí."
-        />
-        <ProfileCards profiles={PROFILES} />
-      </section>
+      {/* Dlaždica už nie je tab s panelom - každý profil má vlastnú stránku /profil/:slug.
+          Města a obce sekciu nemajú: obec nie je archetyp človeka. */}
+      {profHead && profiles.length > 0 && (
+        <section className="sec wrap">
+          <SecHead
+            ey={profHead.ey}
+            title={<>{profHead.pre} <b>jednom ze {countGen(profiles.length)} profilů</b></>}
+            lead={profHead.lead}
+          />
+          <ProfileCards profiles={profiles} />
+        </section>
+      )}
 
       {/* ============ REFERENCE ============ */}
       {/* posuvný rad - šípky na desktope, swipe na mobile; celý zoznam žije na /reference */}
@@ -499,26 +518,12 @@ export default function Wireframe() {
       {/* ============ FAQ ============ */}
       {/* otázky sú číslované (Inter, nie Magistral) - ikona pri každej otázke pôsobila rušivo */}
       <section className="sec wrap">
-        <SecHead ey="Časté dotazy" title={<>Co lidé <b>nejčastěji řeší</b></>} />
-        <div className="faq faq-list">
-          {FAQ.map(([q, a], i) => {
-            const open = faqOpen === i
-            return (
-              <div className={`acc-item ${open ? 'open' : ''}`} key={q}>
-                <button className="acc-q" onClick={() => setFaqOpen(open ? -1 : i)} aria-expanded={open}>
-                  <span className="acc-n">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="acc-q-tx">{q}</span>
-                  <span className="acc-ch"><IconChevronDown size={18} stroke={2.2} /></span>
-                </button>
-                <div className="acc-a"><p>{a}</p></div>
-              </div>
-            )
-          })}
-        </div>
+        <SecHead ey="Časté dotazy" title={<>Co se <b>nejčastěji ptáte</b></>} />
+        <FaqList key={seg} items={faq} />
       </section>
 
       {/* ============ BLOG ============ */}
-      {/* Tá istá sekcia ako pod produktom aj pod článkom – rovnaké karty, šípky
+      {/* Tá istá sekcia ako pod produktom aj pod článkom - rovnaké karty, šípky
           i odkaz „Zobrazit vše", líši sa len titulok. Berie štyri najnovšie
           články, takže sa o ňu po pridaní článku netreba starať. */}
       <section className="sec wrap">
@@ -534,10 +539,17 @@ export default function Wireframe() {
       {/* ============ FOOTER (spoločný) ============ */}
       <SiteFooter />
 
-      {/* Ladiaci prepínač - hlavička je na každej stránke, takže jej varianty
-          musia ísť prepnúť aj odtiaľto. Táto stránka vlastné varianty nemá. */}
+      {/* Ladiaci panel. „Podklad" majú všetky publiká - sekcie sú tie isté.
+          „Proč Allrisk" má len publikum Podnikatelé: mení sekciu, ktorú
+          ostatné nemajú. Voľba „Spolupráce" tu od 2026-08-16 nie je - kroky
+          majú rozhodnutý tvar. */}
       <DebugPanel>
-        <HeaderDebug />
+        {!intents && (
+          <DebugGroup
+            icon={IconLayoutGrid} label="Proč Allrisk" value={whyStyle} onChange={setWhy} wrap
+            options={WHY_VARIANTS}
+          />
+        )}
       </DebugPanel>
     </div>
   )

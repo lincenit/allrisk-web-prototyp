@@ -47,8 +47,7 @@
 /* fallback, kým ilustrácia nie je exportovaná - sklenená dlaždica ako body v hero na /vozidla */
 .site .prof-hero-illus .ni{width:clamp(96px,12vw,128px);height:clamp(96px,12vw,128px);
   border-radius:var(--r-band);color:#fff;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(120deg,rgba(255,255,255,.14),rgba(255,255,255,.05));
-  border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(8px);
+  background:var(--tile-blue);border:0;backdrop-filter:var(--tile-blur);
   box-shadow:0 12px 30px -22px rgba(0,0,0,.6);}
 .site .prof-hero-illus .ni svg{width:44px;height:44px;}
 
@@ -84,32 +83,36 @@
 .site .prof-card .ey{display:flex;align-items:flex-start;}
 .site .prof-card .story-pick{display:inline-flex;align-items:center;gap:6px;}
 .site .prof-card .story-pick svg{transition:transform .18s var(--ease);}
-.site .prof-card:hover .story-pick svg{transform:translateX(4px);}
+/* šípka mieri o 45° hore doprava, posun na hover ide po jej osi */
+.site .prof-card:hover .story-pick svg{transform:translate(3px,-3px);}
 
-/* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============ */
-/* Naliehavosť nesie ROZLOŽENIE, nie štítok na položke: úroveň je hlavička skupiny
-   a položka pod ňu patrí. Preto v maticových variantoch karta štítok nemá - v skupine
-   „Nutnost" by bol na každej karte ten istý.
-   Dva varianty (viď solvedVariants.js) zdieľajú markup a líšia sa len tu:
-     .solved-sloupce - úroveň = stĺpec (najviac „maticové", ale najužšia karta)
-     .solved-pasy    - úroveň = vodorovný pás s popiskom vľavo (znesie 5 : 2 : 0)
-   Prázdne úrovne sa nevykresľujú (groupByNeed) - rodina nemá ani jedno „Zvážit". */
+/* Dlaždica bez prekliku (profily miest a obcí - viď ProfileCards). Zdvih ani
+   kurzor ruky by sľubovali klik, ktorý nikam nevedie, takže sa oboje vypína;
+   podoba dlaždice zostáva, aby rad čítal ako jeden druh obsahu. */
+.site .prof-card--flat{cursor:default;}
+.site .prof-card--flat:hover{border-color:var(--l);transform:none;box-shadow:0 1px 3px rgba(13,31,91,.04);}
+.site .prof-card--flat:hover .story-ill,
+.site .prof-card--flat:hover .ni{background:var(--blue-50);}
+.site .prof-card--flat:hover .story-ill img{transform:none;}
 
-/* Farebná škála úrovní. Jediné miesto, kde sa úroveň prekladá do farby - zvyšok berie
-   premenné, takže sa dá vymeniť celá škála jednou triedou na obale (.solved-c-*).
+/* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============
+   Naliehavosť nesie ROZLOŽENIE, nie štítok na položke: úroveň je hlavička skupiny
+   a položka pod ňu patrí. Preto karta štítok nemá - v skupine „Nutnost" by bol na
+   každej karte ten istý. Úroveň = stĺpec, prázdne úrovne sa nevykresľujú
+   (groupByNeed), takže rodina bez „Zvážit" má dva stĺpce, nie prázdny tretí.
+   (Skúšané a zahodené: „Pásy" = úroveň ako vodorovný pás s lepkavým popiskom vľavo,
+   „Osa" = pásy so zvislou linkou, „Tabulka" = hustá tabuľka s úrovňou ako
+   medzihlavičkou a pôvodný jednostĺpcový zoznam so štítkom naliehavosti na riadku.) */
+
+/* Farebná škála úrovní - klasický semafor červená → žlutá → zelená. Jediné miesto,
+   kde sa úroveň prekladá do farby; zvyšok berie premenné:
      --nbg       SLABÝ farebný podklad hlavičky úrovne
-     --nstroke   silný obrys hlavičky, čip ikony a zvislá os v „Ose" - nositeľ odtieňa
+     --nstroke   silný obrys hlavičky a čip ikony - nositeľ odtieňa
      --nfg       text a ikona v hlavičke (tmavý variant odtieňa, kvôli kontrastu)
      --nline     rám karty v tejto úrovni (váhová os vnútri mriežky)
    Plné farebné výplne bili do očí - celý pás svietil sýtou farbou a ťahal oko viac než
-   názvy produktov pod ním. Odtieň teraz nesie OBRYS, nie plocha: podklad je len tint,
-   obrys 2 px v plnej farbe. Signál ostáva rovnako jasný, ale plocha je tichá. */
-/* A · váha v značkovej modrej - nepridáva do palety žiadnu novú farbu */
-.site .solved-c-modra .sgrp{--nbg:var(--blue-50);--nstroke:var(--blue);--nfg:var(--blue);--nline:var(--blue-200);}
-.site .solved-c-modra .sgrp.doporuceno{--nbg:var(--blue-50);--nstroke:var(--blue-200);--nfg:var(--blue);--nline:var(--l);}
-.site .solved-c-modra .sgrp.zvazit{--nbg:var(--g50);--nstroke:var(--g300);--nfg:var(--g600);--nline:var(--l2);}
-
-/* B · klasický semafor červená → žlutá → zelená.
+   názvy produktov pod ním. Odtieň nesie OBRYS, nie plocha: podklad je len tint, obrys
+   v plnej farbe. Signál ostáva rovnako jasný, ale plocha je tichá.
    Mapovanie je RIZIKOVÉ, nie „stavové": červená = Nutnost (bez toho to nedáva zmysel),
    zelená = Zvážit (ste v pohode aj bez toho). Opačné poradie by dalo červenú najmenej
    dôležitej úrovni. Prehodiť sa dá výmenou --nbg/--nstroke/--nfg medzi 1. a 3. riadkom.
@@ -118,33 +121,18 @@
    Vedomé rozhodnutie používateľa z 2026-08-05, nie prehliadnutie.
    Text NIE JE v plnej farbe pásu: #F59E0B ani #10B981 nemajú na svojom tinte dosť
    kontrastu, preto ide do tmavého odtieňa (#8A5A00 dáva 5,5 : 1, #0A7A52 5,4 : 1). */
-.site .solved-c-semafor .sgrp{--nbg:#FDF1F1;--nstroke:var(--red);--nfg:var(--red);--nline:#F2C9C9;}
-.site .solved-c-semafor .sgrp.doporuceno{--nbg:#FEF8EC;--nstroke:var(--orange);--nfg:#8A5A00;--nline:#F5DFB0;}
-.site .solved-c-semafor .sgrp.zvazit{--nbg:#EDFAF4;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B9E7D4;}
+.site .solved-m .sgrp{--nbg:#FDF1F1;--nstroke:var(--red);--nfg:var(--red);--nline:#F2C9C9;}
+.site .solved-m .sgrp.doporuceno{--nbg:#FEF8EC;--nstroke:var(--orange);--nfg:#8A5A00;--nline:#F5DFB0;}
+.site .solved-m .sgrp.zvazit{--nbg:#EDFAF4;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B9E7D4;}
 /* odtieň musí dôjsť aj na kartu, inak modrý čip ikony popiera hlavičku nad ním */
-.site .solved-c-semafor .sgrp .scard-ic{background:#FBEAEA;color:var(--red);}
-.site .solved-c-semafor .sgrp .scard:hover .scard-ic{background:var(--red);color:#fff;}
-.site .solved-c-semafor .sgrp.doporuceno .scard-ic{background:#FEF3D6;color:#8A5A00;}
-.site .solved-c-semafor .sgrp.doporuceno .scard:hover .scard-ic{background:#8A5A00;color:#fff;}
-.site .solved-c-semafor .sgrp.zvazit .scard-ic{background:#E8F7F0;color:#0A7A52;}
-.site .solved-c-semafor .sgrp.zvazit .scard:hover .scard-ic{background:#0A7A52;color:#fff;}
+.site .solved-m .sgrp .scard-ic{background:#FBEAEA;color:var(--red);}
+.site .solved-m .sgrp .scard:hover .scard-ic{background:var(--red);color:#fff;}
+.site .solved-m .sgrp.doporuceno .scard-ic{background:#FEF3D6;color:#8A5A00;}
+.site .solved-m .sgrp.doporuceno .scard:hover .scard-ic{background:#8A5A00;color:#fff;}
+.site .solved-m .sgrp.zvazit .scard-ic{background:#E8F7F0;color:#0A7A52;}
+.site .solved-m .sgrp.zvazit .scard:hover .scard-ic{background:#0A7A52;color:#fff;}
 
-/* C · zelená → amber → šedá (predchádzajúci návrh, ponechaný na porovnanie).
-   Stojí dva odtiene mimo palety: #10B981 dáva s bielym textom len 2,5 : 1 a #F59E0B
-   ešte menej, takže ako výplň sa použiť nedajú - tmavá zelená je odvodená od
-   existujúcej .tag-green (index.css), tmavý amber je nový. Tretí odtieň tu nie je
-   zámerne: „Zvážit" ostáva šedé, aby škála klesala. */
-.site .solved-c-zelena .sgrp{--nbg:#EAF8F1;--nstroke:var(--green);--nfg:#0A7A52;--nline:#B7E4D0;}
-.site .solved-c-zelena .sgrp.doporuceno{--nbg:#FEF8EC;--nstroke:var(--orange);--nfg:#8A5A00;--nline:#F2DFBA;}
-.site .solved-c-zelena .sgrp.zvazit{--nbg:var(--g50);--nstroke:var(--g300);--nfg:var(--g600);--nline:var(--l2);}
-.site .solved-c-zelena .sgrp .scard-ic{background:#E8F7F0;color:#0A7A52;}
-.site .solved-c-zelena .sgrp .scard:hover .scard-ic{background:#0A7A52;color:#fff;}
-.site .solved-c-zelena .sgrp.doporuceno .scard-ic{background:#FEF6E7;color:#8A5A00;}
-.site .solved-c-zelena .sgrp.doporuceno .scard:hover .scard-ic{background:#8A5A00;color:#fff;}
-.site .solved-c-zelena .sgrp.zvazit .scard-ic{background:var(--g100);color:var(--g600);}
-.site .solved-c-zelena .sgrp.zvazit .scard:hover .scard-ic{background:var(--g600);color:#fff;}
-
-/* --- hlavička úrovne (spoločná pre všetky varianty) --- */
+/* --- hlavička úrovne --- */
 /* Nesie len ikonu a názov s prekladom do bežnej reči. Počet položiek ani poradové
    číslo tu nie sú: v troch hlavičkách nad sebou to boli tri čísla, ktoré ťahali oko
    preč od názvov produktov, a poradie aj množstvo vidno priamo z toho, čo je pod nimi. */
@@ -155,7 +143,7 @@
 /* preklad štítku do bežnej reči - samotné „Zvážit" nepovie, podľa čoho sa rozhodnúť */
 .site .sgrp-t small{font-size:var(--fs-sm);line-height:1.35;opacity:.78;text-wrap:pretty;}
 
-/* --- karta položky (spoločná pre všetky varianty) --- */
+/* --- karta položky --- */
 /* Bez šípky: celá karta je odkaz a chová sa ako odkaz (hover, kurzor, focus), takže
    šípka v rohu len opakovala to isté a v troch úrovniach pod sebou tvorila štvrtý
    zvislý rad drobných značiek. */
@@ -176,53 +164,16 @@
    aby škála klesala aj vnútri mriežky, ale úroveň už dostatočne nesie farebný rám
    (--nline) a hlavička nad stĺpcom; priehľadná karta z toho robila vyblednutý zoznam. */
 
-/* --- A · SLOUPCE: úroveň = stĺpec --- */
+/* --- rozloženie: úroveň = stĺpec --- */
 /* Stĺpec NEMÁ vlastný rám ani podklad - hlavička úrovne stojí samostatne a karty
    ležia voľne pod ňou. Rámovaný stĺpec s tónovaným vnútrom pridával druhý box okolo
    boxov a celá sekcia potom čítala ako tri panely, nie ako jeden zoznam v troch úrovniach. */
 .site .solved-m{display:grid;grid-template-columns:1fr;gap:18px;}
-.site .solved-sloupce .sgrp{display:flex;flex-direction:column;gap:10px;}
+.site .solved-m .sgrp{display:flex;flex-direction:column;gap:10px;}
 /* slabý podklad + farebný obrys: odtieň nesie linka, plocha ostáva tichá */
-.site .solved-sloupce .sgrp-h{background:var(--nbg);color:var(--nfg);padding:12px 15px;
+.site .solved-m .sgrp-h{background:var(--nbg);color:var(--nfg);padding:12px 15px;
   border:1px solid var(--nstroke);border-radius:var(--r-card);}
-.site .solved-sloupce .sgrp-list{display:grid;gap:10px;align-content:start;}
-
-/* --- B · PÁSY: úroveň = vodorovný pás s popiskom vľavo --- */
-/* Karty v páse tečú do auto-fit mriežky, takže 5 nutností vyplní pás a 2 doporučenia
-   ho nechajú kratší - rozdiel v počte je tu informácia, nie diera v layoute. */
-.site .solved-pasy{gap:0;}
-.site .solved-pasy .sgrp{padding:22px 0;border-top:1px solid var(--l);}
-.site .solved-pasy .sgrp:first-child{border-top:0;padding-top:0;}
-.site .solved-pasy .sgrp:last-child{padding-bottom:0;}
-.site .solved-pasy .sgrp-h{color:var(--ink);margin-bottom:14px;}
-.site .solved-pasy .sgrp-ic{width:42px;height:42px;border-radius:var(--r-btn);
-  background:var(--nbg);color:var(--nfg);border:1px solid var(--nstroke);
-  align-items:center;justify-content:center;}
-.site .solved-pasy .sgrp-t small{color:var(--g600);opacity:1;}
-.site .solved-pasy .sgrp-list{display:grid;gap:12px;}
-
-/* --- pôvodný jednostĺpcový zoznam (variant „Původní") --- */
-/* Ostáva ako porovnávacia hladina v ladiacom paneli: naliehavosť je tu štítok na
-   riadku, nie rozloženie, takže sa dá zmerať, či matica reálne pomohla. */
-.site .solved{display:grid;grid-template-columns:1fr;gap:12px;}
-.site .solved-item{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:14px;
-  background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);padding:16px 18px;
-  text-decoration:none;color:inherit;transition:.2s;box-shadow:0 1px 3px rgba(13,31,91,.04);}
-.site .solved-item:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:var(--shadow-lift);}
-.site .solved-item:focus-visible{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
-/* ikona sedí hore vľavo, na linke názvu - vycentrovaná na celú kartu plávala pri dlhších
-   popisoch kdesi v strede textu a riadky položiek sa opticky rozpadli */
-.site .solved-ic{align-self:start;width:44px;height:44px;flex:none;border-radius:var(--r-btn);background:var(--blue-50);color:var(--blue);
-  display:flex;align-items:center;justify-content:center;transition:.2s;}
-.site .solved-item:hover .solved-ic{background:var(--blue);color:#fff;}
-.site .solved-tx{display:flex;flex-direction:column;gap:4px;min-width:0;}
-.site .solved-tx b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.25;}
-.site .solved-tx small{font-size:var(--fs-sm);color:var(--g600);line-height:1.55;text-wrap:pretty;}
-.site .solved-need{grid-column:2;justify-self:start;order:3;display:inline-flex;align-items:center;
-  border-radius:var(--r-pill);padding:5px 12px;font-size:var(--fs-label);font-weight:600;white-space:nowrap;}
-.site .solved-need.nutnost{background:var(--blue);color:#fff;}
-.site .solved-need.doporuceno{background:var(--blue-50);color:var(--blue);}
-.site .solved-need.zvazit{background:var(--g100);color:var(--g600);}
+.site .solved-m .sgrp-list{display:grid;gap:10px;align-content:start;}
 
 /* ============ 4 · SITUÁCIA (zdieľaná s produktovými stránkami) ============ */
 /* Rad záložiek situácií je spoločný .tabbar (components/TabBar.jsx, štýly vo wireframe.css) -
@@ -230,7 +181,7 @@
 
 /* kostra karty zhodná s .veh-panel na /vozidla (rádius, padding, tieň) */
 .site .sit{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;
-  background:var(--box);border:1px solid var(--l);border-radius:20px;
+  background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);
   padding:clamp(20px,3.5vw,32px);box-shadow:0 1px 3px rgba(13,31,91,.04);animation:sitIn .28s var(--ease) both;}
 @keyframes sitIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 @media(prefers-reduced-motion:reduce){.site .sit{animation:none;}}
@@ -317,12 +268,9 @@
 }
 @media(min-width:620px){
   .site .prof-cards{grid-template-columns:repeat(2,1fr);}
-  .site .solved-item{grid-template-columns:auto 1fr auto;}
-  .site .solved-need{grid-column:auto;order:0;justify-self:end;}
-  /* Pod desktopom sú skupiny ešte pod sebou, takže pás je široký na dve karty vedľa seba.
+  /* Pod desktopom sú skupiny ešte pod sebou, takže na stĺpec vyjdú dve karty vedľa seba.
      Bez toho je blok na tablete cez 2 000 px vysoký a hlavičky úrovní od seba odletia. */
-  .site .solved-pasy .sgrp-list,
-  .site .solved-sloupce .sgrp-list{grid-template-columns:repeat(2,1fr);}
+  .site .solved-m .sgrp-list{grid-template-columns:repeat(2,1fr);}
 }
 @media(min-width:980px){
   /* align-items zámerne nie: zarovnanie na začiatok drží medzeru pod breadcrumbom,
@@ -331,32 +279,22 @@
   /* Výšku drží token --hero-illus rovnako ako pod desktopom - tu netreba nič meniť.
      (Skúšaný bol aj grid trik height:0 + min-height:100%, ktorý ilustráciu zrovnal na
      výšku textu vedľa; pri krátkom texte z nej ostal drobec - na /profil/rodina 228 px.) */
-  .site .prof-cards{grid-template-columns:repeat(4,1fr);}
-  .site .prof-cards-3{grid-template-columns:repeat(3,1fr);}
+  /* Počet stĺpcov je počet dlaždíc (--pc-n z ProfileCards, strop 4). Publikum
+     má tri archetypy, „Nejste to úplně vy?" na detaile dva - pevná štvorica
+     po nich nechávala prázdne miesto, ktoré vyzerá ako chýbajúci profil. */
+  .site .prof-cards{grid-template-columns:repeat(var(--pc-n,4),minmax(0,1fr));}
 
-  /* SLOUPCE: počet stĺpcov je počet NEPRÁZDNYCH úrovní (--sgrp-n zo SolvedList).
+  /* Počet stĺpcov je počet NEPRÁZDNYCH úrovní (--sgrp-n zo SolvedList).
      Rodina má 5 : 2 : 0, teda dva stĺpce na plnú šírku - pevné tri by tam nechali
      prázdne miesto, ktoré vyzerá ako chyba dát. Stĺpce sú rovnako široké zámerne:
      nutnosti je najviac a nerovnaké šírky by z počtu urobili náhodu. */
-  .site .solved-sloupce{grid-template-columns:repeat(var(--sgrp-n,3),1fr);align-items:start;gap:16px;}
-  .site .solved-sloupce .sgrp-list{grid-template-columns:1fr;}
-
-  /* PÁSY: popisok úrovne je ľavá lišta, karty tečú vedľa nej.
-     Lišta je lepkavá - pri 5 nutnostiach je pás vyšší než výrez a bez toho by človek
-     v polovici stĺpca už nevedel, ktorú úroveň číta. */
-  .site .solved-pasy .sgrp{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start;
-    padding:26px 0;}
-  .site .solved-pasy .sgrp-h{margin-bottom:0;align-items:flex-start;position:sticky;top:88px;}
-  .site .solved-pasy .sgrp-ic{margin-top:1px;}
-  /* auto-FILL, nie auto-fit: auto-fit zbalí prázdne stopy, takže pás s jedinou položkou
-     („Zvážit" má všade práve jednu) roztiahne kartu cez celú šírku a vyzerá dôležitejšie
-     než päť nutností nad ňou. auto-fill stopu nechá a karta drží šírku stĺpca. */
-  .site .solved-pasy .sgrp-list{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+  .site .solved-m{grid-template-columns:repeat(var(--sgrp-n,3),1fr);align-items:start;gap:16px;}
+  .site .solved-m .sgrp-list{grid-template-columns:1fr;}
 
   /* prepínač na produktovej stránke - počet profilov k produktu nie je fixný,
      preto auto-fit namiesto pevných štyroch stĺpcov */
   .site .prof-tabs{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
   /* rovnaký pomer stĺpcov a medzera ako .veh-panel na /vozidla */
   .site .sit{grid-template-columns:1.45fr .85fr;gap:36px;}
-  .site .sit-aside{position:sticky;top:88px;}
+  .site .sit-aside{position:sticky;top:calc(var(--hdr-stick) + 8px);}
 }

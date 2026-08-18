@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import {
   IconShield, IconBuildingSkyscraper, IconChartLine, IconUsers,
-  IconArrowRight, IconCircleCheck, IconQuote, IconInfoCircle,
+  IconCircleCheck, IconQuote, IconInfoCircle,
 } from '@tabler/icons-react'
 import { advisorBySlug, initials } from '../data/branches.js'
 import {
@@ -49,13 +49,14 @@ export function ArticleMeta({ a, long, dark }) {
 // a bez štítku podproduktu - titulok článku povie, o čo ide, a odkazom je celá karta.
 //   md - bežná karta
 //   lg - jeden článok naplno, obálka vedľa textu (variant „hlavní" pod produktom)
-export function ArticleCard({ a, size = 'md' }) {
+// cover=false je tá istá karta bez fotky (odkazy vedľa hlavného článku), metaBelow
+// obracia poradie - najprv titulok, pod ním rubrika, dátum a doba čítania.
+export function ArticleCard({ a, size = 'md', cover = true, metaBelow = false }) {
   return (
-    <Link to={`/blog/${a.slug}`} className={`blog-card blog-card-${size}`}>
-      <ArticleCover a={a} />
+    <Link to={`/blog/${a.slug}`} className={`blog-card blog-card-${size}${cover ? '' : ' blog-card-nocover'}`}>
+      {cover && <ArticleCover a={a} />}
       <span className="blog-card-tx">
-        <ArticleMeta a={a} />
-        <b>{a.title}</b>
+        {metaBelow ? <><b>{a.title}</b><ArticleMeta a={a} /></> : <><ArticleMeta a={a} /><b>{a.title}</b></>}
       </span>
     </Link>
   )
@@ -186,7 +187,8 @@ export function BlogSection({ items, ey = 'Blog', title }) {
 // Blok blogu na PRODUKTOVEJ stránke. Zoznam si ťahá sám z väzby článok × produkt,
 // takže nový článok s `product: 'vozidla'` sa na /vozidla objaví bez zásahu do stránky.
 //   rad    - BlogSection, teda presne to isté, čo stojí pod článkom
-//   hlavni - prvý článok naplno, zvyšok ako odkazy (rozpracovaná alternatíva)
+//   hlavni - pol na pol: vľavo prvý článok s obálkou, vpravo zvyšné tri tie isté
+//            karty bez fotky; obe polovice sú rovnako vysoké
 export function ProductArticles({
   productKey, variant = 'rad', limit = 4,
   ey = 'Blog', title = <>Souvislosti, <b>které rozhodují</b></>,
@@ -200,21 +202,11 @@ export function ProductArticles({
       <>
         <CarouselHead ey={ey} title={title} {...ALL_LINK} />
         <div className="blog-prod-hlavni">
-          <ArticleCard a={lead} size="lg" />
+          <ArticleCard a={lead} size="lg" metaBelow />
           {rest.length > 0 && (
-            <ul className="blog-links">
-              {rest.map((a) => (
-                <li key={a.slug}>
-                  <Link to={`/blog/${a.slug}`}>
-                    <span className="tx">
-                      <b>{a.title}</b>
-                      <small>{readLabel(a.read)}</small>
-                    </span>
-                    <IconArrowRight size={18} stroke={2.2} />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="blog-prod-side">
+              {rest.map((a) => <ArticleCard key={a.slug} a={a} cover={false} metaBelow />)}
+            </div>
           )}
         </div>
         <CarouselFoot {...ALL_LINK} />

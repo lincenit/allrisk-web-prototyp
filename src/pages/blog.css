@@ -9,15 +9,9 @@
    ============================================================ */
 
 /* ---- hlavička s fotkou ----
-   .page-head má vlastnú modrú výplň; keď pod ňou beží fotka, výplň musí ustúpiť
-   a farbu drží až tint z .photo-hero (zľava doprava, viď --hero-tint v index.css).
-   Aj svetelná žiara v rohu ide preč - nad fotkou je z nej len fľak. */
-.site .page-head.photo-hero{background:var(--hero-base);}
-.site .page-head.photo-hero::after{display:none;}
-.site .page-head.photo-hero>.wrap{position:relative;z-index:2;}
-/* hlavička presahuje pod sticky header, aby fotka začínala až úplne hore */
-.site .blog-head,
-.site .blog-art-head{margin-top:calc(-1 * var(--hdr-h));padding-top:calc(var(--sec-pad) + var(--hdr-h));}
+   Recept .page-head.photo-hero (ustúpená modrá výplň, zrušená žiara a presah pod
+   sticky header) je spoločný s /reference, takže žije vo wireframe.css pri .page-head.
+   Tu zostáva len to, čo je vlastné článkom. */
 
 /* tlačidlo späť namiesto drobečkovej navigácie - v detaile článku je cieľ jediný */
 .site .blog-back{display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;
@@ -67,6 +61,8 @@
 /* hlavný článok - na širokom displeji obálka vedľa textu, nie nad ním */
 .site .blog-card-lg .blog-card-tx{gap:12px;}
 .site .blog-card-lg b{font-size:var(--fs-h3);}
+/* tá istá karta bez fotky - text nesie celú výšku, tak sa naň lepí zvyšný priestor */
+.site .blog-card-nocover .blog-card-tx{justify-content:center;}
 
 /* ---- výpis ---- */
 .site .blog-grid{display:grid;grid-template-columns:1fr;gap:16px;}
@@ -83,7 +79,7 @@
    a nadpis by sa opäť zlepil so zoznamom pod sebou (presne to sa tu stalo). */
 .site .blog-body>*{margin:0;}
 .site .blog-body>*+*{margin-top:20px;}
-.site .blog-body h2{font-size:var(--fs-h3);color:var(--ink);scroll-margin-top:calc(var(--hdr-h) + 20px);}
+.site .blog-body h2{font-size:var(--fs-h3);color:var(--ink);scroll-margin-top:calc(var(--hdr-stick) + 20px);}
 .site .blog-body>h2{margin-top:clamp(30px,4vw,44px);}
 .site .blog-ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;}
 .site .blog-ul li{display:flex;gap:11px;align-items:flex-start;font-size:var(--fs-body);color:var(--g700);line-height:1.55;}
@@ -181,19 +177,11 @@
 
 /* ---- blok blogu na produktovej stránke ----
    Variant „řada karet" je posuvný rad (.carou-track z wireframe.css), takže tu
-   zostáva len druhý variant. */
-.site .blog-prod-hlavni{display:grid;grid-template-columns:1fr;gap:18px;align-items:start;}
-.site .blog-links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
-  border:1px solid var(--l);border-radius:var(--r-card);background:var(--box);overflow:hidden;}
-.site .blog-links li + li{border-top:1px solid var(--l2);}
-.site .blog-links a{display:flex;align-items:center;gap:14px;padding:16px 18px;transition:background .2s;}
-.site .blog-links a:hover{background:var(--blue-50);}
-.site .blog-links .tx{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0;}
-.site .blog-links b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:var(--ink);line-height:1.3;
-  letter-spacing:-.015em;}
-.site .blog-links small{font-size:var(--fs-label);color:var(--g500);}
-.site .blog-links svg{flex:none;color:var(--blue);transition:transform .18s var(--ease);}
-.site .blog-links a:hover svg{transform:translateX(4px);}
+   zostáva len druhý variant.
+   Obe polovice sú rovnako široké aj rovnako vysoké: riadok mriežky určí vyššia
+   z nich (spravidla stĺpec troch kariet) a hlavný článok sa na ňu roztiahne. */
+.site .blog-prod-hlavni{display:grid;grid-template-columns:1fr;gap:18px;align-items:stretch;}
+.site .blog-prod-side{display:grid;grid-auto-rows:1fr;gap:18px;}
 
 /* ============ RESPONSIVE ============ */
 @media(min-width:620px){
@@ -202,14 +190,14 @@
 @media(min-width:760px){
   /* hlavný článok: obálka vľavo, text vpravo - v mriežke drží celú šírku */
   .site .blog-card-lg{flex-direction:row;align-items:stretch;}
-  .site .blog-card-lg .blog-cover{width:46%;aspect-ratio:auto;}
+  .site .blog-card-lg .blog-cover{width:40%;aspect-ratio:auto;}
   .site .blog-card-lg .blog-card-tx{padding:clamp(24px,3vw,34px);justify-content:center;}
 }
 @media(min-width:980px){
   .site .blog-grid{grid-template-columns:repeat(3,1fr);}
   /* telo článku + bočný stĺpec, ktorý ide so scrollom */
   .site .blog-art{grid-template-columns:minmax(0,1fr) 320px;}
-  .site .blog-aside{position:sticky;top:calc(var(--hdr-h) + 20px);align-self:start;}
+  .site .blog-aside{position:sticky;top:calc(var(--hdr-stick) + 20px);align-self:start;}
   .site .blog-toc{display:block;}
-  .site .blog-prod-hlavni{grid-template-columns:1.4fr 1fr;}
+  .site .blog-prod-hlavni{grid-template-columns:1fr 1fr;}
 }

@@ -1,53 +1,56 @@
 /* ============================================================
-   SiteHeader - JEDEN spoločný header pre celý prototyp.
+   SiteHeader - JEDEN header pre celý prototyp, BEZ variantov.
 
-   Lišta má ŠTYRI verzie (headerVariants.js, prepínač je v ladiacom paneli).
-   Všetky odpovedajú na tú istú otázku - patrí publikum (jednotlivci a rodiny /
-   podnikatelé / města a obce) do navigácie, a ak áno, čo tomu ustúpi:
+   Podoba je z Figmy (súbor `Consolidation`, node 1937:3688): dva pásy na jednej
+   plnej modrej ploche, bez gradientu, bez deliacej linky, hranaté.
+     hore  značka vľavo; vpravo prepínač publika, Společnost (a pod ňou O nás,
+           Kariéra, Blog, Reference), Kontakt, hľadanie, Můj Allrisk a
+           „Nahlásit škodu" (→ kontakt s témou). 68px, sadzba 16px.
+     dole  päť obchodných línií zarovnaných DOPRAVA, každá s vlastným panelom.
+           54px, sadzba 14px.
 
-   `prepinac` - jedna položka „Produkty", publikum sa vyberá až v paneli.
-                Lišta zostáva krátka, publikum je o klik ďalej.
-   `pas`      - každé publikum vlastná položka, ale utility (Společnost,
-                Kontakt, hľadanie, účet) odchádza do tenkého pásu NAD lištu.
-                Hlavná lišta nesie logo, tri publiká plnými názvami
-                a „Nahlásit škodu" - vojde sa do bežnej šírky obsahu a nič
-                neustupuje. Cena je výška hlavičky.
-   `kontext`  - publikum je kontext, nie cieľ: prepínač stojí hneď pri
-                „Produkty" a je vidieť aj so zavretým menu. Výber platí pre
-                celý web, nie len pre menu (src/segment.js).
-   `karty`    - lišta ako `prepinac`, ale panel začína tromi kartami publík
-                na plnú šírku namiesto úzkeho bočného stĺpca.
+   Do 2026-08-12 tu žili TRI verzie hlavičky (`jeden`, `dva`, `figma`) a ŠTYRI
+   varianty lepivosti, oboje prepínateľné v ladiacom paneli. User vybral verziu
+   podľa Figmy a lepivosť „skryť pri scrolle" a ostatné dal zmazať, takže obe osi
+   aj s prepínačmi (headerVariants.js, stickyVariants.js, HeaderDebug.jsx)
+   sú preč. Kto ich bude hľadať, nájde ich v gite.
 
-   V každej verzii vedú Podnikatelé rovno na /podnikatele - nikde neotvárajú
-   panel. Klient výslovne nechcel podnikateľom tlačiť produkty; ich vstupom je
-   systém péče na vlastnej stránke, nie zoznam pojištění.
+   LEPIVOSŤ: hlavička je `position:sticky` a pri scrolle DOLE sa spodný pás
+   zasunie pod horný; scroll HORE ho vráti. Hore tak pri čítaní zostane horný
+   rad so značkou a akciou, katalóg sa vráti presne vtedy, keď ho niekto hľadá -
+   pohyb hore je v prehliadaní signál „chcem naspäť", nie náhoda.
+
+   Prepínač publika je tlačidlo v štýle „Můj Allrisk" (user, 2026-08-11)
+   s ikonou publika a chevronom; po otvorení sa preklopí do plochy panelu pod
+   sebou. Publikum je nastavenie, ktoré mení celý web (src/segment.js), nie
+   odkaz v rade.
    ============================================================ */
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import './SiteHeader.css'
 import { asset } from '../asset.js'
-import { MENU, CATS, SEGMENTS } from '../data/menu.js'
+import { MENU, CATS, SEGMENTS, itemsFor, segmentBy } from '../data/menu.js'
 import { routeFor } from '../productRoutes.js'
 import ProductIcon from './ProductIcon.jsx'
 import MegaMenu from './MegaMenu.jsx'
-import { useDebugOption } from './DebugPanel.jsx'
-import { HDR_DEFAULT, HDR_ONE_ITEM, hdrVariant } from '../headerVariants.js'
-import { useSegment, SEG_DEFAULT } from '../segment.js'
+import { useSegment } from '../segment.js'
 import {
-  IconAlertTriangle, IconSearch, IconChevronDown, IconUser, IconChevronRight,
-  IconArrowUpRight, IconUsers, IconBriefcase, IconBuildingCommunity,
+  IconAlertTriangle, IconSearch, IconChevronDown, IconUser, IconCheck,
+  IconUsers, IconBriefcase, IconBuildingCommunity,
 } from '@tabler/icons-react'
 
-// Ikona publika (kľúč drží data/menu.js). Prepínač ňou dáva výber najavo aj
-// bez čítania - v lište je to jediný prvok, ktorý sa mení podľa stavu webu.
+// Ikona publika (kľúč drží data/menu.js). Nesie ju prepínač aj každý riadok
+// jeho rozbaľovačky - výber tak ide prečítať aj bez čítania textu.
 const SEG_ICONS = { users: IconUsers, briefcase: IconBriefcase, city: IconBuildingCommunity }
 
-// Blog je pod „Společnost" (2026-08-10). Ako samostatná položka lišty bral
-// ~79px a to je presne to, čo verzii „polozky" chýbalo, keď publiká idú plnými
-// názvami. Ustúpil obsahový vstup, nie navigácia.
+// Blog je od 2026-08-12 zase POD „Společnost" (user). Medzi 2026-08-11 a týmto
+// dátumom mal vlastnú položku v lište; horný rad medzitým prevzal aj prepínač
+// publika a „Kontakt", takže sa Blog vracia tam, kde tematicky patrí - je to
+// obsah o firme, nie samostatná obchodná línia.
 // Položky s cestou od lomítka majú v prototype vlastnú stránku a idú routerom;
 // zvyšok je zatiaľ mŕtvy odkaz (#) - preto tá dvojica renderov nižšie.
-const COMPANY = [['O nás', '#'], ['Kariéra', '#'], ['Blog', '/blog']]
+// Poradie je dané (user, 2026-08-16): O nás → Kariéra → Blog → Reference.
+const COMPANY = [['O nás', '/o-nas'], ['Kariéra', '#'], ['Blog', '/blog'], ['Reference', '/reference']]
 const CompanyLink = ({ label, to, onClick }) => (
   to.startsWith('/')
     ? <Link to={to} onClick={onClick}>{label}</Link>
@@ -55,118 +58,135 @@ const CompanyLink = ({ label, to, onClick }) => (
 )
 const POPULAR = ['Vozidla', 'Cestovní', 'Nemovitost', 'Investice', 'Život a úraz']
 
-// „Společnost" žije v lište, ale vo verzii `pas` v hornom páse - je to tá istá
-// rozbaľovačka na dvoch miestach, takže má vlastný komponent.
-function CompanyMenu({ open, onToggle, onNavigate }) {
-  return (
-    <div className="hdr-dd-wrap">
-      <button className={open ? 'on' : ''} aria-expanded={open} onClick={onToggle}>
-        Společnost <IconChevronDown size={17} stroke={2.2} />
+// „Nahlásit škodu" ide od 2026-08-12 na KONTAKT (user), nie na /vozidla - škoda
+// nie je produkt a nahlásenie sa nedeje na katalógovej stránke.
+// Téma v query je tá istá, akú nesie pásik škody v rozcestníku
+// (data/needfinder.js → NEED_CLAIM.to). Kontakt ju prečíta a zobrazí nad
+// formulárom, takže pristátie nadväzuje na klik a nie je slepé.
+// Jedna konštanta preto, že tlačidlo je v hlavičke dvakrát - v lište aj v drawri.
+const CLAIM_TO = '/kontakt?tema=Nahlásit škodu'
+
+// Rozbaľovačka publika. Rovnaký tvar riadku v lište aj v mobilnom drawri - je to
+// tá istá voľba, takže nemá dôvod vyzerať dvakrát inak.
+function SegmentList({ seg, onPick }) {
+  return SEGMENTS.map((s) => {
+    const I = SEG_ICONS[s.icon] || IconUsers
+    const on = s.key === seg
+    return (
+      <button
+        key={s.key} type="button" role="menuitemradio" aria-checked={on}
+        className={`hdr-segrow${on ? ' on' : ''}`}
+        onClick={() => onPick(s.key)}
+      >
+        <span className="hdr-segrow-ic"><I size={22} stroke={1.7} /></span>
+        <span className="hdr-segrow-tx">
+          <b>{s.label}</b>
+          <small>{s.desc}</small>
+        </span>
+        {/* Odfajknutie, nie len farba: zvolená položka sa nesmie dať prečítať
+            iba podľa pozadia (DESIGN.md - každý farebný stav má aj znak). */}
+        {on && <IconCheck className="hdr-segrow-ck" size={18} stroke={2.6} />}
       </button>
-      {open && (
-        <div className="hdr-dd">
-          {COMPANY.map(([l, to]) => <CompanyLink key={l} label={l} to={to} onClick={onNavigate} />)}
-        </div>
-      )}
-    </div>
-  )
+    )
+  })
 }
 
-// Vo verziách s jednou položkou nie je otvorený segment, ale jeden panel -
-// `openSeg` preto drží túto značku namiesto kľúča publika. Jeden stav zvládne
-// všetky verzie a nemusí sa duplikovať zatváranie, Escape ani klik mimo.
-const PRODUKTY = '_produkty'
-
-// Podnikatelé nikde neotvárajú katalóg; majú vlastnú stránku.
-const BIZ_KEY = 'podnikatele'
-const BIZ = '/podnikatele'
-
 export default function SiteHeader() {
-  // Zmazaná verzia môže zostať v localStorage z minulej návštevy - `hdrVariant`
-  // ju stiahne späť na predvolenú, nech lišta nikdy nekreslí kostru bez CSS.
-  const [hdrRaw] = useDebugOption('header', HDR_DEFAULT)
-  const hdrStyle = hdrVariant(hdrRaw)
-  // lišta nesie jednu položku „Produkty" a publikum sa vyberá inde
-  const oneItem = HDR_ONE_ITEM.includes(hdrStyle)
-  const util = hdrStyle === 'pas'      // utility odchádza do pásu nad lištou
-  const ctx = hdrStyle === 'kontext'   // publikum je prepínač pri logu
-  const cards = hdrStyle === 'karty'   // publiká sú karty hore v paneli
+  // Publikum je stav webu, nie hlavičky - hlavička ho len prepína a číta.
+  const [seg, setSeg] = useSegment()
+  const segObj = segmentBy(seg)
+  const SegIcon = SEG_ICONS[segObj.icon] || IconUsers
 
-  const [openSeg, setOpenSeg] = useState(null)   // otvorený panel: kľúč publika alebo PRODUKTY
-  // DVA výbery publika, zámerne:
-  //   siteSeg  - stav celého webu (src/segment.js). Píše ho LEN prepínač vo
-  //              verzii „kontext" - tam je publikum nastavenie, po ktorom sa
-  //              mení aj úvodná stránka.
-  //   panelSeg - výber vnútri menu (bočný stĺpec „prepinac", karty „karty").
-  //              Ten landing page prepínať NEMÁ (user, 2026-08-11): otvoriť
-  //              menu a prezrieť si inú ponuku nie je to isté ako povedať webu,
-  //              kto som. Preto ani nezačína od stavu webu - menu sa otvorí vždy
-  //              na Jednotlivcoch a rodinách (user), teda na publiku, ktoré má
-  //              najširší katalóg a týka sa najviac ľudí.
-  const [siteSeg, setSiteSeg] = useSegment()
-  const [panelSeg, setPanelSeg] = useState(SEG_DEFAULT)
-  const seg = ctx ? siteSeg : panelSeg
-  const setSeg = ctx ? setSiteSeg : setPanelSeg
+  const [openCat, setOpenCat] = useState(null)   // otvorený panel: kľúč obchodnej línie
+  const [segOpen, setSegOpen] = useState(false)  // rozbalený prepínač publika
   const [compOpen, setCompOpen] = useState(false)
-  const [ctxOpen, setCtxOpen] = useState(false)  // rozbalený prepínač publika (verzia „kontext")
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [drawer, setDrawer] = useState(false)
-  // Otvorené publikum v mobilnom drawri. Na začiatku žiadne: prvá úroveň sú
-  // tri publiká a tie majú byť po otvorení menu vidieť všetky tri naraz.
-  const [mseg, setMseg] = useState(null)
-  // Žiadna kategória nie je otvorená vopred: rozbalené Pojištění zatlačí
-  // zvyšné dve publiká hlboko pod okraj obrazovky a drawer sa otvorí tak,
-  // že prvá úroveň navigácie nie je vidieť.
+  // Otvorená kategória v mobilnom drawri. Na začiatku žiadna: prvá úroveň je
+  // päť línií a tie majú byť po otvorení menu vidieť všetky naraz.
   const [acc, setAcc] = useState(null)
 
   const headerRef = useRef(null)
-  const segObj = SEGMENTS.find((s) => s.key === seg) || SEGMENTS[0]
-  const SegIcon = SEG_ICONS[segObj.icon] || IconUsers
+  // Drawer je SÚRODENEC hlavičky (fixed panel pod ňou), nie jej potomok - do
+  // „kliku mimo" preto musí ísť zvlášť. Bez neho platil prepínač publika v drawri
+  // za klik mimo: `mousedown` zhodil rozbaľovačku ešte pred `click`, riadok sa
+  // odmontoval a výber publika sa na telefóne nedal potvrdiť vôbec.
+  const drawerRef = useRef(null)
 
   const closeAll = () => {
-    setOpenSeg(null); setCompOpen(false); setCtxOpen(false); setSearchOpen(false); setDrawer(false)
+    setOpenCat(null); setSegOpen(false); setCompOpen(false); setSearchOpen(false); setDrawer(false)
   }
   const closeDrawer = () => setDrawer(false)
-  const anyOpen = openSeg || compOpen || ctxOpen || searchOpen
+  const anyOpen = openCat || segOpen || compOpen || searchOpen
+  // Čokoľvek rozbalené, vrátane mobilného drawra - to je stav, v ktorom sa
+  // hlavička nesmie zasunúť pri scrolle.
+  const menuOpen = anyOpen || drawer
 
-  // klik mimo headera zavrie otvorené menu (panel / Společnost / publikum / hľadanie)
+  // klik mimo headera (a mimo drawra) zavrie, čo je otvorené
   useEffect(() => {
-    if (!anyOpen) return
+    if (!anyOpen) return undefined
     const onDown = (e) => {
-      if (headerRef.current && !headerRef.current.contains(e.target)) {
-        setOpenSeg(null); setCompOpen(false); setCtxOpen(false); setSearchOpen(false)
+      const inside = headerRef.current?.contains(e.target) || drawerRef.current?.contains(e.target)
+      if (!inside) {
+        setOpenCat(null); setSegOpen(false); setCompOpen(false); setSearchOpen(false)
       }
     }
     document.addEventListener('mousedown', onDown)
     return () => document.removeEventListener('mousedown', onDown)
   }, [anyOpen])
 
+  // Otvorený drawer zamkne scroll stránky. Drawer je fixed a scrolluje si sám,
+  // takže bez zámku sa pod ním hýbe obsah - a na telefóne to vyzerá, akoby menu
+  // odchádzalo preč.
+  useEffect(() => {
+    if (!drawer) return undefined
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [drawer])
+
   // Escape zavrie menu a vráti fokus do lišty
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== 'Escape' || !anyOpen) return
-      setOpenSeg(null); setCompOpen(false); setCtxOpen(false); setSearchOpen(false)
-      headerRef.current?.querySelector('.hdr-nav button')?.focus()
+      setOpenCat(null); setSegOpen(false); setCompOpen(false); setSearchOpen(false)
+      headerRef.current?.querySelector('.hdr-seg-btn')?.focus()
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [anyOpen])
 
-  // Prepnutie verzie lišty musí zavrieť, čo je otvorené: „Produkty" vo verzii
-  // s položkami neexistujú a naopak, takže by ostal visieť panel bez tlačidla.
-  useEffect(() => { setOpenSeg(null); setCtxOpen(false) }, [hdrStyle])
-
-  // Verzia je aj na <html>, nie len na hlavičke: `pas` je o pás vyššia a výšku
-  // hlavičky berú z tokenu --hdr-h aj foto-hero (podliezajú lištu) a kotvy.
-  // Bez toho by sa hero rozišlo s hlavičkou práve v tej verzii, ktorá ju mení.
+  // Stav scrollu. `data-hdrhide` na <html> = scrolluje sa dole a spodný pás sa má
+  // zasunúť. Značka na dokumente, nie stav v komponente: schovanie mení `--hdr-stick`,
+  // teda výšku, ktorá pri scrolle naozaj zostane na obrazovke, a tú si berú sticky
+  // prvky a kotvy na stránkach - tie o hlavičke nevedia, ale o <html> áno.
+  // Otvorená ponuka sa neskrýva: panel visí z hlavičky a odišiel by aj s ňou.
+  // Na telefóne to platí dvojnásobne - drawer je zavesený pod hlavičkou a odišiel
+  // by s ňou aj burger, teda jediné, čím sa dá menu zavrieť.
   useEffect(() => {
-    document.documentElement.dataset.hdr = hdrStyle
-    return () => { delete document.documentElement.dataset.hdr }
-  }, [hdrStyle])
+    const el = document.documentElement
+    if (menuOpen) { delete el.dataset.hdrhide; return undefined }
+    let last = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      const topH = headerRef.current?.querySelector('.hdr-top')?.offsetHeight || 64
+      // Skrýva sa až pod dvojnásobkom výšky horného pásu: tesne pod vrchom stránky
+      // by zmizla skôr, než by ju stihol niekto minúť, a pôsobilo by to ako chyba.
+      if (y > last && y > topH * 2) el.dataset.hdrhide = '1'
+      else if (y < last || y <= 8) delete el.dataset.hdrhide
+      last = y
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      delete el.dataset.hdrhide
+    }
+  }, [menuOpen])
 
-  // Hľadanie ide naprieč všetkými segmentmi - používateľ, ktorý píše do lupy,
-  // žiadne publikum nezvolil.
+  // Hľadanie ide naprieč všetkými publikami - kto píše do lupy, žiadne publikum
+  // nevyberal a nemá dôvod prísť o výsledok len preto, že stojí na inom.
   const searchIndex = useMemo(() => {
     const out = []; const seen = new Set()
     for (const s of SEGMENTS) {
@@ -184,154 +204,160 @@ export default function SiteHeader() {
   const q = query.trim().toLowerCase()
   const results = q ? searchIndex.filter((i) => i.label.toLowerCase().includes(q) || i.cat.toLowerCase().includes(q)) : []
 
-  const openSearch = () => { setSearchOpen((o) => !o); setOpenSeg(null); setCompOpen(false); setCtxOpen(false) }
+  const openSearch = () => { setSearchOpen((o) => !o); setOpenCat(null); setSegOpen(false); setCompOpen(false) }
   const closeSearch = () => { setSearchOpen(false); setQuery('') }
   const togglePanel = (key) => {
-    setOpenSeg((cur) => (cur === key ? null : key))
-    setCompOpen(false); setCtxOpen(false); setSearchOpen(false)
+    setOpenCat((cur) => (cur === key ? null : key))
+    setSegOpen(false); setCompOpen(false); setSearchOpen(false)
   }
-  const toggleCompany = () => { setCompOpen((p) => !p); setOpenSeg(null); setCtxOpen(false); setSearchOpen(false) }
+  const toggleCompany = () => { setCompOpen((p) => !p); setOpenCat(null); setSegOpen(false); setSearchOpen(false) }
+  const toggleSeg = () => { setSegOpen((p) => !p); setOpenCat(null); setCompOpen(false); setSearchOpen(false) }
 
-  // Vstup do katalógu vo verziách s jednou položkou. Keď je zvolené publikum
-  // Podnikatelé, žiadny katalóg neexistuje - položka sa mení na odkaz na ich
-  // stránku, aby prepínač publika neponúkal panel, ktorý nikdy nemal existovať.
-  const produktyItem = ctx && seg === BIZ_KEY ? (
-    <NavLink to={BIZ} className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>
-      Produkty <IconArrowUpRight size={16} stroke={2.2} />
-    </NavLink>
-  ) : (
-    <button className={openSeg === PRODUKTY ? 'on' : ''} aria-expanded={openSeg === PRODUKTY} onClick={() => togglePanel(PRODUKTY)}>
-      Produkty <IconChevronDown size={17} stroke={2.2} />
+  // Prepnutie publika musí zavrieť panel aj zbaliť akordeón: pod novým publikom
+  // je v tej istej línii iný zoznam a otvorený panel by sa prekreslil pod rukou.
+  // Od 2026-08-16 zatvára aj drawer: prepínač stojí v lište NAD ním, takže by
+  // pod otvoreným menu ticho prepísal celý jeho katalóg.
+  const pickSeg = (key) => {
+    setSeg(key)
+    setOpenCat(null); setSegOpen(false); setCompOpen(false); setSearchOpen(false); setAcc(null)
+    setDrawer(false)
+  }
+
+  /* ---------- kusy hlavičky ---------- */
+
+  const logo = (
+    <Link className="hdr-logo" to="/" onClick={closeAll} aria-label="Allrisk - domů">
+      <img src={asset('/allrisk-logo-white.svg')} alt="Allrisk" />
+    </Link>
+  )
+
+  // Prepínač publika. Tvar tlačidla „Můj Allrisk" (user): ohraničené, nie
+  // vyplnené - je to voľba, nie akcia. Otvorené sa preklopí do plochy panelu.
+  const segSwitch = (
+    <div className="hdr-seg">
+      {/* aria-label aj pri viditeľnom popisku: na telefóne je z tlačidla len ikona
+          a šípka (CSS skrýva `span`) a bez neho by tam ostalo tlačidlo bez mena.
+          Meno obsahuje viditeľný text, takže hlasové ovládanie funguje ďalej. */}
+      <button
+        className={`hdr-seg-btn${segOpen ? ' on' : ''}`}
+        aria-expanded={segOpen} aria-haspopup="true"
+        aria-label={`Pro koho: ${segObj.label}`}
+        onClick={toggleSeg}
+      >
+        <SegIcon size={20} stroke={1.8} />
+        {/* VŽDY plný názov („Jednotlivci a rodiny"). Do 2026-08-12 sa pod 1180px
+            prepínal na skratku („Rodiny") kvôli šírke - user to zrušil ako
+            nezmysel a má pravdu: publikum je nastavenie celého webu a nesmie sa
+            volať v každej šírke okna inak. Miesto na to je odvtedy, čo horný rad
+            pustil Blog pod „Společnost". */}
+        <span>{segObj.label}</span>
+        <IconChevronDown className="hdr-seg-cv" size={17} stroke={2.4} />
+      </button>
+      {segOpen && (
+        <div className="hdr-segdd hdr-dd--anim" role="menu" aria-label="Pro koho">
+          <SegmentList seg={seg} onPick={pickSeg} />
+        </div>
+      )}
+    </div>
+  )
+
+  const companyMenu = (
+    <div className="hdr-dd-wrap">
+      <button className={compOpen ? 'on' : ''} aria-expanded={compOpen} onClick={toggleCompany}>
+        Společnost <IconChevronDown size={16} stroke={2.2} />
+      </button>
+      {compOpen && (
+        <div className="hdr-dd hdr-dd--anim">
+          {COMPANY.map(([l, to]) => <CompanyLink key={l} label={l} to={to} onClick={closeAll} />)}
+        </div>
+      )}
+    </div>
+  )
+
+  const contactLink = <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakt</NavLink>
+  const searchBtn = (
+    <button className={`hdr-searchbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" aria-expanded={searchOpen} onClick={openSearch}>
+      <IconSearch size={19} stroke={2} /> <span>Hledat</span>
     </button>
+  )
+  // aria-label aj pri viditeľnom popisku: v lište je z tlačidla len ikona
+  // (CSS skryje `span`) a bez neho by tam ostalo tlačidlo bez mena. Ten istý
+  // markup nesie aj mobilný drawer, kde popisok vidno.
+  const accountBtn = <button className="hdr-mua" aria-label="Můj Allrisk"><IconUser size={19} stroke={2} /><span>Můj Allrisk</span></button>
+  const claimBtn = (
+    <Link to={CLAIM_TO} className="hdr-claim" aria-label="Nahlásit škodu" onClick={closeAll}>
+      <IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span>
+    </Link>
+  )
+  const burger = (
+    // otvorenie menu zhasne rozbaľovačku publika vedľa neho - inak by visela nad drawerom
+    <button
+      className={`hdr-burger ${drawer ? 'on' : ''}`}
+      onClick={() => { setDrawer((d) => !d); setSegOpen(false); setSearchOpen(false) }}
+      aria-label="Menu" aria-expanded={drawer}
+    ><i /><i /><i /></button>
+  )
+  const mobileSearch = (
+    <button className={`hdr-iconbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" aria-expanded={searchOpen} onClick={openSearch}><IconSearch size={22} stroke={2} /></button>
+  )
+
+  // Päť obchodných línií, každá s vlastným panelom - obsah spodného pásu.
+  const catNav = (
+    <nav className="hdr-nav hdr-nav--cats">
+      {CATS.map((c) => (
+        <div className="hdr-navitem" key={c.key}>
+          <button
+            className={openCat === c.key ? 'on' : ''}
+            aria-expanded={openCat === c.key}
+            onClick={() => togglePanel(c.key)}
+          >
+            {c.label} <IconChevronDown size={16} stroke={2.2} />
+          </button>
+          {openCat === c.key && <MegaMenu seg={seg} cat={c.key} onNavigate={closeAll} />}
+        </div>
+      ))}
+    </nav>
   )
 
   return (
     <>
-      {/* verzia lišty je aj na elemente - rozdiel medzi nimi nie je len v tom,
-          čo sa vykreslí, ale aj koľko miesta to zaberie (viď SiteHeader.css) */}
-      <header className={`hdr hdr--${hdrStyle}${drawer ? ' hdr--solid' : ''}`} ref={headerRef}>
-        {/* ---- utility pás (len verzia „pas") ----
-            Všetko, čo nevedie do katalógu, ide o riadok vyššie. Hlavnej lište
-            tým zostane presne toľko miesta, koľko si tri publiká plnými názvami
-            pýtajú, takže sa nemusí rozťahovať ani nič obetovať. */}
-        {util && (
-          <div className="hdr-util">
-            <div className="hdr-util-in">
-              <CompanyMenu open={compOpen} onToggle={toggleCompany} onNavigate={closeAll} />
-              <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakt</NavLink>
-              {/* hľadanie zostáva v spodnej lište ako v ostatných verziách -
-                  je to akcia, nie odkaz, a patrí k tlačidlám vpravo dole */}
-              <button className="hdr-util-mua"><IconUser size={17} stroke={2} /> Můj Allrisk</button>
-            </div>
+      <header className={`hdr${drawer ? ' hdr--solid' : ''}`} ref={headerRef}>
+        {/* ---- horný pás ----
+            Značka a všetko, čo nevedie do katalógu: prepínač publika, odkazy,
+            hľadanie, účet a akcia. Katalóg je o riadok nižšie. */}
+        <div className="hdr-top">
+          <div className="hdr-top-in">
+            {logo}
+            <span className="hdr-spacer" />
+            {/* Prepínač publika stojí hneď PRED „Společnost" (user, 2026-08-12).
+                V návrhu bol dole vľavo; hore je preto, aby spodný pás zostal
+                čistý katalóg piatich obchodných línií. */}
+            {segSwitch}
+            {companyMenu}
+            {contactLink}
+            {searchBtn}
+            {accountBtn}
+            {claimBtn}
+            {mobileSearch}
+            {burger}
           </div>
-        )}
-
-        <div className="hdr-bar">
-          <Link className="hdr-logo" to="/" onClick={closeAll} aria-label="Allrisk - domů">
-            <img src={asset('/allrisk-logo-white.svg')} alt="Allrisk" />
-          </Link>
-
-          <span className="hdr-spacer" />
-          <nav className="hdr-nav">
-            {/* ---- prepínač publika (len verzia „kontext") ----
-                Stojí hneď pri „Produkty" (user, 2026-08-11), lebo mení práve
-                to, čo je pod nimi - pri logu vyzeral ako druhá značka. Ide
-                pred ne, nie za: najprv pre koho, potom čo.
-                Ikona sa mení s výberom, takže je zvolené publikum vidieť aj
-                bez čítania. Nadpis „Nabídka" nad názvom zmizol - v jednom
-                riadku na 48px si tlačidlo vystačí s ikonou a názvom. */}
-            {ctx && (
-              <div className="hdr-ctx">
-                <button className={ctxOpen ? 'on' : ''} aria-expanded={ctxOpen} onClick={() => { setCtxOpen((p) => !p); setOpenSeg(null); setCompOpen(false); setSearchOpen(false) }}>
-                  <SegIcon size={20} stroke={2} />
-                  {/* Názov publika, nie „Pro …": predložku povie ikona a rozbaľovačka
-                      a v lište stojí 28px, ktoré tam nie sú. Celé „Pro jednotlivce
-                      a rodiny" nesie hlavička panelu.
-                      Dva zápisy: pod 1100px sa nezmestí ani názov a skratka je
-                      jediné miesto, kde sa dá ubrať bez toho, aby zmizol odkaz
-                      alebo akcia. */}
-                  <b>
-                    <span className="hdr-ctx-full">{segObj.label}</span>
-                    <span className="hdr-ctx-short">{segObj.short}</span>
-                  </b>
-                  <IconChevronDown size={17} stroke={2.2} />
-                </button>
-                {ctxOpen && (
-                  <div className="hdr-dd hdr-ctx-dd">
-                    {SEGMENTS.map((s) => {
-                      const I = SEG_ICONS[s.icon] || IconUsers
-                      return (
-                        <button
-                          key={s.key} className={s.key === seg ? 'on' : ''}
-                          onClick={() => { setSeg(s.key); setCtxOpen(false); setOpenSeg(null) }}
-                        >
-                          <I size={20} stroke={2} />
-                          <span>
-                            <b>{s.label}</b>
-                            <small>{s.desc}</small>
-                          </span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-            {oneItem ? produktyItem : (
-              /* Podnikatelé sú odkaz, nie rozbaľovačka - nejde tam o výber
-                 produktu, ale o spôsob spolupráce, a ušetrený chevron je
-                 presne to miesto, ktoré potrebuje „Jednotlivci a rodiny". */
-              SEGMENTS.map((s) => (s.key === BIZ_KEY ? (
-                <NavLink key={s.key} to={BIZ} className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>
-                  {s.label}
-                </NavLink>
-              ) : (
-                <button
-                  key={s.key}
-                  className={openSeg === s.key ? 'on' : ''}
-                  aria-expanded={openSeg === s.key}
-                  onClick={() => togglePanel(s.key)}
-                >
-                  {s.label} <IconChevronDown size={17} stroke={2.2} />
-                </button>
-              )))
-            )}
-            {/* vo verzii „pas" je toto oboje o riadok vyššie */}
-            {!util && (
-              <>
-                <CompanyMenu open={compOpen} onToggle={toggleCompany} onNavigate={closeAll} />
-                <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakt</NavLink>
-              </>
-            )}
-          </nav>
-          <span className="hdr-divider" />
-          <div className="hdr-actions">
-            <button className={`hdr-iconbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" aria-expanded={searchOpen} onClick={openSearch}><IconSearch size={22} stroke={2} /></button>
-            <button className="hdr-mua" aria-label="Můj Allrisk"><IconUser size={20} stroke={2} /><span>Můj Allrisk</span></button>
-            <Link to="/vozidla" className="hdr-claim" aria-label="Nahlásit škodu" onClick={closeAll}><IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span></Link>
-          </div>
-          <button className={`hdr-burger ${drawer ? 'on' : ''}`} onClick={() => setDrawer((d) => !d)} aria-label="Menu" aria-expanded={drawer}><i /><i /><i /></button>
         </div>
 
-        {/* ---- panel ----
-            `setSeg` sa posiela len tam, kde si publikum vyberá panel sám:
-            `prepinac` má bočný stĺpec, `karty` riadok kariet. Verzia `kontext`
-            ho nedostane - publikum už zvolil prepínač pri logu, takže panel
-            len pomenuje, čie to je. */}
-        {openSeg && (
-          <div className="hdr-mega-wrap">
-            <MegaMenu
-              seg={openSeg === PRODUKTY ? seg : openSeg}
-              setSeg={openSeg === PRODUKTY && !ctx ? setSeg : undefined}
-              cards={cards}
-              onNavigate={closeAll}
-            />
+        {/* ---- spodný pás ----
+            Päť obchodných línií zarovnaných doprava (user, 2026-08-12), rovnako
+            ako v návrhu. Panel línie sedí flush pod pásom, takže vyzerá ako
+            vysunutý z hlavičky, nie ako druhá vrstva nad ňou - to drží obidva
+            pásy pohromade ako jeden objekt. */}
+        <div className="hdr-bar">
+          <div className="hdr-bar-in">
+            <span className="hdr-spacer" />
+            {catNav}
           </div>
-        )}
+        </div>
 
         {searchOpen && (
-          <div className="hdr-mega-wrap">
-            <div className="hdr-mega hdr-search">
+          <div className="hdr-searchwrap">
+            <div className="hdr-search hdr-dd--anim">
               <div className="hdr-search-bar">
                 <IconSearch size={20} stroke={2} />
                 <input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Hledat produkt nebo službu…" />
@@ -342,10 +368,10 @@ export default function SiteHeader() {
                   results.length ? (
                     <>
                       <div className="hdr-search-lbl">Výsledky · {results.length}</div>
-                      <div className="hdr-mega-grid">
+                      <div className="hdr-search-grid">
                         {results.map((item) => (
                           <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={closeSearch}>
-                            <ProductIcon name={item.icon} />
+                            <ProductIcon name={item.icon} size={22} />
                             <span><b>{item.label}</b><small>{item.cat}</small></span>
                           </Link>
                         ))}
@@ -369,68 +395,41 @@ export default function SiteHeader() {
       </header>
 
       {/* ---- mobilný drawer ----
-          JEDEN pre všetky verzie lišty (user, 2026-08-11): dvojúrovňový akordeón,
-          kde prvá úroveň sú publiká - Jednotlivci a rodiny rozbaliť, Podnikatelé
-          odkaz na ich stránku, Města a obce rozbaliť. Varianty hlavičky riešia
-          šírku desktopovej lišty; na mobile žiadna šírka nie je, takže nemali čo
-          porovnávať - len robili z jednej navigácie dve.
-          Riadok je celý, preto plné názvy. */}
-      <div className={`hdr-drawer ${drawer ? 'open' : ''}`}>
+          Najprv pre koho, potom čo - rovnaké poradie ako na desktope. */}
+      <div className={`hdr-drawer ${drawer ? 'open' : ''}`} ref={drawerRef}>
         <div className="hdr-drawer-in">
+          {/* Prepínač publika tu UŽ NIE JE (user, 2026-08-16): stojí natrvalo
+              v hornom páse, aj na telefóne. Publikum mení celý web, takže sa
+              človek nemá dozvedieť až po otvorení menu, v akej verzii je -
+              a dva ovládače na tú istú vec by zdieľali jeden stav. */}
           <button className="hdr-mfield" onClick={() => { setDrawer(false); setSearchOpen(true) }}><IconSearch size={22} stroke={2} /> Hledat…</button>
 
           <div className="hdr-acc">
-            {SEGMENTS.map((s) => {
-              // Podnikatelé nie sú akordeón - vedú na stránku, presne ako
-              // v lište a v bočnom paneli na desktope.
-              if (s.key === BIZ_KEY) {
-                return (
-                  <Link key={s.key} className="hdr-acc-row hdr-acc-seg hdr-acc-link" to={BIZ} onClick={closeDrawer}>
-                    {s.label}
-                    <IconChevronRight className="hdr-acc-ch" size={20} stroke={2} />
-                  </Link>
-                )
-              }
-              const open = mseg === s.key
-              const body = (
-                <div className="hdr-acc-sub2">
-                  {CATS.map((c) => (
-                    <div key={c.key}>
-                      <button
-                        className={`hdr-acc-row ${acc === c.key ? 'open' : ''}`}
-                        aria-expanded={acc === c.key}
-                        onClick={() => setAcc(acc === c.key ? null : c.key)}
-                      >
-                        {c.label}
-                        <IconChevronDown className="hdr-acc-ch" size={20} stroke={2} />
-                      </button>
-                      {acc === c.key && (
-                        <div className="hdr-acc-sub">
-                          {/* zoznam, nie mriežka - produkty idú pod sebou na plnú šírku */}
-                          {MENU[s.key][c.key].map((item) => (
-                            <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={closeDrawer}>
-                              <ProductIcon name={item.icon} />
-                              <span><b>{item.label}</b></span>
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )
-
+            {CATS.map((c) => {
+              const items = itemsFor(seg, c.key)
+              if (!items.length) return null
+              const open = acc === c.key
               return (
-                <div key={s.key}>
+                <div key={c.key}>
                   <button
                     className={`hdr-acc-row hdr-acc-seg ${open ? 'open' : ''}`}
                     aria-expanded={open}
-                    onClick={() => { setMseg(open ? null : s.key); setAcc(null) }}
+                    onClick={() => setAcc(open ? null : c.key)}
                   >
-                    {s.label}
+                    {c.label}
                     <IconChevronDown className="hdr-acc-ch" size={20} stroke={2} />
                   </button>
-                  {open && body}
+                  {open && (
+                    <div className="hdr-acc-sub">
+                      {/* zoznam, nie mriežka - produkty idú pod sebou na plnú šírku */}
+                      {items.map((item) => (
+                        <Link className="hdr-item" key={item.label} to={routeFor(item.label)} onClick={closeDrawer}>
+                          <ProductIcon name={item.icon} size={22} />
+                          <span><b>{item.label}</b></span>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )
             })}
@@ -441,8 +440,8 @@ export default function SiteHeader() {
             <Link to="/kontakt" onClick={closeDrawer}>Kontakt</Link>
           </div>
           <div className="hdr-mfoot">
-            <Link to="/vozidla" className="hdr-claim" onClick={closeDrawer}><IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span></Link>
-            <button className="hdr-mua" aria-label="Můj Allrisk"><IconUser size={20} stroke={2} /><span>Můj Allrisk</span></button>
+            <Link to={CLAIM_TO} className="hdr-claim" onClick={closeDrawer}><IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span></Link>
+            <button className="hdr-mua"><IconUser size={20} stroke={2} /><span>Můj Allrisk</span></button>
           </div>
         </div>
       </div>

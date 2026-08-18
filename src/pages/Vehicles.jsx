@@ -10,19 +10,26 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
-import { TAB_VARIANTS, TAB_VARIANT_DEFAULT } from '../tabVariants.js'
+import { TAB_VARIANTS, TAB_VARIANT_DEFAULT, tabVariant } from '../tabVariants.js'
 import { BLOG_PROD_VARIANTS, BLOG_PROD_DEFAULT } from '../blogVariants.js'
-import HeaderDebug from '../components/HeaderDebug.jsx'
 import { ProductArticles } from '../components/ArticleParts.jsx'
 import { VEHICLE_CATS, PRODUCTS } from '../data/vehicles.js'
 // Modelové situácie ťaháme z klientských profilov - ten istý archetyp, ktorý má
 // vlastnú stránku /profil/:slug. Situácia „stala se nehoda" je doslova tá istá entita.
 import { situationsFor, countGen } from '../data/profiles.js'
+// Produkt je scopovaný na PUBLIKUM (user, 2026-08-12). Toto „Pojištění vozidel" je
+// produkt pre jednotlivcov a rodiny - firemné vozy majú vlastný produkt „Flotila
+// vozidel", ktorý stránku zatiaľ nemá. Preto sem nesmie prísť firemný archetyp:
+// Martin so skladom a dodávkou medzi štyrmi domácnosťami tvrdil, že je stránka
+// pre všetkých. Až dostane flotila vlastnú stránku, dostane aj vlastné `PAGE_SEG`.
+const PAGE_SEG = 'rodiny'
 import { SituationPanel, ProfileTabs } from '../components/ProfileParts.jsx'
 import { SecHead } from '../components/PageParts.jsx'
+import { Decor } from '../components/Decor.jsx'
+import { Line } from '../components/Line.jsx'
 import {
   IconShield, IconCarCrash, IconWindow, IconTool, IconRoute,
-  IconCircleCheck, IconArrowRight,
+  IconCircleCheck, IconArrowUpRight,
   IconChevronRight, IconCar, IconUser, IconUsers,
   IconBuildingCommunity, IconPaw, IconLock, IconHeadset,
   IconMotorbike, IconCaravan, IconTractor,
@@ -42,7 +49,8 @@ export default function Vehicles() {
   const [tab, setTab] = useState('povinne')
   const active = PRODUCTS.find((t) => t.key === tab)
   // vzhľad radu záložiek - rozpracovaná voľba, drží sa naprieč stránkami (aj na profile)
-  const [tabStyle, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
+  const [tabStyleRaw, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
+  const tabStyle = tabVariant(tabStyleRaw)
   // koľko miesta dostane blog na produktovej stránke - tiež rozpracovaná voľba
   const [blogStyle, setBlogStyle] = useDebugOption('blogProd', BLOG_PROD_DEFAULT)
   // Panel Podnikatelé je v hlavičke, teda na každej stránke; prepínač musí
@@ -53,7 +61,7 @@ export default function Vehicles() {
   // --- modelové situace: klientské profily na preklik ---
   // Zoznam ťaháme zo situácií k tomuto produktu, nie zo všetkých profilov: prepínač tak
   // nikdy neponúkne profil, ku ktorému by sa nemala z čoho vykresliť situácia.
-  const profiles = situationsFor('vozidla')
+  const profiles = situationsFor('vozidla', PAGE_SEG)
   const [profKey, setProfKey] = useState(profiles[0].profile.key)
   const picked = profiles.find((x) => x.profile.key === profKey) || profiles[0]
   const prof = picked.profile
@@ -68,6 +76,8 @@ export default function Vehicles() {
       <section className="hero veh-hero photo-hero">
         {/* foto vozu v modrom duotóne (foto vloží klient do public/vozidla/hero.jpg) */}
         <div className="photo-hero-bg veh-hero-bg" style={{ backgroundImage: `url(${asset('/vozidla/hero.jpg')})` }} aria-hidden="true" />
+        <Decor />
+        <Line pos="hero" />
         <div className="wrap hero-in veh-hero-in">
           {/* breadcrumb je súčasťou textového stĺpca, nie pás nad ním - rovnako ako na /profil */}
           <div className="hero-tx">
@@ -81,22 +91,25 @@ export default function Vehicles() {
             <div className="hero-cta">
               {/* na produkte sa hovorí o produktoch - „Co se jim stalo“ patrí profilu klienta,
                   kde je ten človek konkrétny; tu sú modelové situace prehľadom viacerých profilov */}
-              <a href="#veh-produkty" className="btn fill">Prohlédnout produkty <IconArrowRight size={18} stroke={2.2} /></a>
+              <a href="#veh-produkty" className="btn fill">Prohlédnout produkty <IconArrowUpRight size={18} stroke={2.2} /></a>
               <a href="#veh-modely" className="btn">Modelové situace</a>
             </div>
           </div>
+          {/* Ikona 24 a jeden riadok textu - ten istý prvok ako karty kontaktu
+              v modrom páse. Vysvetľujúca veta pod tvrdením je preč (user,
+              2026-08-16): v hero má karta uniesť jeden fakt, nie odstavec. */}
           <ul className="hero-points">
             <li>
-              <span className="hp-ic"><IconCar size={28} stroke={1.5} /></span>
-              <span className="hp-tx"><b>Náhradní vůz až na 20 dní zdarma</b><small>Abyste zůstali mobilní i během opravy vozu.</small></span>
+              <span className="hp-ic"><IconCar size={24} stroke={1.7} /></span>
+              <span className="hp-tx"><b>Náhradní vůz až na 20 dní zdarma</b></span>
             </li>
             <li>
-              <span className="hp-ic"><IconHeadset size={28} stroke={1.5} /></span>
-              <span className="hp-tx"><b>Oddělení likvidací 24/7, 365 dní</b><small>Škodu řešíme interně, kdykoliv ji nahlásíte.</small></span>
+              <span className="hp-ic"><IconHeadset size={24} stroke={1.7} /></span>
+              <span className="hp-tx"><b>Oddělení likvidací 24/7, 365 dní</b></span>
             </li>
             <li>
-              <span className="hp-ic"><IconRoute size={28} stroke={1.5} /></span>
-              <span className="hp-tx"><b>Služby autopůjčovny</b><small>Vše kolem vozu pod jednou střechou.</small></span>
+              <span className="hp-ic"><IconRoute size={24} stroke={1.7} /></span>
+              <span className="hp-tx"><b>Služby autopůjčovny</b></span>
             </li>
           </ul>
         </div>
@@ -213,7 +226,7 @@ export default function Vehicles() {
             <h3>Chcete si to ověřit přesně na vaši situaci?</h3>
             <p>Projděte si krytí s poradcem - ukážeme, co přesně potřebujete, bez zbytečného přeplácení i bez děr v krytí.</p>
           </div>
-          <Link to="/kontakt?tema=Pojištění vozidel" className="btn fill">Probrat s poradcem <IconArrowRight size={18} stroke={2.2} /></Link>
+          <Link to="/kontakt?tema=Pojištění vozidel" className="btn fill">Probrat s poradcem <IconArrowUpRight size={18} stroke={2.2} /></Link>
         </div>
       </section>
 
@@ -236,7 +249,6 @@ export default function Vehicles() {
       {/* rad záložiek je ten istý prvok ako v profile klienta - variant sa prepína
           na oboch stránkach naraz, aby sa dal porovnať v oboch kontextoch */}
       <DebugPanel>
-        <HeaderDebug />
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}

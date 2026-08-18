@@ -9,24 +9,33 @@ import { asset } from '../asset.js'
 import { useTabBar } from '../useTabBar.js'
 import {
   productHref, productLabel, productHasPage, PRODUCTS_META,
-  NEED_LABEL, NEED_META, needRank, groupByNeed,
+  NEED_META, needRank, groupByNeed,
 } from '../data/profiles.js'
-import { SOLVED_VARIANT_DEFAULT, SOLVED_COLOR_DEFAULT } from '../solvedVariants.js'
 import {
   IconHome, IconSofa, IconUmbrella, IconHeart, IconStethoscope, IconKey, IconPlane,
   IconChartLine, IconCoin, IconBuildingWarehouse, IconTruck, IconLicense, IconScale,
-  IconCar, IconBriefcase, IconArrowRight, IconCircleCheck, IconUser,
+  IconCar, IconBriefcase, IconArrowUpRight, IconCircleCheck, IconUser,
   IconFileText, IconSparkles,
   IconDroplet, IconHomePlus, IconGavel, IconBuildingHospital,
   IconWind, IconPaw, IconSchool, IconFirstAidKit, IconHeartbeat, IconWallet,
   IconSnowflake, IconGauge, IconTrendingDown, IconTrendingUp, IconLock,
   IconShieldCheck, IconThumbUp, IconBulb,
+  IconTool, IconBuildingFactory,
+  IconUserHeart, IconBuildingCommunity, IconBuildingBank, IconTrees,
 } from '@tabler/icons-react'
 
 // Kľúč ikony (z dát) -> tabler komponent. Dáta zostávajú bez Reactu.
 export const PROFILE_ICONS = {
   // archetypy
   user: IconUser, heart: IconHeart, briefcase: IconBriefcase, chart: IconChartLine, coin: IconCoin,
+  // samoživiteľka - dospelý s dieťaťom, aby sa dlaždica odlíšila od „Rodiny" (srdce)
+  // aj od „Sám za sebe" (postava); obec je budova úradu, nie ďalší človek
+  parent: IconUserHeart, town: IconBuildingCommunity, townhall: IconBuildingBank,
+  village: IconTrees,
+  // firemné archetypy - živnostník má nástroj (pracuje vlastníma rukama),
+  // výrobná firma halu. Kufrík zostáva podnikateľovi s tímom, aby sa tri
+  // firemné dlaždice vedľa seba dali rozoznať aj bez čítania.
+  tools: IconTool, factory: IconBuildingFactory,
   // produkty
   car: IconCar, home: IconHome, sofa: IconSofa, umbrella: IconUmbrella,
   stethoscope: IconStethoscope, key: IconKey, plane: IconPlane,
@@ -59,25 +68,43 @@ export function ProfileIllus({ img, ic }) {
   )
 }
 
-// Mriežka 4 profilov na landingu - dlaždica je odkaz na vlastnú stránku profilu.
+// Mriežka profilov na landingu - dlaždica je odkaz na vlastnú stránku profilu.
+// Počet stĺpcov ide do CSS ako premenná, nie ako trieda: publikum má tri
+// archetypy, „Nejste to úplně vy?" na detaile dva a pevná štvorica po nich
+// nechávala prázdne miesto, ktoré vyzerá ako chýbajúca dlaždica.
+//
+// Profil BEZ `slug` je dlaždica bez prekliku: je to portrét, nie vstup do stránky.
+// Tak stoja profily miest a obcí (user, 2026-08-12) - archetyp obce sa oplatí
+// ukázať, ale detailná stránka s modelovými situáciami k nemu zatiaľ nie je.
+// Nekreslí sa ani „Zobrazit profil": sľúbený preklik, ktorý nikam nevedie, je
+// horší než žiadny.
 export function ProfileCards({ profiles, className = '' }) {
   return (
-    <div className={`prof-cards ${className}`.trim()}>
-      {profiles.map((p) => (
-        <Link key={p.key} to={`/profil/${p.slug}`} className="story prof-card">
-          {/* ilustrácia ide edge-to-edge (rovnako ako foto modelu na produktovej stránke),
-              preto má dlaždica padding 0 a text vlastný odsadený blok */}
-          <ProfileIllus img={p.img} ic={p.ic} />
-          <span className="prof-card-tx">
-            <span className="ey">{p.ey}</span>
-            <b>{p.t}</b>
-            <p>{p.p}</p>
-            <span className="story-pick">
-              Zobrazit profil <IconArrowRight size={16} stroke={2.2} />
+    <div className={`prof-cards ${className}`.trim()} style={{ '--pc-n': Math.min(4, profiles.length) }}>
+      {profiles.map((p) => {
+        const body = (
+          <>
+            {/* ilustrácia ide edge-to-edge (rovnako ako foto modelu na produktovej stránke),
+                preto má dlaždica padding 0 a text vlastný odsadený blok */}
+            <ProfileIllus img={p.img} ic={p.ic} />
+            <span className="prof-card-tx">
+              <span className="ey">{p.ey}</span>
+              <b>{p.t}</b>
+              <p>{p.p}</p>
+              {p.slug && (
+                <span className="story-pick">
+                  Zobrazit profil <IconArrowUpRight size={16} stroke={2.2} />
+                </span>
+              )}
             </span>
-          </span>
-        </Link>
-      ))}
+          </>
+        )
+        return p.slug ? (
+          <Link key={p.key} to={`/profil/${p.slug}`} className="story prof-card">{body}</Link>
+        ) : (
+          <div key={p.key} className="story prof-card prof-card--flat">{body}</div>
+        )
+      })}
     </div>
   )
 }
@@ -172,7 +199,7 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
           {!toProduct
             ? 'Zobrazit profil'
             : productHasPage(situation.product) ? 'Zobrazit produkt' : 'Probrat s poradcem'}
-          <IconArrowRight size={18} stroke={2.2} />
+          <IconArrowUpRight size={18} stroke={2.2} />
         </Link>
       </aside>
     </div>
@@ -184,15 +211,13 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
 // dala prečítať až po položkách a rovnaké úrovne držala pri sebe len zhoda triedenia.
 // Dnes je delenie samotné rozloženie: úroveň je hlavička skupiny, položka pod ňu patrí.
 // Preto na karte NIE JE štítok - v skupine „Nutnost" by bol na každej karte ten istý.
-export function SolvedList({ items, variant = SOLVED_VARIANT_DEFAULT, colors = SOLVED_COLOR_DEFAULT }) {
+export function SolvedList({ items }) {
   const sorted = [...items].sort((a, b) => needRank(a.need) - needRank(b.need))
-  if (variant === 'puvodni') return <SolvedFlat items={sorted} />
-
   const groups = groupByNeed(sorted)
   return (
-    // počet skupín ide do CSS ako premenná - stĺpcový variant sa podľa nej rozloží
+    // počet skupín ide do CSS ako premenná - rozloženie sa podľa nej rozdelí
     // na 3 alebo 2 stĺpce podľa toho, či profil vôbec nejaké „Zvážit" má
-    <div className={`solved-m solved-${variant} solved-c-${colors}`} style={{ '--sgrp-n': groups.length }}>
+    <div className="solved-m" style={{ '--sgrp-n': groups.length }}>
       {/* Hlavička nesie IBA ikonu, názov úrovne a preklad do bežnej reči.
           Počet položiek ani poradové číslo tu zámerne nie sú - poradie aj množstvo
           človek vidí priamo z toho, čo je pod hlavičkou, a v troch hlavičkách nad sebou
@@ -218,25 +243,6 @@ export function SolvedList({ items, variant = SOLVED_VARIANT_DEFAULT, colors = S
             ))}
           </div>
         </section>
-      ))}
-    </div>
-  )
-}
-
-// Pôvodný jednostĺpcový zoznam so štítkom naliehavosti na riadku - ostáva ako
-// porovnávacia hladina v ladiacom paneli, aby sa maticové varianty mali proti čomu merať.
-function SolvedFlat({ items }) {
-  return (
-    <div className="solved">
-      {items.map((it) => (
-        <Link key={it.product} to={productHref(it.product)} className="solved-item">
-          <span className="solved-ic"><Icon name={PRODUCTS_META[it.product]?.icon} size={22} stroke={1.6} /></span>
-          <span className="solved-tx">
-            <b>{productLabel(it.product)}</b>
-            <small>{it.note}</small>
-          </span>
-          <span className={`solved-need ${it.need}`}>{NEED_LABEL[it.need]}</span>
-        </Link>
       ))}
     </div>
   )

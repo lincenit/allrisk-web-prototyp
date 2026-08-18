@@ -11,17 +11,27 @@ import { numbers } from './company.js'
 // a nemá zmysel ich písať znova, keby sa vrátili.
 
 // Sedem tvrdení zo strany 6 brožúry. Prvé je v tlači vysadené inak (je to
-// zastrešujúci sľub, nie jeden z radu) - preto `lead: true`.
-// `icon` je kľúč do mapy v Business.jsx; ikony nepatria do dát, lebo tie
+// zastrešujúci sľub, nie jeden z radu) - preto `lead: true`. Na webe je z neho
+// od 2026-08-16 VETA SEKCIE, nie karta: nadpis, veta pod ním aj tá karta
+// hovorili ten istý sľub trikrát za sebou.
+// `icon` je kľúč do mapy v BizCare.jsx; ikony nepatria do dát, lebo tie
 // isté texty môže použiť aj iná stránka s iným vizuálom.
+// DVE ZNENIA POPISU (2026-08-17, user: „skús poskracovať subtexty kartičiek"):
+//   desc  - plný prepis z tlače. NEMAZAŤ, je to zdroj a inde sa môže hodiť.
+//   short - jedna veta do dlaždice na úvode. V tlači má karta celý odstavec,
+//           na webe stojí šesť dlaždíc vedľa seba a šesť odstavcov naraz je
+//           stena textu - dlaždica má povedať tvrdenie, nie ho vysvetliť.
+// Vypisuje sa `short`; keby chýbal, komponent siahne po `desc`.
+// Zastrešujúce tvrdenie (`lead: true`) `short` nemá - na úvode sa nevypisuje
+// vôbec (nadpis sekcie hovorí to isté).
 export const PRINCIPLES = [
   { key: 'partner', icon: 'partner', lead: true, label: 'Jsme váš osobní partner', desc: 'Máte jednoho odborníka, který zná vaši situaci, mluví srozumitelně a je vám k dispozici, když ho potřebujete.' },
-  { key: 'jistota', icon: 'check', label: 'Jistota správného rozhodnutí', desc: 'Neprodáváme produkty, ale pomáháme vám zvolit řešení, která dávají dlouhodobý smysl. Připravíme pojistný program na míru vašemu podnikání.' },
-  { key: 'opora', icon: 'opora', label: 'Opora při škodách', desc: 'V krizových situacích stojíme na vaší straně. Zastupujeme vás při likvidaci pojistných událostí a hájíme vaše zájmy.' },
-  { key: 'rizika', icon: 'rizika', label: 'Rozpoznání vašich rizik', desc: 'Díváme se na vaše podnikání v souvislostech. Identifikujeme klíčová rizika a navrhneme funkční ochranu, ne jen formální krytí.' },
-  { key: 'pece', icon: 'pece', label: 'Dlouhodobá péče', desc: 'Pojištěním spolupráce nekončí. Pravidelně aktualizujeme smlouvy a sledujeme změny trhu i vašeho podnikání.' },
-  { key: 'kvalita', icon: 'kvalita', label: 'Kvalita a hodnota', desc: 'Prověřujeme stávající smlouvy a hledáme lepší rozsah, podmínky i servis. Nehledáme nejlevnější řešení, ale nejlepší poměr cena/výkon.' },
-  { key: 'vyber', icon: 'vyber', label: 'Aktivní výběr řešení', desc: 'Před výročím smluv ověřujeme, zda je vaše pojištění stále tou nejlepší volbou.' },
+  { key: 'jistota', icon: 'check', label: 'Jistota správného rozhodnutí', short: 'Pojistný program na míru, ne ceník produktů.', desc: 'Neprodáváme produkty, ale pomáháme vám zvolit řešení, která dávají dlouhodobý smysl. Připravíme pojistný program na míru vašemu podnikání.' },
+  { key: 'opora', icon: 'opora', label: 'Opora při škodách', short: 'Škodu řešíme s pojistitelem za vás.', desc: 'V krizových situacích stojíme na vaší straně. Zastupujeme vás při likvidaci pojistných událostí a hájíme vaše zájmy.' },
+  { key: 'rizika', icon: 'rizika', label: 'Rozpoznání vašich rizik', short: 'Najdeme, co vaše podnikání skutečně ohrožuje.', desc: 'Díváme se na vaše podnikání v souvislostech. Identifikujeme klíčová rizika a navrhneme funkční ochranu, ne jen formální krytí.' },
+  { key: 'pece', icon: 'pece', label: 'Dlouhodobá péče', short: 'Smlouvy aktualizujeme, jak se firma mění.', desc: 'Pojištěním spolupráce nekončí. Pravidelně aktualizujeme smlouvy a sledujeme změny trhu i vašeho podnikání.' },
+  { key: 'kvalita', icon: 'kvalita', label: 'Kvalita a hodnota', short: 'Ne nejlevnější, ale nejlepší poměr cena/výkon.', desc: 'Prověřujeme stávající smlouvy a hledáme lepší rozsah, podmínky i servis. Nehledáme nejlevnější řešení, ale nejlepší poměr cena/výkon.' },
+  { key: 'vyber', icon: 'vyber', label: 'Aktivní výběr řešení', short: 'Před výročím ověříme, jestli je pořád nejlepší.', desc: 'Před výročím smluv ověřujeme, zda je vaše pojištění stále tou nejlepší volbou.' },
 ]
 
 // Päť krokov spolupráce (brožúra s. 8). Poradie je záväzné, čísla sa
@@ -87,7 +97,11 @@ export const ASSIST = [
 ]
 
 // Čo pre klienta zaisťuje vlastné Centrum likvidace (brožúra s. 15).
+// Prvá položka nesie to, čo do 2026-08-16 stálo ako veta nad zoznamom (rozdiel
+// oproti trhovému štandardu). User ju chcel v zozname, nie zvlášť - preto je
+// o niečo dlhšia než zvyšok. Položky sú JEDEN riadok, bez podtextu.
 export const CLAIMS = [
+  'Vlastní Centrum likvidace, ne jen základní asistence makléře',
   'Konzultace ještě před nahlášením události',
   'Vysvětlení postupu a přehled dokladů',
   'Oznámení pojistiteli na plnou moc',
@@ -123,7 +137,11 @@ export const PROOF = numbers('skody', 'pojistne', 'poradci', 'odRoku')
 
 // Následná péče (brožúra s. 12). Garant je hlavný argument, päť bodov je,
 // čo pre klienta reálne robí.
+// Garant je od 2026-08-16 PRVÁ POLOŽKA zoznamu, nie veta nad ním (user):
+// obsah tej vety sa presunul sem, aby sekcia nehovorila to isté dvakrát. Preto
+// je dlhšia než zvyšok. Položky sú JEDEN riadok, bez podtextu.
 export const AFTERCARE = [
+  'Přidělený odborný garant, který hlídá, aby pojištění odpovídalo situaci firmy',
   'Servisní schůzky a aktualizace smluv podle vývoje firmy',
   'Posouzení návazností dalších pojištění a doporučení úprav',
   'Průběžná analýza podmínek proti reálným potřebám',

@@ -103,7 +103,7 @@ components:
     backgroundColor: "{colors.allblue}"
     textColor: "#FFFFFF"
     rounded: "{rounded.btn}"
-    padding: "0 22px"
+    padding: "0 28px"
     height: "48px"
   button-primary-hover:
     backgroundColor: "{colors.allblue-hover}"
@@ -194,6 +194,8 @@ A confident, blue-dominant palette: one corporate blue carries identity across l
 
 **The Gradient-Is-The-Line Rule.** The colourful `grad-core` gradient (`#0021E5 → #01C7FF → #8806E4 → #571483`) is the brand's "Line" and appears only as a signature — the 22px lead rule on an eyebrow, the journey's step-progress bar, the animated hero stroke. The footer's top edge used to be on this list; it was dropped 2026-08-04 and the footer now meets the page with no rule at all. The blue-on-blue `grad-blue` is the *field* gradient for headers, heroes, and promo bands. Never swap their jobs.
 
+**The Two-Decorations Rule.** A blue field carries at most two graphic elements, and they are the two the print manual owns: the gradient **Line** and the white hairline **Rings** (see §5). Nothing else gets invented for a blue band — no dot grids, no noise, no floating shapes. White sections carry neither; there the eyebrow and the headline are the brand.
+
 **The Muted-Floor Rule.** `#6B7280` is the floor for any grey that carries text — placeholders and captions included. `#9CA3AF` looks like the natural "quiet" step and reads as elegant in a mockup, but it measures **2.54:1 on white** and fails AA everywhere it has ever been used for copy. If a grey feels too heavy, cut the text or shrink its role; do not lighten it past the floor.
 
 ## 3. Typography
@@ -233,16 +235,17 @@ Flat by default, with soft blue-tinted shadows that appear as a response to stat
 
 ### Buttons
 - **Shape:** gently rounded (12px, `--r-btn`), 48px tall (40px for `.btn-sm`), 1.5px transparent border reserved for outline variants, `cubic-bezier(.22,1,.36,1)` transitions.
-- **Primary:** solid AllBlue on white text (`0 22px` padding). Hover → `allblue-hover` `#0039A3`.
+- **Primary:** solid AllBlue on white text (`0 28px` padding, `--btn-px`; `--ctl-px` `22px` for the chrome scale). Hover → `allblue-hover` `#0039A3`.
 - **White:** white surface, AllBlue text — the primary CTA *on* blue/gradient grounds. Hover → `blue-50`.
 - **Outline:** transparent with AllBlue border and text; hover inverts to solid AllBlue. The secondary action.
 - **Ghost-on-dark:** transparent with a translucent-white border for use on gradient heroes; hover inverts to white.
-- **Claim (red):** the one AllRed button, 40px, 10px radius — report-an-event only (see The One Red Rule).
+- **Claim (red):** the one AllRed button, 40px, 10px radius, `0 22px` padding — report-an-event only (see The One Red Rule).
+- **Icon-only is a square.** Where the label is hidden and only the glyph shows (header search, account), width equals height — the item padding token must not apply, or the button becomes an oblong. Set the width explicitly and zero the inline padding.
 - **Arrow-link:** a text-only tertiary — AllBlue, 700 weight, with an arrow that slides 4px right on hover.
 
 ### Chips / Tags
 - **Style:** fully-rounded pills (`--r-pill`), 12px/600, `5px 12px` padding. Variants: `tag-blue` (solid AllBlue), `tag-soft` (`blue-50` on AllBlue), `tag-green`, `tag-red` — soft tint + matching text, never a coloured left stripe.
-- **Segment switch / tabs:** pill or 8–12px buttons; unselected = white with hairline border and slate text, selected = solid AllBlue with white text. Used in the mega-menu "Pro koho" switcher and product-category tabs.
+- **Segment switch / tabs:** pill or 8–12px buttons, `11px 20–22px` padding; unselected = white with hairline border and slate text, selected = solid AllBlue with white text. Used in the mega-menu "Pro koho" switcher and product-category tabs.
 
 ### Section Head
 Eyebrow → title → lead is one component (`SecHead`), not a shape retyped per page. The blue page-head on a subpage is the same block with an `h1` instead of an `h2`; only its colours change. Anything below the lead — a stat row, jump links — is passed as children so it inherits the same rhythm.
@@ -284,6 +287,61 @@ Every hero that carries a photograph (`/vozidla`, `/profil/:slug`, `/kontakt`, b
 
 ### Signature — The Line
 The brand's continuous gradient brushstroke, rendered as an inline SVG stroke that *draws* on load (`@keyframes draw` / `shimmer`, stroke-dashoffset animation) and respects `prefers-reduced-motion`. It appears once per composition as a hero/accent — the client's life journey — plus its miniature echoes: the eyebrow lead-rule and the footer's top edge. One line per view; it is never tiled or repeated as texture.
+
+In the prototype the Line arrives as artwork — prepared files in `/public/brand` — never as CSS geometry. Rules that survive whichever file carries it:
+
+- **Every hero and every banner (2026-08-16).** Until that date the rule was one ribbon per page and never over a photo; the client reversed it — the ribbon now sits on heroes exactly like the Rings, photo heroes included. It is still one per *band*, and white sections still get nothing. What made the 2026-08-12 photo test fail was opacity, not the photo: at `.16` over the balloon the stroke read as purple haze, while the artwork at full strength reads as brand.
+- **The video hero takes neither decoration.** Tried and dropped twice: the footage carries its own baked-in typography, so a fixed ribbon cuts straight through it, and a hairline over moving frames is a smudge. `/` gets its ribbon from the first flat band instead.
+- **It must overflow.** The ribbon is always wider than the band and gets clipped, so no band ever shows the whole shape. Any new blue band therefore needs `overflow: hidden`.
+
+**Placement (2026-08-16).** The artwork and its geometry both come from the live reality site (`allrisk-sites/sites/allrisk-reality`, `src/components/ui/hero-line.tsx`), copied bit-for-bit so the two sites carry the same ribbon rather than two similar ones. `<Line pos>` reproduces it: anchored to the band's **right edge**, natural aspect ratio (`width` + `height:auto`, never `cover`), so it is never stretched or cropped horizontally and overflows vertically instead. Two placements:
+
+| `pos` | Width | Vertical | Responsive |
+| --- | --- | --- | --- |
+| `hero` | 50 % | centred | `<1280` shifts a quarter right; `<1024` hangs off the top edge |
+| `banner` (default) | 75 % | bottom | `≥1024` centres instead |
+
+**No ribbon belongs to a place (2026-08-16).** Four files live in `/public/brand` — `line-1…4.png` — and they are interchangeable: any of the four may stand in any slot. The old `line-hero-*` / `line-banner-*` names claimed a tie between drawing and band type that never existed, so the set was renumbered and the call-site stopped naming a file. `<Line>` picks one itself, and since 2026-08-17 the pick is **re-rolled on every page load** — the client wants the site to look slightly different each time it opens. The same now goes for the Rings: `<Decor>` takes no filename either and rotates through the four canvases. Retired in the same pass: three near-duplicates of the same looping stroke, plus `line-home.png`, which was a knot of three overlapping strokes rather than one gesture. Masters of the whole set stay in `brand-identity/graphics`.
+
+**This is not how the Rings are placed**, which is why the two cannot share a component. Rings are a canvas over the whole band that clips itself; the Line is an object hung on one edge that relies on the band's own `overflow`.
+
+### Signature — The Rings
+The second graphic element of the print manual, and the only other decoration allowed on a blue field. A ring is a **concentric pair of 1px white hairlines** — *not* a filled band. The space between the two hairlines stays exactly the ground colour; the "band" is created by the gap alone, and it is about as thick as the Line's ribbon.
+
+Measured from `profilspolecnosti.pdf` p. 9 at 150 dpi:
+
+| Property | Print value |
+| --- | --- |
+| Stroke | 1px white, alpha ≈ `.11` (≈ `.15` on screen — a 1px hairline fades faster on a monitor than on paper) |
+| Radius ratio inner : outer | `0.784` (r 21.8 % and 27.8 % of page width) |
+| Band thickness | 6 % of page width ≈ 18 mm, vs. ~14 mm for the Line |
+| Diameter | Larger than the frame — arcs, not circles |
+
+Rules, whichever file carries them:
+
+- **Every blue band may take rings; only one gets the Line.** Rings are the quiet default; the ribbon is the accent.
+- **Never the whole circle.** Diameters run 30–74 % of the band's width with centres pushed to or past the edges, so what shows is an arc. A ring small enough to close inside the band has failed.
+- **Varied opacity is the point.** Each ring carries its own alpha; a set of equally-weighted rings reads as a pattern, which this is not.
+- **Blue ground only.** Rings never appear on white or `#F8F9FA` sections.
+
+### Decoration is a file, not code
+Neither signature is derived at runtime. A blue band takes **one artwork file** from `/public/brand/decor`, laid over it by `<Decor>` — an `<img>` at `inset: 0`, `object-fit: cover`, **100 % of the band and 100 % opacity**. Which of the four canvases it gets is drawn at random per page load (`src/components/decorPick.js`); only the *choice* is code, never the drawing. The code sets no size, no offset and no alpha: everything visual is baked into the file, so a canvas carrying the rings *and* the ribbon together drops straight in as one layer. The arrangement changes by **replacing a file, never by editing CSS**.
+
+Three consequences when authoring a file:
+
+- **Artboard ratio ≈ band ratio.** `cover` keeps the scale (a circle stays a circle) and crops the surplus, so a canvas far off the band's proportions loses exactly the edges the artwork sits on. Measured on desktop: hero ≈ 3.1–4.1, page head ≈ 3.2–4.6, `.wrap` banner ≈ 4.0, contact band ≈ 2.1.
+- **Bake the alpha in.** The `.11–.15` hairline and the ribbon's haze belong in the export, not in a CSS token.
+- **Mobile needs no separate file.** On a narrow band `cover` zooms in, which enlarges the arcs on its own.
+
+SVG beats PNG for the rings: `vector-effect="non-scaling-stroke"` holds the stroke at 1px in any width of band, where a scaled PNG goes soft — and the hairline is the whole point. For the ribbon, whose gradient is painterly, PNG is right.
+
+**Status 2026-08-16: both signatures are placed.** Rings sit on **every blue field on the site** — every hero and page head, photo or not, plus the `/o-nas` banners, the banners on `/` and `/blog`, and the shared contact band. Each page carries exactly one ribbon: on the ribbon's own band where the page has one, otherwise on its contact band via `<ContactBand line="…">`.
+
+**Rings go over a photo hero; the ribbon does not.** The photograph and its blue tint stay exactly as they are and the rings are simply one more layer on top — `.decor` sits at `z-index: 1`, after `.photo-hero::before` in the tree, so it paints above the tint and below the type. Nothing about the photo recipe changes. The ribbon is the opposite case: over a photograph it reads as haze rather than as brand (tried on the `/o-nas` balloon hero at `.16`, rejected 2026-08-12), so a photo hero takes rings only and its page's ribbon lives further down. `PageHero` encodes both halves — `<Decor>` unconditionally, `<Line>` only in the `!photo` branch.
+
+**The video hero takes nothing.** The homepage `.wf-hero` is moving footage; a hairline over it would be a smear, and the video is already the page's signature moment.
+
+**Watch for `> *` rules on a band.** `.site .ab-band > *` used to set `position:relative` on every child, which matches `.decor` at equal specificity and — because page CSS loads after `index.css` — silently dropped the canvas back into the flow as an ordinary image. It is now scoped with `:not(.decor):not(.decor-line)`. Any new band rule that styles all children needs the same exclusion.
 
 ## 6. Do's and Don'ts
 

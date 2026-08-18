@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom'
 // nová stránka pri každom prekliku najprv odrolovala zdola nahor. Plynulý scroll
 // tak ostáva len tam, kam patrí: pri kotvách v rámci jednej stránky.
 //
-// Výnimka pre kotvu: odkaz typu /podnikatele#garant mieri DOVNÚTRA stránky, ktorá
+// Výnimka pre kotvu: odkaz typu /#spoluprace mieri DOVNÚTRA stránky, ktorá
 // sa práve montuje. Prehliadač na hash sám neskočí (router mení históriu, nie
 // dokument) a tento efekt by ho aj tak prebil skokom na začiatok. Cieľ preto
 // hľadáme až po vykreslení - requestAnimationFrame stačí, sekcie sú v prvom

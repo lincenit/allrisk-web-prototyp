@@ -1,192 +1,44 @@
 /* ============================================================
-   MegaMenu - produktový panel jedného segmentu: hlavička s publikom
-   a pod ňou štyri stĺpce na plnú šírku.
-   Rám a tieň držia spec z DESIGN.md §5 (18px rádius pre mega-menu,
-   hlboký navy tieň).
+   MegaMenu - panel JEDNEJ obchodnej línie (viď MegaMenu.jsx). Veľký panel
+   „Produkty" (`.mm--all`, štyri stĺpce) odišiel 2026-08-12 s verziou hlavičky
+   `jeden`, ku ktorej patril - v gite ho nájdeš.
    ============================================================ */
 
-/* Šírka sa riadi obsahom, nie zvykom:
-   1020  katalóg bez bočného panelu - 4 stĺpce po ~216px, akurát na názvy
-   +140  bočný panel s prepínačom, keď je hlavička vo verzii „přepínač" */
-.mm{
-  pointer-events:auto;
-  width:min(1020px,calc(100vw - 32px));
-  background:var(--box);
-  border:1px solid var(--l);
-  border-radius:18px;
-  box-shadow:0 30px 60px -28px rgba(13,31,91,.45);
-  overflow:hidden;
-}
-.mm--rail{width:min(1160px,calc(100vw - 32px));}
-.mm-body{display:grid;grid-template-columns:256px minmax(0,1fr);}
-.mm-main{min-width:0;}
+/* Zaoblený zo VŠETKÝCH strán, aj hore (user, 2026-08-12) - je to karta, a karta
+   má rovnaké rohy dokola. Do 2026-08-12 dosadal flush pod pás (bez horného rámu,
+   zaoblený len dole), aby vyzeral z hlavičky vysunutý; celý rádius je čitateľnejší
+   a panel aj tak zostáva prilepený na pás, takže sa neodtrhne od svojej línie.
 
-/* ikona: v menu bez modrého štvorčeka, len ťah */
-.mm .hdr-ic{width:auto;height:auto;background:transparent;border-radius:0;flex:none;display:inline-flex;}
-.mm .hdr-ic svg{stroke:var(--blue);}
+   288px je najužšia šírka, v ktorej sa „Likvidace pojistných událostí" vojde
+   na jeden riadok aj s ikonou. Podnikatelia majú v Pojištění dvanásť položiek
+   - `max-height` z výšky okna a scroll vnútri, nech panel nikdy nekončí pod
+   spodnou hranou obrazovky. */
+/* Panel visí z TLAČIDLA, ale dosadá na spodnú hranu hlavičky - preto sa
+   k `top:100%` pripočíta odsadenie spodného pásu (`--hdr-bar-pb`). Bez neho
+   by od zmenšenia tlačidiel línií končil o kus vyššie a prekryl by pás. */
+.mm{position:absolute;top:calc(100% + var(--hdr-bar-pb,0px));left:0;z-index:110;
+  width:288px;max-height:calc(100vh - var(--hdr-h) - 24px);overflow-y:auto;
+  background:var(--box);border:1px solid var(--l);
+  border-radius:var(--r-card);
+  box-shadow:0 24px 48px -20px rgba(13,31,91,.34);
+  padding:8px;}
+/* Posledné dve línie stoja pri pravej hrane obsahu - panel zarovnaný zľava by
+   im vytiekol z okna. */
+.hdr-navitem:nth-last-child(-n+2) .mm{left:auto;right:0;}
+/* Nad foto-hero je pás priehľadný, takže panel nemá na čo dosadnúť - tam sa
+   od hlavičky odlepí o 8px a stojí ako samostatná karta. Rám aj rádius má
+   dokola už z pravidla vyššie. */
+.hero-hdr:not(.hero-hdr-solid) .mm{margin-top:8px;}
 
-/* ============================================================
-   HLAVIČKA PANELU
-   Jediný riadok, ktorý povie, čie je to publikum. Nie je to ozdoba:
-   label v lište je skrátený („Rodiny" zamlčí jednotlivcov), tu sa to
-   dopovie. Pás je svetlý, nie modrý - modrá plocha v tejto veľkosti
-   ťahala pozornosť na text, ktorý sa nedá kliknúť.
-   ============================================================ */
-/* Vo verzii s prepínačom hlavička nie je - publikum pomenúva bočný panel. */
-.mm-head{padding:18px 24px 16px;border-bottom:1px solid var(--l2);}
-/* Menu ide celé v Interi, bez Magistralu - display rez tu súťažil
-   s produktovými názvami. O stupeň nižšia veľkosť a vyššia váha, aby
-   nadpis držal rovnakú silu ako predtým Magistral 500. */
-.mm-head h2{
-  font-family:var(--sans);font-size:var(--fs-h3);font-weight:700;line-height:1.15;
-  letter-spacing:-.025em;color:var(--ink);margin:0;
-}
-.mm-head p{font-size:var(--fs-sm);line-height:1.55;color:var(--g600);margin:5px 0 0;}
-
-/* ============================================================
-   MODRÝ PANEL SO SEGMENTOM - len verzia hlavičky „přepínač".
-   Prepínače hore, popisok dole (margin-top:auto na .mm-side-tx). Panel je
-   vysoký ako obsah vedľa, takže titulok sadne na jeho spodok a tlačidlá
-   stoja na jednej linke s nadpismi stĺpcov.
-   ============================================================ */
-.mm-side{background:var(--blue-50);padding:24px 20px;display:flex;flex-direction:column;}
-.mm-side-tx{margin-top:auto;padding-top:28px;}
-/* Menu ide celé v Interi, bez Magistralu - display rez tu súťažil
-   s produktovými názvami. O stupeň nižšia veľkosť a vyššia váha, aby
-   nadpis držal rovnakú silu ako predtým Magistral 500. */
-.mm-side-h{
-  font-family:var(--sans);font-size:var(--fs-h3);font-weight:700;line-height:1.15;
-  letter-spacing:-.025em;color:var(--ink);margin:0;
-}
-/* žiadny spodný margin - popisok je posledný prvok panelu */
-.mm-side-p{font-size:var(--fs-sm);line-height:1.55;color:var(--g600);margin:10px 0 0;}
-
-/* Prepínače v tvare tlačidla (DESIGN.md §5: 12px rádius = --r-btn), na plnú
-   šírku panelu. Neaktívny je biele tlačidlo, aktívny plná modrá: blue-50 už
-   nesie plocha panelu aj hover riadku. Hover je plochý - tieň by tlačidlá
-   nadvihol nad panel, a to je prepínač v ploche, nie plávajúca karta. */
-.mm-tags{display:flex;flex-direction:column;gap:8px;}
-.mm-tags button{
-  border:0;background:#fff;cursor:pointer;width:100%;
-  border-radius:var(--r-btn);padding:12px 14px;
-  font-family:inherit;font-size:var(--fs-sm);font-weight:600;color:var(--g700);text-align:left;
-  transition:background .18s,color .18s;
-}
-/* Podnikatelé nie sú záložka, ale odkaz na vlastnú stránku. Vyzerá ako
-   ostatné položky stĺpca, aby rad nedrobil, a odlišuje ho len šípka odsunutá
-   doprava - príznak „odídeš odtiaľto", nie ďalší tvar. */
-.mm-tag-link{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-  background:#fff;border-radius:var(--r-btn);padding:12px 14px;
-  font-size:var(--fs-sm);font-weight:600;color:var(--g700);text-decoration:none;
-  transition:background .18s,color .18s;
-}
-/* Šípka nemá vlastnú farbu ani pohyb - dedí currentColor, takže sa mení
-   spolu s textom a v pokoji aj na hoveri je to jeden celok. Modrá šípka nad
-   sivým textom robila z ovládacieho prvku dve veci. */
-.mm-tag-link svg{flex:none;}
-.mm-tag-link:hover{color:var(--blue);}
-
-.mm-tags button:hover{color:var(--blue);}
-.mm-tags button.on{background:var(--blue);color:#fff;}
-.mm-tags button.on:hover{background:var(--blue-800);color:#fff;}
-
-/* ============================================================
-   PUBLIKÁ AKO KARTY - len verzia hlavičky „karty".
-   Prvý riadok panelu namiesto úzkeho bočného stĺpca: publikum je prvé,
-   čo v paneli vidno, a karta unesie aj jeho popis. Neaktívna karta je biela
-   s rámom, aktívna plná modrá - blue-50 nesie hover produktového riadku
-   a ako výplň by sa s ním zliala.
-
-   Bez sivého podkladu a bez deliacej čiary pod radom (user, 2026-08-11):
-   dve plochy nad sebou robili z panelu dve stránky a názvy publík sa v tom
-   strácali. Rad teraz oddeľuje od katalógu len medzera - a nesie ho veľkosť
-   názvu, ktorý je o stupeň nad nadpismi stĺpcov (17,5 proti 16). Je to prvá
-   úroveň panelu, takže nesmie byť drobnejšia než druhá.
-   ============================================================ */
-.mm-cards{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;
-  padding:24px 24px 4px;
-}
-.mm-card{
-  display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;
-  background:#fff;border:1px solid var(--l);border-radius:var(--r-btn);padding:15px 17px;
-  font-family:inherit;cursor:pointer;text-decoration:none;
-  transition:background .18s,border-color .18s,color .18s;
-}
-.mm-card b{display:flex;align-items:center;gap:8px;font-size:var(--fs-card);font-weight:700;
-  letter-spacing:-.015em;line-height:1.2;color:var(--ink);}
-.mm-card small{font-size:var(--fs-sm);line-height:1.45;color:var(--g500);}
-/* Šípka dedí currentColor rovnako ako v bočnom paneli - odkaz a záložka
-   sa líšia príznakom „odídeš odtiaľto", nie vlastnou farbou. */
-.mm-card svg{flex:none;}
-.mm-card:hover{border-color:var(--blue);}
-.mm-card:hover b{color:var(--blue);}
-.mm-card.on{background:var(--blue);border-color:var(--blue);}
-.mm-card.on b,.mm-card.on small{color:#fff;}
-
-/* ============================================================
-   STĹPCE
-   Stĺpce nedelia linky - drží ich medzera. Musí byť výrazne širšia
-   než presah hover-plochy položky (margin-inline:-10px), inak sa
-   plochy susedných stĺpcov takmer dotýkajú a kategórie pôsobia
-   natlačené na seba.
-   ============================================================ */
-.mm-cols{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:0 36px;padding:24px 24px 26px;align-items:start;
-}
-.mm-col{min-width:0;}
-.mm-colgrp + .mm-colgrp{margin-top:28px;}
-
-/* Názvy kategórií sú o stupeň väčšie než položky pod nimi (16 proti 14),
-   aby v štyroch stĺpcoch bolo na prvý pohľad vidieť, kde stĺpec začína. */
-.mm-col h3{
-  font-family:var(--sans);font-size:var(--fs-body);font-weight:700;color:var(--ink);
-  letter-spacing:-.015em;margin:0 0 14px;
-}
-
-.mm-list{list-style:none;margin:0;padding:0;}
-.mm-list a{
-  display:flex;align-items:center;gap:10px;padding:8px 10px;margin-inline:-10px;
-  border-radius:10px;text-decoration:none;
-  font-size:var(--fs-sm);font-weight:500;line-height:1.3;color:var(--ink);
-  transition:background .15s,color .15s;
-}
-.mm-list a:hover{background:var(--blue-50);color:var(--blue);}
-
-/* ---------- fokus ---------- */
-.mm a:focus-visible,.mm button:focus-visible{
-  outline:2px solid var(--blue);outline-offset:2px;border-radius:10px;
-}
-
-/* ---------- pohyb ---------- */
-@keyframes mm-in{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:none;}}
-@keyframes mm-rise{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
-.mm{animation:mm-in .22s var(--ease) both;}
-.mm-cols > *{animation:mm-rise .3s var(--ease) both;}
-.mm-cols > *:nth-child(2){animation-delay:.04s;}
-.mm-cols > *:nth-child(3){animation-delay:.08s;}
-.mm-cols > *:nth-child(4){animation-delay:.12s;}
-
-@media(prefers-reduced-motion:reduce){
-  .mm,.mm-cols > *{animation:none;}
-}
-
-/* ---------- DOTYK ----------
-   Mega-menu beží aj na tabletoch na šírku (≥980px). Tam sa ovláda prstom,
-   takže zásah dvíhame na 44px bez zmeny desktopovej mierky. */
-@media(pointer:coarse){
-  .mm-list a{min-height:44px;}
-  .mm-tags button{min-height:44px;}
-}
-
-/* ---------- užšie desktopy ---------- */
-@media(max-width:1140px){
-  .mm-body{grid-template-columns:212px minmax(0,1fr);}
-  .mm-side{padding:20px 16px;}
-  .mm-head{padding:16px 20px 14px;}
-  /* rovnaké odsadenie ako stĺpce pod ním - inak rad kariet vyčnieva o 4px */
-  .mm-cards{padding:20px 20px 2px;}
-  .mm-cols{gap:0 26px;padding:20px;}
-}
+.mm-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;}
+/* Riadok, nie karta: karta v karte je vždy chyba a panel sám je tá karta.
+   Plocha 44px je zásah na myš aj na prst. */
+/* Rovnaké vodorovné odsadenie ako každá iná položka hlavičky - token drží
+   .hdr (SiteHeader.css), aby sa panel línie neodlíšil od rozbaľovačiek. */
+.mm-item{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 var(--hdr-item-px,16px);
+  border-radius:var(--r-btn);text-decoration:none;
+  font-family:var(--sans);font-size:var(--fs-sm);font-weight:500;color:var(--ink);
+  transition:background .15s,color .15s;}
+.mm-item svg{flex:none;width:22px;height:22px;stroke:var(--blue);}
+.mm-item:hover{background:var(--blue-50);color:var(--blue);}
+.mm-item:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;}

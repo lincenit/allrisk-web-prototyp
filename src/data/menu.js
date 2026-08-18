@@ -24,23 +24,30 @@ export const ICONS = {
   phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 5a2 2 0 012-2',
 }
 
-// primary = tri hlavné obchodné línie; zvyšok sú doplnkové služby (spodný pás menu).
+// Päť obchodných línií. Od 2026-08-11 je KAŽDÁ vlastnou položkou lišty (predtým
+// stĺpce v jedinom paneli „Produkty") - prvou úrovňou navigácie je publikum
+// v páse nad lištou a línie sú až to, čo si pod zvoleným publikom vyberáš.
+//   primary - tri hlavné línie. Dnes už nerozhoduje o rozložení panelu, ale
+//             o poradí a o tom, čo je jadro ponuky a čo nadstavba.
+//   lead    - veta v hlavičke panelu. Povie, čo je tá línia, skôr než sa človek
+//             pustí do zoznamu; pri „Allrisk EFFECTIVE" je to jediné miesto,
+//             kde sa dozvie, že ide o klubový projekt na prevádzkové náklady.
 export const CATS = [
-  { key: 'pojisteni', label: 'Pojištění', primary: true },
-  { key: 'reality', label: 'Reality', primary: true },
-  { key: 'finance', label: 'Finance', primary: true },
-  { key: 'servis', label: 'Klientský servis' },
-  { key: 'effective', label: 'Allrisk EFFECTIVE' },
+  { key: 'pojisteni', label: 'Pojištění', primary: true, lead: 'Krytí rizik, která by vás jinak stála vlastní peníze.' },
+  { key: 'reality', label: 'Reality', primary: true, lead: 'Prodej, nákup i nájem - papírování necháte na nás.' },
+  { key: 'finance', label: 'Finance', primary: true, lead: 'Úvěry, investice a účty srovnané napříč trhem.' },
+  { key: 'servis', label: 'Klientský servis', lead: 'To, co se děje po podpisu - hlavně když se něco stane.' },
+  { key: 'effective', label: 'Allrisk EFFECTIVE', lead: 'Klubový projekt na snížení provozních nákladů.' },
 ]
 
-// Segmenty sú od 2026-08-10 prvou úrovňou navigácie - každý má vlastné
-// tlačidlo v hlavičke namiesto bývalej jedinej položky „Produkty".
-//   short = label do lišty. Musí byť krátky: na navigáciu zostáva po logu
-//           a pravých akciách ~600px a plné názvy sa doň nezmestia.
-//   pro   = nadpis panelu. Dopovie to, čo sa do lišty nevošlo („Rodiny"
-//           samo o sebe zamlčuje jednotlivcov).
-//   icon  = kľúč ikony publika (mapuje ju SiteHeader). Prepínač publika v lište
-//           ňou dáva výber najavo aj bez čítania textu.
+// Segmenty sú prvou úrovňou navigácie - pás záložiek NAD lištou, presne ako na
+// allrisk.cz. Prepnutie nemení len menu, ale celý web pod ním (src/segment.js).
+//   short = skrátený label. Pás sa doň skladá pod 1180px, kde tri plné názvy
+//           spolu s utility napravo prestanú vychádzať.
+//   pro   = nadpis/eyebrow panelu a úvodu. Dopovie to, čo sa do záložky
+//           nevošlo („Rodiny" samo o sebe zamlčuje jednotlivcov).
+//   icon  = kľúč ikony publika (mapuje ju SiteHeader). V mobilnom prepínači
+//           dáva výber najavo aj bez čítania textu.
 export const SEGMENTS = [
   { key: 'rodiny', label: 'Jednotlivci a rodiny', short: 'Rodiny', pro: 'Pro jednotlivce a rodiny', icon: 'users', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
   { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', pro: 'Pro podnikatele a firmy', icon: 'briefcase', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
@@ -49,6 +56,13 @@ export const SEGMENTS = [
 
 // koľko služieb ponúkame danému segmentu (číslo v hlavičke menu)
 export const countFor = (seg) => CATS.reduce((n, c) => n + (MENU[seg]?.[c.key]?.length || 0), 0)
+
+// Publikum podľa kľúča. Nikdy nevracia undefined: kľúč môže prísť z localStorage
+// z minulej návštevy a hlavička by potom čítala `.label` z ničoho.
+export const segmentBy = (key) => SEGMENTS.find((s) => s.key === key) || SEGMENTS[0]
+// Položky jednej línie pre zvolené publikum. Prázdne pole namiesto pádu - línia
+// bez položiek sa v lište nemá čím otvoriť a header sa na to pýta.
+export const itemsFor = (seg, cat) => MENU[seg]?.[cat] || []
 
 const it = (label, icon, desc) => ({ label, icon, desc })
 

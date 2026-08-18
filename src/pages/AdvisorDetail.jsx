@@ -7,7 +7,7 @@ import { ReferenceCard } from '../components/References.jsx'
 import { REFERENCES } from '../data/references.js'
 import { advisorBySlug, branchBySlug, initials } from '../data/branches.js'
 import {
-  IconMapPin, IconPhone, IconMail, IconArrowRight, IconMessage,
+  IconMapPin, IconPhone, IconMail, IconArrowUpRight, IconMessage,
   IconChecklist, IconStar, IconSend,
 } from '@tabler/icons-react'
 
@@ -32,7 +32,7 @@ export default function AdvisorDetail() {
         <section className="wrap notfound">
           <h1>Poradce nenalezen</h1>
           <p>Tohoto poradce se nám nepodařilo najít.</p>
-          <Link to="/kontakt" className="btn fill">Zpět na kontakty <IconArrowRight size={18} stroke={2.2} /></Link>
+          <Link to="/kontakt" className="btn fill">Zpět na kontakty <IconArrowUpRight size={18} stroke={2.2} /></Link>
         </section>
         <SiteFooter />
       </div>

@@ -8,33 +8,29 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
-import HeaderDebug from '../components/HeaderDebug.jsx'
-import { TAB_VARIANTS, TAB_VARIANT_DEFAULT } from '../tabVariants.js'
-import {
-  SOLVED_VARIANTS, SOLVED_VARIANT_DEFAULT, SOLVED_COLORS, SOLVED_COLOR_DEFAULT,
-} from '../solvedVariants.js'
-import { PROFILES, profileBySlug, situationCount } from '../data/profiles.js'
+import { TAB_VARIANTS, TAB_VARIANT_DEFAULT, tabVariant } from '../tabVariants.js'
+import { profilesFor, profileBySlug, situationCount } from '../data/profiles.js'
+import { useSegmentPage } from '../segment.js'
 import { ProfileIllus, ProfileCards, SituationPanel, SolvedList, iconFor } from '../components/ProfileParts.jsx'
 import { SecHead } from '../components/PageParts.jsx'
-import {
-  IconArrowRight, IconChevronRight, IconLayoutNavbar, IconLayoutColumns, IconPalette,
-} from '@tabler/icons-react'
+import { Decor } from '../components/Decor.jsx'
+import { Line } from '../components/Line.jsx'
+import { IconArrowUpRight, IconChevronRight, IconLayoutNavbar } from '@tabler/icons-react'
 
 export default function ProfileDetail() {
   const { slug } = useParams()
   const p = profileBySlug(slug)
   useHeroHeader(!!p)
+  // Profil JE publikum - kto sem príde z vyhľadávača, nemá dôvod ešte niečo
+  // prepínať a pás v hlavičke by inak tvrdil niečo iné, než čo má pred sebou.
+  // Musí stáť nad vetvou „profil nenalezen": hook sa nesmie volať podmienene.
+  useSegmentPage(p?.seg)
   // V stave je kľúč situácie, nie poradie - „Nejste to úplně vy?" prepne slug na tej istej
   // stránke a index by potom ukazoval na cudziu situáciu. Kľúč, ktorý profil nemá, padne na prvú.
   const [sit, setSit] = useState('')
   // vzhľad radu záložiek - rozpracovaná voľba, drží sa naprieč stránkami (aj na /vozidla)
-  const [tabStyle, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
-  // rozloženie bloku „Co je dobré mít vyřešeno" - tiež rozpracované, drží sa medzi profilmi,
-  // lebo varianty sa dajú posúdiť až porovnaním rodiny (5 : 2 : 0) proti ostatným
-  const [solvedStyle, setSolvedStyle] = useDebugOption('solved', SOLVED_VARIANT_DEFAULT)
-  // farebná škála úrovní je zámerne SAMOSTATNÁ os od rozloženia - inak sa nedá povedať,
-  // či za dojmom stojí rozloženie alebo farba (semafor je zatiaľ návrh, viď profile.css)
-  const [solvedColors, setSolvedColors] = useDebugOption('solvedColors', SOLVED_COLOR_DEFAULT)
+  const [tabStyleRaw, setTabStyle] = useDebugOption('tabs', TAB_VARIANT_DEFAULT)
+  const tabStyle = tabVariant(tabStyleRaw)
 
   if (!p) {
     return (
@@ -42,7 +38,7 @@ export default function ProfileDetail() {
         <section className="wrap notfound">
           <h1>Profil nenalezen</h1>
           <p>Takový klientský profil u nás zatím nemáme.</p>
-          <Link to="/" className="btn fill">Zpět na úvod <IconArrowRight size={18} stroke={2.2} /></Link>
+          <Link to="/" className="btn fill">Zpět na úvod <IconArrowUpRight size={18} stroke={2.2} /></Link>
         </section>
         <SiteFooter />
       </div>
@@ -52,7 +48,8 @@ export default function ProfileDetail() {
   const active = p.situations.find((s) => s.key === sit) || p.situations[0]
   // ikona je komponent, nie hotový prvok - veľkosť si volí variant záložky
   const tabItems = p.situations.map((s) => ({ key: s.key, label: s.tab, icon: iconFor(s.ic) }))
-  const others = PROFILES.filter((x) => x.key !== p.key)
+  // Iné profily TOHO ISTÉHO publika: rodine nemá zmysel ponúkať výrobnú firmu.
+  const others = profilesFor(p.seg).filter((x) => x.key !== p.key)
 
   return (
     <div className="site">
@@ -64,6 +61,8 @@ export default function ProfileDetail() {
           style={{ backgroundImage: `url(${asset(p.photo)}), url(${asset('/kontakt/hero.jpg')})` }}
           aria-hidden="true"
         />
+        <Decor />
+        <Line pos="hero" />
         <div className="wrap hero-in prof-hero-in">
           {/* titulok nesie archetyp aj meno („Podnikatel Martin, 41 let“), popis osoby je rovno pod ním.
               Breadcrumb je súčasťou tohto stĺpca, nie samostatný pás nad ním - inak sa pri
@@ -83,7 +82,7 @@ export default function ProfileDetail() {
                 druhé znenie, inak človek po kliknutí nevie, či je tam, kam mieril */}
             <div className="hero-cta">
               <a href="#prof-situace" className="btn fill">
-                Proč je to dobré mít <IconArrowRight size={18} stroke={2.2} />
+                Proč je to dobré mít <IconArrowUpRight size={18} stroke={2.2} />
               </a>
               <a href="#prof-reseni" className="btn">Co je dobré mít vyřešeno</a>
             </div>
@@ -102,7 +101,7 @@ export default function ProfileDetail() {
           title={<>Co je dobré mít <b>vyřešeno</b></>}
           lead="Pro tenhle profil dává smysl tohle - rozdělené podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje."
         />
-        <SolvedList items={p.solved} variant={solvedStyle} colors={solvedColors} />
+        <SolvedList items={p.solved} />
       </section>
 
       {/* ============ 3 · PROČ JE TO DOBRÉ MÍT ============ */}
@@ -129,7 +128,7 @@ export default function ProfileDetail() {
       <section className="sec wrap">
         <SecHead title={<>Nejste to <b>úplně vy?</b></>} lead="Podívejte se na profil, který sedí líp." />
         {/* tie isté dlaždice ako na landingu - jeden komponent, žiadny druhý variant karty */}
-        <ProfileCards profiles={others} className="prof-cards-3" />
+        <ProfileCards profiles={others} />
       </section>
 
       <ContactBand />
@@ -137,18 +136,9 @@ export default function ProfileDetail() {
 
       {/* ten istý prepínač variantov ako na /vozidla - rad záložiek je tam aj tu ten istý prvok */}
       <DebugPanel>
-        <HeaderDebug />
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}
-        />
-        <DebugGroup
-          icon={IconLayoutColumns} label="Co mít vyřešeno" value={solvedStyle} onChange={setSolvedStyle} wrap
-          options={SOLVED_VARIANTS}
-        />
-        <DebugGroup
-          icon={IconPalette} label="Barvy úrovní" value={solvedColors} onChange={setSolvedColors} wrap
-          options={SOLVED_COLORS}
         />
       </DebugPanel>
     </div>

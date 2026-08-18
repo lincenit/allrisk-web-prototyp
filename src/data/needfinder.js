@@ -1,5 +1,8 @@
 // Potřebový rozcestník na landing page - dve úrovne.
-// 1. úroveň = „nákupný zámer" v prvej osobe (dlaždica), 2. úroveň = konkrétne produkty.
+// 1. úroveň = „nákupný zámer" (dlaždica), 2. úroveň = konkrétne produkty.
+// Zámer sa píše NEURČITKOM, nie „Chci…" (user, 2026-08-18): nadpis sekcie sa pýta
+// „Co právě řešíte?" a odpoveďou je sloveso, nie šesťkrát zopakované „Chci". Zostáva
+// to reč klienta („Pojistit se"), nie názov produktu („Pojištění") - o to tu ide.
 // Produkty držia rovnaké názvy ako mega-menu (data/menu.js), aby si klient po kliku
 // z rozcestníka a z menu prišiel na to isté.
 //
@@ -15,7 +18,7 @@ const p = (label, icon, desc, to) => ({ label, icon, desc, to })
 
 // Škoda nie je nákup - urgentná, neprodejná potreba, preto stojí mimo mriežky.
 export const NEED_CLAIM = {
-  t: 'Chci nahlásit škodu',
+  t: 'Nahlásit škodu',
   d: 'Škody likvidujeme sami - jeden kontakt od nahlášení až po výplatu.',
   to: '/kontakt?tema=Nahlásit škodu',
 }
@@ -26,7 +29,7 @@ export const NEED_CLAIM = {
 // likvidácie škody - tá stojí mimo mriežky v pásiku NEED_CLAIM, rovnako ako u rodín.
 export const NEED_MESTA = [
   {
-    key: 'obec', icon: 'building', t: 'Chci pojistit obec', accent: 'obec', d: 'Majetek, bytové domy i zastupitelé',
+    key: 'obec', icon: 'building', t: 'Pojistit obec', accent: 'obec', d: 'Majetek, bytové domy i zastupitelé',
     tema: 'Pojištění obce',
     lead: 'Od budov po odpovědnost za výkon funkce.',
     products: [
@@ -37,7 +40,7 @@ export const NEED_MESTA = [
     ],
   },
   {
-    key: 'provoz', icon: 'truck', t: 'Chci vyřešit provoz a vozový park', accent: 'provoz a vozový park', d: 'Vozidla, technika i energie',
+    key: 'provoz', icon: 'truck', t: 'Vyřešit provoz a vozový park', accent: 'provoz a vozový park', d: 'Vozidla, technika i energie',
     tema: 'Provoz obce',
     lead: 'To, co obec platí každý měsíc - levněji a bez starostí.',
     products: [
@@ -47,7 +50,7 @@ export const NEED_MESTA = [
     ],
   },
   {
-    key: 'finance', icon: 'bank', t: 'Chci spravovat finance obce', accent: 'finance obce', d: 'Účty, investice i kurzy',
+    key: 'finance', icon: 'bank', t: 'Spravovat finance obce', accent: 'finance obce', d: 'Účty, investice i kurzy',
     tema: 'Finance obce',
     lead: 'Volné prostředky, účty i platby do zahraničí.',
     products: [
@@ -63,7 +66,7 @@ export const NEED_MESTA = [
 // ---- jednotlivci a rodiny ----
 export const NEED_INTENTS = [
   {
-    key: 'pojisteni', icon: 'shield', t: 'Chci se pojistit', accent: 'pojistit', d: 'Auto, bydlení, rodina i cesty',
+    key: 'pojisteni', icon: 'shield', t: 'Pojistit se', accent: 'Pojistit', d: 'Auto, bydlení, rodina i cesty',
     tema: 'Pojištění',
     lead: 'Vyberte, co chcete chránit. Krytí i limity doladíme spolu.',
     products: [
@@ -78,7 +81,7 @@ export const NEED_INTENTS = [
     ],
   },
   {
-    key: 'uver', icon: 'bank', t: 'Chci úvěr', accent: 'úvěr', d: 'Hypotéka i spotřebitelský úvěr',
+    key: 'uver', icon: 'bank', t: 'Získat úvěr', accent: 'úvěr', d: 'Hypotéka i spotřebitelský úvěr',
     tema: 'Úvěry a hypotéky',
     lead: 'Srovnáme nabídky bank a vyjednáme podmínky za vás.',
     products: [
@@ -89,7 +92,7 @@ export const NEED_INTENTS = [
     ],
   },
   {
-    key: 'reality', icon: 'house', t: 'Chci koupit / prodat / pronajmout nemovitost', accent: 'nemovitost', d: 'Realitní služby i nájem bez rizika',
+    key: 'reality', icon: 'house', t: 'Koupit, prodat či pronajmout nemovitost', accent: 'nemovitost', d: 'Realitní služby i nájem bez rizika',
     tema: 'Reality',
     lead: 'Od odhadu ceny po podpis - papírování necháte na nás.',
     products: [
@@ -102,7 +105,7 @@ export const NEED_INTENTS = [
     ],
   },
   {
-    key: 'investice', icon: 'chart', t: 'Chci investovat', accent: 'investovat', d: 'Portfolio, spoření i penze',
+    key: 'investice', icon: 'chart', t: 'Investovat a spořit', accent: 'Investovat', d: 'Portfolio, spoření i penze',
     tema: 'Investice',
     lead: 'Podle cíle a horizontu - srozumitelně, bez žargonu.',
     products: [
@@ -114,7 +117,7 @@ export const NEED_INTENTS = [
     ],
   },
   {
-    key: 'energie', icon: 'bolt', t: 'Chci levnější energie / mobilní tarify', accent: 'levnější energie / mobilní tarify', d: 'Allrisk EFFECTIVE',
+    key: 'energie', icon: 'bolt', t: 'Ušetřit za energie a tarify', accent: 'energie a tarify', d: 'Allrisk EFFECTIVE',
     tema: 'Energie a tarify',
     lead: 'Trvalé úspory na tom, co platíte každý měsíc.',
     products: [
@@ -124,7 +127,7 @@ export const NEED_INTENTS = [
     ],
   },
   {
-    key: 'auto', icon: 'key', t: 'Chci si půjčit / pronajmout auto', accent: 'auto', d: 'Autopůjčovna a operativní leasing',
+    key: 'auto', icon: 'key', t: 'Půjčit si auto', accent: 'auto', d: 'Autopůjčovna a operativní leasing',
     tema: 'Autopůjčovna',
     lead: 'Na pár dní i na roky - s pojištěním i servisem v ceně.',
     products: [

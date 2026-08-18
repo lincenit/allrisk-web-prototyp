@@ -47,11 +47,36 @@ export const productLabel = (key) => PRODUCTS_META[key]?.label || key
 // true = produkt má vlastnú stránku (dnes vozidlá a flotily), takže CTA môže sľúbiť produkt
 export const productHasPage = (key) => hasRoute(PRODUCTS_META[key]?.label || key)
 
-// ---- 4 archetypy ----
+// ---- archetypy ----
 // need: 'nutnost' = bez toho to nedáva zmysel, 'doporuceno' = silne odporúčame, 'zvazit' = podľa situácie
+//
+// `seg` je publikum (src/segment.js). Od 2026-08-11 mení prepnutie záložky
+// v hlavičke celý web, takže sekcia profilov na úvode ukazuje len archetypy
+// zvoleného publika - Martin uprostred rodín bol dovtedy jediné miesto, kde
+// úvod pre domácnosti hovoril o firme.
+//
+// Města a obce profily od 2026-08-12 MAJÚ (user). Dovtedy tu stálo, že ich
+// nedostanú, lebo obec nie je archetyp človeka - platí to naďalej, a preto sú
+// obecné dlaždice bez prekliku a bez situácií: nesú veľkosť a starosti obce,
+// nie príbeh jedného človeka. Klikateľné sú len profily jednotlivcov a rodín.
+//
+// ILUSTRÁCIE: každý profil ju od 2026-08-15 má, ale niektoré sú PREVZATÉ.
+// Bezplatná vrstva Tabler.io dáva dokopy desať rôznych kresieb (sedem SVG
+// z galérie + tri PNG) a profilov je deväť, k tomu štyri dlaždice v BizCare
+// a tri v „Proč Allrisk" - na vlastnú kresbu pre každé miesto to nestačí.
+// Pravidlo, ktoré to drží: tá istá kresba smie stáť na dvoch miestach LEN
+// vtedy, keď sa nedajú vidieť naraz. Publikum je stav celého webu, takže
+// stránka pre rodiny, pre podnikateľov a pre obce sú tri rôzne obrazovky.
+// Rozdelenie po obrazovkách (overené proti WHY v home.js a BizCare.jsx):
+//   rodiny      singl=kocúr, rodina=nákup, samoživiteľka=fajka, penzia=dvojica
+//   podnikatelé podnikatel=žonglér, živnostník=monitor, výroba=žeriav
+//               + BizCare: fajka, dvojica, monitor-oprava, kľúč
+//   města       malá obec=kocúr, město=žonglér, svazek=nákup
+//               + WHY: žeriav, monitor, štít  + BizCare ako vyššie
+// Pri pridávaní profilu preto NAJPRV skontroluj, čo už na jeho obrazovke je.
 export const PROFILES = [
   {
-    key: 'singl',
+    key: 'singl', seg: 'rodiny',
     slug: 'sam-za-sebe',
     // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
     photo: '/profily/sam-za-sebe.jpg',
@@ -179,7 +204,7 @@ export const PROFILES = [
   },
 
   {
-    key: 'rodina',
+    key: 'rodina', seg: 'rodiny',
     slug: 'rodina',
     // foto pár ~38 s dvomi školákmi - presne tento zlúčený archetyp
     // (súbor sa volá po pôvodnom profile „rodina v nejlepších letech", obsah sedí)
@@ -324,7 +349,133 @@ export const PROFILES = [
   },
 
   {
-    key: 'podnikatel',
+    // Štvrtý archetyp domácností (user, 2026-08-12). Nie je to ďalšia veková
+    // priehradka medzi 38 a 63 - tá by opakovala produktovú skladbu rodiny.
+    // Samoživiteľka je jediný profil, kde JEDEN príjem drží celú domácnosť,
+    // takže „zabezpečení příjmu" a životné poistenie tu nie sú odporúčanie,
+    // ale prvá vec v poradí.
+    key: 'samozivitelka', seg: 'rodiny',
+    slug: 'samozivitelka',
+    // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
+    photo: '/profily/samozivitelka.jpg',
+    ic: 'parent',
+    // Ilustrácia je tá istá kresba, aká stojí na dlaždici „spolupráce" v BizCare
+    // (dospelý s dieťaťom a fajkou). Bezplatná galéria Tabler.io je vyčerpaná -
+    // overené znovu 2026-08-15, osem použiteľných kusov a všetky sú už v repe -
+    // a dvakrát sa zobraziť nemôžu: BizCare beží len MIMO segmentu „rodiny",
+    // samoživiteľka len v ňom. Keď sa kúpi platený balík, dostane vlastnú.
+    img: '/illus/tabler/stories/samozivitelka.svg',
+    ey: 'Samoživitelka',
+    t: 'Klára, 35 let',
+    p: 'Dvě děti a jeden příjem na všechno.',
+    lead: 'Nájem, dvě děti a jedna výplata. Nemá druhý příjem, který by zaskočil, a rezerva vydrží dva měsíce - takže výpadek není nepohodlí, ale problém.',
+    pts: [
+      'Zabezpečení příjmu jako první, ne jako doplněk',
+      'Životní pojištění nastavené kvůli dětem, ne kvůli úvěru',
+      'Odpovědnost za škody, které způsobí děti',
+    ],
+    intro: 'Vychovává dvě děti sama, pracuje na plný úvazek a rozpočet má spočítaný do koruny. Nejde o to, kolik toho má - jde o to, že za ni nikdo nezaskočí. Když vypadne ona, vypadne celá domácnost.',
+    solved: [
+      { product: 'prijem', need: 'nutnost', note: 'Denní dávka a měsíční renta při pracovní neschopnosti. Nemocenská pokryje zhruba polovinu výplaty, nájem se ale nesnižuje.' },
+      { product: 'zivot', need: 'nutnost', note: 'Pojistná částka nastavená podle toho, jak dlouho budou děti závislé na vašem příjmu, ne podle zůstatku úvěru.' },
+      { product: 'domacnost', need: 'nutnost', note: 'Vybavení bytu, elektronika a věci dětí. Kryje i vytopení a krádež, na které z jedné výplaty rezerva není.' },
+      { product: 'odpovednost', need: 'nutnost', note: 'Za škodu způsobenou dítětem odpovídá rodič. Rodinná varianta pokrývá vás i obě děti na jedné smlouvě.' },
+      { product: 'vozidla', need: 'doporuceno', note: 'U staršího auta dává smysl spíš asistence a skla než drahá havarijka. Důležité je, aby auto nikdy nezůstalo stát.' },
+      { product: 'investice', need: 'doporuceno', note: 'Nejdřív rezerva na tři měsíce nákladů, teprve pak dlouhodobé peníze. Malá pravidelná částka je lepší než čekání na lepší rok.' },
+      { product: 'pravni', need: 'zvazit', note: 'Spory o výživné, s pronajímatelem nebo se zaměstnavatelem. Advokáta i soudní poplatek platí pojištění.' },
+    ],
+    situations: [
+      {
+        key: 'samozivitelka-nemoc', ic: 'illness',
+        product: 'prijem', sub: 'Denní dávka při pracovní neschopnosti',
+        tab: 'Nemohla pracovat',
+        title: 'Zánět šlach na obou zápěstích ji vyřadil na čtyři měsíce',
+        story: 'Pracuje u pokladny, bez rukou to nejde. Nemocenská jí vyšla na 17 200 Kč měsíčně proti čisté mzdě 31 000 Kč. Samotný nájem je 15 500 Kč a děti chodí na obědy a kroužky.',
+        fix: [
+          'Denní dávka dorovnala rozdíl od 15. dne neschopnosti, ne až od třicátého.',
+          'Plnění chodilo měsíčně na účet, takže nájem ani obědy nikdy nevypadly.',
+          'Nesahala na rezervu, kterou má odloženou na havárie v domácnosti.',
+        ],
+        outcome: 'Za čtyři měsíce přišlo plnění 55 000 Kč. Děti nepoznaly, že se něco dělo.',
+      },
+      {
+        key: 'samozivitelka-vozidlo', ic: 'crash',
+        product: 'vozidla', sub: 'Technické asistence',
+        tab: 'Auto zůstalo stát',
+        title: 'Ráno před školkou nenaskočilo a odtah byl 40 km daleko',
+        story: 'Dvanáct let stará Fabia, kterou vozí děti do školy a jezdí na směny. Servis, který jí opravu udělá za rozumnou cenu, je v okresním městě - odtah tam by ji vyšel na 3 800 Kč.',
+        fix: [
+          'Asistence přijela do hodiny a vůz odtáhla do jejího servisu, ne do nejbližšího.',
+          'Náhradní vůz na tři dny, takže nevynechala ani jednu směnu.',
+          'Havarijku na dvanáct let staré auto jsme jí nesjednávali - u téhle ceny vozu se nevyplatí.',
+        ],
+        outcome: 'Zaplatila jen opravu. Odtah, náhradní vůz i dispečink stály 0 Kč.',
+      },
+      {
+        key: 'samozivitelka-skoda', ic: 'claim',
+        product: 'odpovednost', sub: 'Odpovědnost členů domácnosti',
+        tab: 'Dítě způsobilo škodu',
+        title: 'Dcera na koloběžce narazila do zaparkovaného auta',
+        story: 'Promáčknuté dveře a škrábanec přes celý bok, oprava 38 000 Kč. Majitel chtěl škodu uhradit do konce měsíce - částku, kterou Klára nemá odloženou.',
+        fix: [
+          'Za škodu způsobenou dítětem odpovídá rodič, pojištění odpovědnosti ji kryje.',
+          'Stačilo nahlásit škodu a doložit fotky, s majitelem i pojišťovnou jednalo oddělení Allrisk.',
+          'Rodinná varianta kryje ji i obě děti, bez připojištění za každé zvlášť.',
+        ],
+        outcome: 'Pojišťovna vyplatila 37 000 Kč, Klára doplatila spoluúčast 1 000 Kč.',
+      },
+      {
+        key: 'samozivitelka-vytopeni', ic: 'water',
+        product: 'domacnost', sub: 'Škoda vodou z vodovodního zařízení',
+        tab: 'Vytopili je shora',
+        title: 'Soused nad nimi nechal téct vodu a promáčel dětský pokoj',
+        story: 'Zničená podlaha, postel a psací stůl obou dětí. Byt má v nájmu, takže stavbu řeší majitel - vybavení uvnitř je ale její a nové postele stály 46 000 Kč.',
+        fix: [
+          'Pojištění domácnosti kryje vybavení i v nájemním bytě, nejen ve vlastním.',
+          'Vysoušeče zajistila asistenční služba, nemusela shánět firmu sama.',
+          'Nárok na sousedovu pojišťovnu jsme uplatnili my, ona neřešila ani jeden telefonát.',
+        ],
+        outcome: 'Plnění 44 000 Kč do tří týdnů. Děti spaly ve svém pokoji dřív, než skončily prázdniny.',
+      },
+      {
+        key: 'samozivitelka-rezerva', ic: 'growth',
+        product: 'investice', sub: 'Pravidelné investování',
+        tab: 'Chtěla začít odkládat',
+        title: 'Tisícovka měsíčně, o kterou se rozpočet nerozsype',
+        story: 'Po nájmu, jídle a kroužcích jí zbývá kolem 2 500 Kč. Bála se, že investování znamená velké částky a dlouhé závazky, ze kterých se nedá vystoupit.',
+        fix: [
+          'Nejdřív rezerva na tři měsíce nákladů na spořicím účtu - ta musí být dřív než investice.',
+          'Zbytek jde do pravidelné investice, kterou lze kdykoli snížit nebo pozastavit.',
+          'Peníze dětí vedeme zvlášť od její vlastní rezervy, aby se z nich neuždibovalo.',
+        ],
+        outcome: 'Odkládá 1 000 Kč měsíčně a poprvé má rezervu, která pokryje celý nečekaný měsíc.',
+      },
+    ],
+    models: {
+    vozidla: {
+      // TODO(design): vlastná ilustrácia pre každý profil - zatiaľ 3 existujúce SVG na 5 profilov.
+      img: '/cars/bycar.svg',
+      tagIcon: 'user',
+      driver: 'Řidička 35 let · děti v autě',
+      car: 'Škoda Fabia', year: '2012', engine: '1.2 HTP · 51 kW',
+      mileage: '11 000 km / rok', deductible: '10 000 Kč',
+      usage: 'Do školy, na směny a k babičce. Auto není luxus, je to jediný způsob, jak stihnout ráno školku i práci.',
+      // Zámerne BEZ havarijky: u dvanásťročného vozu je jej cena neúmerná
+      // hodnote auta a rozpočtu, ktorý má na sebe jeden príjem. Skladba je tým
+      // najlacnejšia zo všetkých modelov na /vozidla - a to je tu tá informácia.
+      base: 380, preset: ['asistence', 'skla', 'nahradni'],
+      why: 'U dvanáct let starého vozu je havarijka dražší, než kolik by kdy vyplatila. Rozhoduje, aby auto nezůstalo stát - proto asistence a náhradní vůz.',
+      perks: [
+        'Odtah do vlastního servisu, ne jen do nejbližšího',
+        'Náhradní vůz po dobu opravy, aby nevypadla směna',
+        'Nízký nájezd drží cenu povinného ručení dole',
+      ],
+    },
+    },
+  },
+
+  {
+    key: 'podnikatel', seg: 'podnikatele',
     slug: 'podnikatel',
     // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
     photo: '/profily/podnikatel.jpg',
@@ -452,7 +603,173 @@ export const PROFILES = [
   },
 
   {
-    key: 'pred-penzi',
+    key: 'zivnostnik', seg: 'podnikatele',
+    slug: 'zivnostnik',
+    // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
+    photo: '/profily/zivnostnik.jpg',
+    ic: 'tools',
+    // Kresba so ženou pri monitore - jeden človek, ktorý si vedie celú agendu
+    // sám. Prevzatá z bezplatnej vrstvy Tabler.io (viď poznámku pri PROFILES).
+    img: '/illus/tabler/stories/zivnostnik.png',
+    ey: 'Živnostník',
+    t: 'Petra, 34 let',
+    p: 'Pracuje sama na sebe, bez zaměstnanců.',
+    lead: 'Nemá firmu ani tým - má IČO, klienty a vlastní ruce. Když nemůže pracovat ona, nepracuje nikdo a příjem je na nule.',
+    pts: [
+      'Zabezpečení příjmu, když OSVČ nemá nemocenskou',
+      'Odpovědnost za škodu způsobenou vlastní prací',
+      'Právní ochrana na nezaplacené faktury',
+    ],
+    intro: 'Živí se sama na sebe pátým rokem a jde jí to. Za ni ale nikdo nezaskočí, za chybu ručí osobním majetkem a stát jí na důchod odvádí minimum - tři díry, o kterých se v dobrých měsících nepřemýšlí.',
+    solved: [
+      { product: 'prijem', need: 'nutnost', note: 'Nemocenská pro OSVČ prakticky neexistuje. Denní dávka a renta drží příjem, když nemůžete pracovat vy osobně.' },
+      { product: 'odpovednostFirmy', need: 'nutnost', note: 'Škoda, kterou způsobíte klientovi svou prací. U živnostníka jde nárok rovnou na osobní majetek, firma mezi tím nestojí.' },
+      { product: 'pravni', need: 'doporuceno', note: 'Nezaplacené faktury a spory se zákazníky. Advokáta, soudní poplatek i posudek platí pojištění, ne vy z rezervy.' },
+      { product: 'penze', need: 'doporuceno', note: 'Za OSVČ odvádí stát minimum. Bez vlastního spoření je důchod zlomek toho, na co jste dnes zvyklá.' },
+      { product: 'domacnost', need: 'doporuceno', note: 'Vybavení, se kterým pracujete, bývá doma. Běžná domácnost ho kryje jen do limitu a podnikání z ní často vypadává.' },
+      { product: 'investice', need: 'zvazit', note: 'Nepravidelný příjem chce nejdřív rezervu na tři měsíce nákladů. Teprve to, co zbude nad ní, má smysl investovat.' },
+    ],
+    situations: [
+      {
+        key: 'zivnostnik-chyba', ic: 'claim',
+        product: 'odpovednostFirmy', sub: 'Odpovědnost za škodu z podnikání',
+        tab: 'Chyba v zakázce',
+        title: 'Špatný podklad, který klient stihl vytisknout v nákladu 20 000 kusů',
+        story: 'Chyba v datech šla do tisku a přišla se na ni až po dodání. Klient vyčíslil zmařený náklad na 186 000 Kč a chtěl ho po Petře - ta má IČO, ne firmu, takže ručí vším, co má.',
+        fix: [
+          'Pojištění odpovědnosti krylo škodu způsobenou vadným plněním, včetně nákladů na nový tisk.',
+          'O výši škody jednala pojišťovna, Petra neplatila vlastního znalce ani advokáta.',
+          'Část nároku za ušlý zisk byla neoprávněná a pojišťovna ji odmítla za ni.',
+        ],
+        outcome: 'Uznaná škoda 162 000 Kč šla z pojištění, Petra doplatila spoluúčast 5 000 Kč a klienta si udržela.',
+      },
+      {
+        key: 'zivnostnik-nemoc', ic: 'illness',
+        product: 'prijem', sub: 'Denní dávka pro OSVČ',
+        tab: 'Nemohla pracovat',
+        title: 'Zánět šlach v zápěstí a jedenáct týdnů bez jediné odevzdané zakázky',
+        story: 'Diagnóza z přetížení, fixace a rehabilitace. Petra si neplatila dobrovolné nemocenské, takže jí ze systému nepřišla ani koruna - ale nájem ateliéru, záloha na zdravotní a leasing běžely dál.',
+        fix: [
+          'Denní dávka z pojištění příjmu naskočila od 15. dne a běžela po celou dobu léčby.',
+          'Krytí platí pro OSVČ, kde se plnění neváže na potvrzení od zaměstnavatele.',
+          'Stálé náklady jsme s ní na dva měsíce přenastavili, aby plnění stačilo pokrýt i je.',
+        ],
+        outcome: 'Plnění 148 000 Kč. Petra nemusela sáhnout na rezervu ani vzít úvěr a vrátila se ke klientům, které si udržela.',
+      },
+      {
+        key: 'zivnostnik-faktura', ic: 'scale',
+        product: 'pravni', sub: 'Právní ochrana v podnikání',
+        tab: 'Zákazník nezaplatil',
+        title: 'Dvě faktury za 94 000 Kč a klient, který přestal odpovídat',
+        story: 'Dílo převzal bez výhrad, pak se odmlčel. Advokát za vymáhání chtěl zálohu 25 000 Kč, což je u téhle částky skoro třetina - Petra to málem odepsala.',
+        fix: [
+          'Právní ochrana zaplatila advokáta i soudní poplatek, Petra nedala ze svého nic.',
+          'Předžalobní výzva z advokátní kanceláře vyřešila menší z faktur ještě před podáním žaloby.',
+          'Krytí zahrnuje i náklady protistrany pro případ, že by spor prohrála.',
+        ],
+        outcome: 'Zaplaceno 94 000 Kč i s úroky z prodlení. Právní náklady 31 000 Kč šly z pojištění.',
+      },
+      {
+        key: 'zivnostnik-penze', ic: 'growth',
+        product: 'penze', sub: 'Penzijní spoření pro OSVČ',
+        tab: 'Odvádí minimum',
+        title: 'Deset let na minimálních zálohách a důchod kolem 13 000 Kč',
+        story: 'Petra odvádí minimum, protože „daňově se to vyplatí". Propočet ale ukázal, co to znamená za třicet let: státní důchod na úrovni třetiny dnešního příjmu a nic dalšího.',
+        fix: [
+          'Penzijní spoření se státním příspěvkem jako základ, který se u OSVČ vyplatí i daňově.',
+          'Nad ním pravidelná investice s horizontem nad dvacet let, kde nevadí výkyv.',
+          'Částku jsme navázali na fakturaci, ne na pevný měsíční odvod - v slabém měsíci se sníží.',
+        ],
+        outcome: 'Petra odkládá v průměru 6 200 Kč měsíčně a rozdíl proti minimálním odvodům je za třicet let víc než dvojnásobek důchodu.',
+      },
+    ],
+  },
+
+  {
+    key: 'vyrobni', seg: 'podnikatele',
+    slug: 'vyrobni-firma',
+    // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
+    photo: '/profily/vyrobni-firma.jpg',
+    ic: 'factory',
+    // Žeriav a stavebné kocky - jediná kresba v celej zásobe, ktorá hovorí
+    // o výrobe. Sem sedí lepšie než kamkoľvek inam.
+    img: '/illus/tabler/stories/vyrobni-firma.png',
+    ey: 'Výrobní firma',
+    t: 'Zdeněk, 52 let',
+    p: 'Hala, dvacet lidí a export do Německa.',
+    lead: 'Majetek v desítkách milionů, linka, která nesmí stát, a odběratelé v zahraničí. Rizika velké firmy, rozpočet střední.',
+    pts: [
+      'Majetek a přerušení provozu, když stojí linka',
+      'Odpovědnost za vadný výrobek i mimo ČR',
+      'Flotila dodávek a vysokozdvižných vozíků',
+    ],
+    intro: 'Vyrábí kovové komponenty pro německé odběratele. Hala, lisy a zásoby dělají desítky milionů, ale nejdražší položkou není majetek - je to týden, kdy linka stojí a odběratel čeká.',
+    solved: [
+      { product: 'firma', need: 'nutnost', note: 'Hala, stroje a zásoby. Součástí je přerušení provozu, které platí mzdy a režii, když se nevyrábí.' },
+      { product: 'odpovednostFirmy', need: 'nutnost', note: 'Vadný výrobek u odběratele včetně následné škody. Krytí musí platit i tam, kam dodáváte, ne jen v ČR.' },
+      { product: 'flotila', need: 'nutnost', note: 'Dodávky, vozíky i osobní vozy na jedné smlouvě a jednom vyúčtování. Přidání vozu bez nové smlouvy.' },
+      { product: 'zivot', need: 'doporuceno', note: 'Úrazové pojištění lidí ve výrobě. U rizikových profesí je to zároveň argument, proč u vás zůstat.' },
+      { product: 'pravni', need: 'doporuceno', note: 'Spory s odběrateli, dodavateli i zaměstnanci. U exportu se řeší podle cizího práva a to je bez pojištění drahé.' },
+      { product: 'investice', need: 'zvazit', note: 'Provozní rezerva zvlášť, peníze s pevným termínem zvlášť. Investuje se až to, co má horizont nad pět let.' },
+    ],
+    situations: [
+      {
+        key: 'vyrobni-linka', ic: 'storm',
+        product: 'firma', sub: 'Připojištění přerušení provozu',
+        tab: 'Stála výroba',
+        title: 'Přepětí po bouřce spálilo řídicí jednotku lisu',
+        story: 'Zásah do trafostanice, přepětí v rozvodech a spálená elektronika hlavního lisu. Náhradní díl z Itálie s dodáním tři týdny a odběratel, který má v objednávce sankci za zpoždění.',
+        fix: [
+          'Pojištění majetku pokrylo opravu lisu i poškozené rozvody a čidla po celé hale.',
+          'Přerušení provozu platilo mzdy, nájem a fixní režii po celou dobu, kdy linka stála.',
+          'Asistence sehnala náhradní díl přes servisní síť za devět dní místo tří týdnů.',
+        ],
+        outcome: 'Plnění 1 940 000 Kč včetně ušlého zisku. Firma dodala se skluzem pěti dní a sankci od odběratele nezaplatila.',
+      },
+      {
+        key: 'vyrobni-vada', ic: 'claim',
+        product: 'odpovednostFirmy', sub: 'Odpovědnost za vadný výrobek',
+        tab: 'Reklamace ze zahraničí',
+        title: 'Vadná série komponentů zastavila montážní linku odběratele v Bavorsku',
+        story: 'Nedodržená tolerance u 4 200 kusů se projevila až v montáži. Odběratel zastavil linku na dva dny, vyčíslil škodu na 218 000 eur a nárok uplatnil podle německého práva.',
+        fix: [
+          'Odpovědnost za vadný výrobek kryla nejen výměnu dílů, ale i následnou škodu z přerušení výroby odběratele.',
+          'Územní platnost smlouvy zahrnuje EU - bez toho by nárok podle německého práva zůstal celý na firmě.',
+          'Pojišťovna zajistila německého právního zástupce i posouzení nároku na místě.',
+        ],
+        outcome: 'Uznaná škoda 173 000 eur šla z pojištění. Firma zaplatila spoluúčast a zakázku si udržela i na další rok.',
+      },
+      {
+        key: 'vyrobni-uraz', ic: 'firstaid',
+        product: 'zivot', sub: 'Úrazové pojištění zaměstnanců',
+        tab: 'Úraz ve výrobě',
+        title: 'Přiskřípnutá ruka u lisu a devět měsíců mimo provoz',
+        story: 'Zkušený obsluhovač, chvíle nepozornosti, tři operace a trvalé omezení hybnosti prstů. Zákonné pojištění zaměstnavatele pokrylo část, zbytek by firma řešila z vlastního - a hlavně by přišla o člověka.',
+        fix: [
+          'Skupinové úrazové pojištění vyplatilo za trvalé následky nad rámec zákonného pojištění.',
+          'Denní odškodné běželo po celou dobu léčby, takže rodině nespadl příjem.',
+          'Firma po návratu přeřadila zaměstnance na kontrolu kvality a nemusela hledat nikoho nového.',
+        ],
+        outcome: 'Plnění 620 000 Kč zaměstnanci. Firma si udržela člověka, kterého zaučovala čtyři roky.',
+      },
+      {
+        key: 'vyrobni-flotila', ic: 'crash',
+        product: 'flotila', sub: 'Flotilové pojištění',
+        tab: 'Nabourala dodávka',
+        title: 'Šestý vůz ve flotile a šestá smlouva s jiným výročím',
+        story: 'Každý vůz měl vlastní smlouvu, jiné výročí a jiný variabilní symbol. Když jeden naboural, hledala účetní půl dne, u koho vlastně je - a přidání sedmého vozu znamenalo celé kolo znovu.',
+        fix: [
+          'Celou flotilu jsme převedli na jednu smlouvu s jedním vyúčtováním a jedním výročím.',
+          'Přidání i odebrání vozu je dnes jeden e-mail, ne nová smlouva a nové sjednávání.',
+          'Náhradní vozidlo po nehodě je v základu až na 20 dní, takže rozvoz nestojí.',
+        ],
+        outcome: 'Administrativa flotily klesla z půl dne měsíčně na pár minut a pojistné je o 14 % níž než součet původních šesti smluv.',
+      },
+    ],
+  },
+
+  {
+    key: 'pred-penzi', seg: 'rodiny',
     slug: 'pred-penzi',
     // foto pod hero (klient doplní do public/profily/); kým chýba, presvitá značkový gradient
     photo: '/profily/pred-penzi.jpg',
@@ -574,19 +891,71 @@ export const PROFILES = [
     },
     },
   },
+
+  /* ---- města a obce ----
+     Do 2026-08-12 tu obce archetypy NEMALI (viď poznámku nad PROFILES). User to
+     otočil: rad dlaždíc ukáže, čím sa obec od obce líši, aj keď za ním zatiaľ
+     nie je detailná stránka. Preto tieto tri NEMAJÚ `slug` - ProfileCards ich
+     vykreslí bez prekliku a bez „Zobrazit profil", takže nesľubujú stránku,
+     ktorá neexistuje. Chýba im aj `solved` a `models`: oboje číta len detail
+     a produktová stránka, kam sa obec zatiaľ nedostane.
+     `situations: []` tam byť MUSÍ - `situationsFor()` prechádza všetky profily
+     a bez poľa by na produktovej stránke spadlo. */
+  {
+    // POZOR na trojicu obcí: kresby sú tu čisto zástupné. V celej bezplatnej
+    // zásobe Tabler.io nie je NIČ, čo by hovorilo o obci alebo o úrade, takže
+    // dlaždice nesú kocúra, žongléra a nákupný vozík - vyplnené miesto, nie
+    // význam. Toto je prvé, čo sa má vymeniť, keď pribudne platený balík.
+    key: 'mala-obec', seg: 'mesta',
+    ic: 'village',
+    img: '/illus/tabler/stories/mala-obec.svg',
+    ey: 'Malá obec',
+    t: 'Do 1 000 obyvatel',
+    p: 'Úřad, hasičárna a starosta na půl úvazku.',
+    situations: [],
+  },
+  {
+    key: 'mesto', seg: 'mesta',
+    ic: 'townhall',
+    img: '/illus/tabler/stories/mesto.svg',
+    ey: 'Město',
+    t: 'Nad 5 000 obyvatel',
+    p: 'Školy, bytový fond a vlastní technické služby.',
+    situations: [],
+  },
+  {
+    key: 'svazek-obci', seg: 'mesta',
+    ic: 'town',
+    img: '/illus/tabler/stories/svazek-obci.svg',
+    ey: 'Svazek obcí',
+    t: 'Několik obcí společně',
+    p: 'Společný majetek, vodovod a jedno výběrové řízení.',
+    situations: [],
+  },
 ]
 
 // ---- lookupy ----
 export const profileBySlug = (slug) => PROFILES.find((p) => p.slug === slug)
 export const profileByKey = (key) => PROFILES.find((p) => p.key === key)
 
+// Archetypy jedného publika. Prázdny výsledok je platná odpoveď, nie chyba -
+// stránka podľa neho vie, že sekciu profilov nemá vôbec vykresliť. Preto tu
+// NIE JE fallback na rodiny.
+export const profilesFor = (seg) => PROFILES.filter((p) => p.seg === seg)
+
 // Situácia pre dvojicu (profil, produkt) - vstup z produktovej stránky.
 export const situationFor = (profileKey, productKey) =>
   profileByKey(profileKey)?.situations.find((s) => s.product === productKey)
 
 // Všetky situácie k jednému produktu, v poradí profilov - taby na produktovej stránke.
-export const situationsFor = (productKey) =>
+// `seg` zužuje výber na jedno publikum. Produkt JE scopovaný na publikum (user,
+// 2026-08-12): stránka /vozidla je produkt pre jednotlivcov a rodiny, firemné vozy
+// sú samostatná „Flotila vozidel", ktorá stránku zatiaľ nemá. Bez tohto filtra
+// stál Martin so skladom a dodávkou medzi štyrmi domácnosťami a produkt tvrdil,
+// že je pre všetkých - čo nie je.
+export const situationsFor = (productKey, seg) =>
   PROFILES.map((p) => {
+    if (seg && p.seg !== seg) return null
     const s = p.situations.find((x) => x.product === productKey)
     return s ? { profile: p, situation: s } : null
   }).filter(Boolean)
@@ -613,12 +982,6 @@ const COUNT_NOM = { 1: 'Jedna', 2: 'Dvě', 3: 'Tři', 4: 'Čtyři', 5: 'Pět', 6
 export const situationCount = (n) =>
   `${COUNT_NOM[n] || n} ${n === 1 ? 'situace' : n <= 4 ? 'situace' : 'situací'}`
 
-// Štítky naliehavosti pre „Co je dobré mít vyřešeno"
-export const NEED_LABEL = {
-  nutnost: 'Nutnost',
-  doporuceno: 'Doporučujeme',
-  zvazit: 'Zvážit',
-}
 // Hlavička úrovne v maticovom rozložení. `hint` je jednoveršový preklad štítku do
 // bežnej reči - samotné „Zvážit" nepovie, podľa čoho sa má človek rozhodnúť.
 // Ikony sú KĽÚČE, komponenty k nim mapuje ProfileParts.jsx (rovnako ako pri produktoch).

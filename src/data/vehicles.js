@@ -70,5 +70,5 @@ export const MODULES = [
   { key: 'nahradni', icon: 'car', name: 'Náhradní vozidlo', desc: 'Auto po dobu opravy', price: 70 },
 ]
 
-// Modelové situácie (4 klientské profily vrátane vozidla, skladby krytia a situácie)
+// Modelové situácie (klientské profily vrátane vozidla, skladby krytia a situácie)
 // žijú v data/profiles.js - sú zdieľané s landingom aj so stránkou /profil/:slug.

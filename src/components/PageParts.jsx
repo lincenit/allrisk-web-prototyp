@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { IconArrowLeft } from '@tabler/icons-react'
 import { asset } from '../asset.js'
+import { Decor } from './Decor.jsx'
+import { Line } from './Line.jsx'
 
 // Spoločné diely sekundárnych stránok (kontakt, detail pobočky, detail poradce).
 // Poradie prvkov drží tvar reality webu: tlačidlo späť → identita (foto/avatar +
@@ -9,12 +11,22 @@ import { asset } from '../asset.js'
 
 // Hero presahuje pod sticky header (margin -64 / padding +64), takže gradient
 // aj podkladová fotka vidno aj za hlavičkou.
+// Kružnice má hero VŽDY, aj s fotkou (user, 2026-08-16): fotka a modrý závoj
+// zostávajú, kresba je len ďalšia vrstva nad nimi (z-index 1, v strome za
+// .photo-hero::before, takže sa kreslí nad závojom a pod sadzbou).
+//
+// Stuhu má hero VŽDY, aj s fotkou (user, 2026-08-16) - rovnako ako kružnice.
+// Do 2026-08-16 platil opak (nad fotkou z nej bol fialový opar), teraz je to
+// druhá vrstva nad závojom a pod sadzbou. Ktorá zo štyroch stúh a ktoré plátno
+// kružníc to bude, si oba komponenty losujú samy pri každom načítaní.
 export function PageHero({ back, backLabel, title, subtitle, photo, media, children }) {
   return (
     <section className="phero photo-hero">
       {photo && (
         <div className="photo-hero-bg" style={{ backgroundImage: `url(${asset(photo)})` }} aria-hidden="true" />
       )}
+      <Decor />
+      <Line pos="hero" />
       <div className="wrap phero-in">
         {back && (
           <Link to={back} className="phero-back">
