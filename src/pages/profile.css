@@ -97,7 +97,7 @@
 
 /* ============ 3 · CO JE DOBRÉ MÍT VYŘEŠENO ============
    Naliehavosť nesie ROZLOŽENIE, nie štítok na položke: úroveň je hlavička skupiny
-   a položka pod ňu patrí. Preto karta štítok nemá - v skupine „Nutnost" by bol na
+   a položka pod ňu patrí. Preto karta štítok nemá - v skupine „Absolutní základ" by bol na
    každej karte ten istý. Úroveň = stĺpec, prázdne úrovne sa nevykresľujú
    (groupByNeed), takže rodina bez „Zvážit" má dva stĺpce, nie prázdny tretí.
    (Skúšané a zahodené: „Pásy" = úroveň ako vodorovný pás s lepkavým popiskom vľavo,
@@ -113,7 +113,7 @@
    Plné farebné výplne bili do očí - celý pás svietil sýtou farbou a ťahal oko viac než
    názvy produktov pod ním. Odtieň nesie OBRYS, nie plocha: podklad je len tint, obrys
    v plnej farbe. Signál ostáva rovnako jasný, ale plocha je tichá.
-   Mapovanie je RIZIKOVÉ, nie „stavové": červená = Nutnost (bez toho to nedáva zmysel),
+   Mapovanie je RIZIKOVÉ, nie „stavové": červená = Absolutní základ (bez toho to nedáva zmysel),
    zelená = Zvážit (ste v pohode aj bez toho). Opačné poradie by dalo červenú najmenej
    dôležitej úrovni. Prehodiť sa dá výmenou --nbg/--nstroke/--nfg medzi 1. a 3. riadkom.
    POZOR, ide proti DESIGN.md: AllRed #BF0D0D je tam vyhradená VÝHRADNE pre „Nahlásit
@@ -193,6 +193,8 @@
 .site .sit-main h3{font-family:var(--display);font-weight:700;font-size:var(--fs-h3);
   line-height:1.22;color:var(--ink);margin:14px 0 0;text-wrap:balance;}
 .site .sit-story{color:var(--g600);font-size:var(--fs-body);line-height:1.6;margin-top:12px;max-width:52ch;text-wrap:pretty;}
+/* popisek kroku - tučný začiatok riadku, zvyšok vety zostáva v šedej */
+.site .sit-fix li b{color:var(--ink);font-weight:700;}
 
 .site .sit-lbl{font-size:var(--fs-label);font-weight:700;letter-spacing:.13em;text-transform:uppercase;
   color:var(--mut);margin:22px 0 4px;}

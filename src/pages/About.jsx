@@ -15,14 +15,15 @@ import { SecHead } from '../components/PageParts.jsx'
 import { Decor } from '../components/Decor.jsx'
 import { Line } from '../components/Line.jsx'
 import TabBar from '../components/TabBar.jsx'
-import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
+import { DebugPanel } from '../components/DebugPanel.jsx'
+import HeaderDebug from '../components/HeaderDebug.jsx'
 import {
   NUMBERS, numbers, INTRO, LEADERSHIP, PARTNERS, PROJECTS,
   CHANNELS, EXAMS, HELP, CERTIFICATES,
 } from '../data/company.js'
 import {
   IconChevronRight, IconArrowUpRight, IconHome, IconBuildingStore, IconVideo,
-  IconMapPin, IconCheck, IconLayoutColumns, IconStairsUp, IconCircleDotted,
+  IconMapPin, IconCheck,
 } from '@tabler/icons-react'
 
 // ============================================================
@@ -62,35 +63,15 @@ const BAND_NUMS = numbers('klienti', 'poradci', 'pojistne', 'skody', 'uvery', 'p
 // k tomu, čím bola - sklo ako susedia, len väčšie; jediné, čo ju povyšuje, je
 // mierka sadzby. Veľkosti sú v about.css pri `.ab-num--lead`.
 // ZMAZANÉ 2026-08-17: `vedla` (tiráž ako stĺpec vpravo od dlaždíc). Celá os
-// vznikla kvôli tomu, kam postaviť tiráž - tá je z pásu preč, takže zostáva
-// jediná skutočná voľba: nadpis nad dlaždicami, alebo vedľa nich.
-const BAND_VARIANTS = [
-  { value: 'pod', label: 'Nadpis nad dlaždicami' },
-  { value: 'nadpis', label: 'Nadpis vľavo' },
-]
+// vznikla kvôli tomu, kam postaviť tiráž - tá je z pásu preč.
+// ZMAZANÁ 2026-08-19 (user) aj celá os „Rozvrh pásu" so zvyšnou dvojicou
+// `pod` / `nadpis`: PÁS MÁ NADPIS NAD DLAŽDICAMI, bodka. S nadpisom vľavo
+// museli dlaždice do dvoch stĺpcov, takže sa z ôsmich čísel stal vysoký stĺpec
+// vedľa krátkeho nadpisu - a pás prestal byť pásom.
 
-// Systém péče - tri podoby tej istej štvorice krokov. `obrazek` je pôvodný
-// výrez z PDF a je tu na porovnanie s tlačou, nie ako kandidát.
-// ZMAZANÉ 2026-08-17 (user): `stuha` - tlačový cikcak prekreslený do SVG.
-// Dôvod je pri kóde v components/CareSteps.jsx.
-const CARE_VARIANTS = [
-  { value: 'obrazek', label: 'Dodaná kresba' },
-  { value: 'linka', label: 'Linka se zastávkami' },
-  { value: 'vlna', label: 'Vlnitá stuha' },
-  { value: 'schody', label: 'Schody z kariet' },
-]
-
-// Ekosystém - DVE podoby, nie podklady pod textom (user, 2026-08-18):
-//   kolo     pôvodný návrh - kružnica na bielej sekcii, text nalieha na vybraný
-//            kruh; vrátený na žiadosť usera („tú prvú variantu vráť ako sme ju
-//            mali predtým, než som ťa poprosil o redizajn") - PREDVOLENÉ
-//   sloupec  vľavo kategórie so stuhou narovnanou do stĺpca (fotka línie je
-//            v koliesku kategórie), vpravo detail
-// Zmazané: `foto`, `sklo`, `deska`, `vypis`, `linka`, `velky` a `pas`.
-const ECO_VARIANTS = [
-  { value: 'kolo', label: 'Kolo + text' },
-  { value: 'sloupec', label: 'Kategorie | detail' },
-]
+// ZMAZANÉ 2026-08-19 (user): prepínače ekosystému - podoba sekcie (`dbg:eko4`)
+// aj poloha šípok (`dbg:ekonav`) aj s components/EcosystemDebug.jsx. Sekcia má
+// jednu podobu: koleso s textom a šípkami nad popisom.
 
 // ZMAZANÉ 2026-08-17 (user): os `ekoVaz` (karta na kružnici / panel vedľa).
 // Panel vedľa kružnice bol práve to, čo user na návrhu zamietol - voľba to
@@ -129,18 +110,6 @@ function ExamTabs({ groups }) {
 export default function About() {
   // foto-hero pod priehľadnou hlavičkou - rovnaký mechanizmus ako /vozidla
   useHeroHeader()
-  const [bandStyle, setBandStyle] = useDebugOption('abBand', 'pod')
-  // Predvolená je dodaná kresba (user ju nahral 2026-08-17 večer a vypýtal si
-  // ju); kreslené podoby zostávajú v paneli. Kľúč je `abCare2`, nie `abCare`:
-  // voľba prežíva v localStorage, takže staré `linka` z predošlých preklikov
-  // by novú predvoľbu prebilo a stránka by vyzerala nezmenene.
-  const [careStyle, setCareStyle] = useDebugOption('abCare2', 'obrazek')
-  // Ekosystém si ten istý kľúč číta sám (components/Ecosystem.jsx) - tu je len
-  // prepínač, preto stačí hodnota na zvýraznenie zvolenej možnosti. Kľúč je
-  // `eko4`: zmazané podoby prežívajú v localStorage a vyliezli by ako
-  // neoštýlovaná sekcia.
-  const [ecoStyle, setEcoStyle] = useDebugOption('eko4', 'kolo')
-
   return (
     <div className="site">
       {/* ============ HERO - obálka brožúry ============ */}
@@ -213,7 +182,7 @@ export default function About() {
           pod ňou dlaždice s číslami. Tu je to jeden pás v rovnakom poradí. */}
       <section className="sec wrap">
         {/* modrý pás je spoločný .banner - tu len jeho vnútorný rozvrh */}
-        <div className={`banner ab-band ab-band--${bandStyle}`}>
+        <div className="banner ab-band">
           {/* Linka stránky. Hero je fotka (balón), na tú stuha nepatrí - nesie ju
               preto prvý plochý modrý pás. Ostatné dva bannery majú len kružnice. */}
           <Decor />
@@ -248,7 +217,8 @@ export default function About() {
       {/* ============ EKOSYSTÉM - najdôležitejšia sekcia ============
           SEKCIU SI NESIE KOMPONENT SÁM (`<section class="sec">` + `.wrap`
           vnútri), nie stránka: hlavička sekcie, kružnica a text k nej sú jeden
-          rozvrh a stránka do neho nemá čo hovoriť. Prepína sa `dbg:eko4`. */}
+          rozvrh a stránka do neho nemá čo hovoriť. Podoba je jedna, sekcia
+          sa neprepína (2026-08-19). */}
       <Ecosystem />
 
       {/* ============ FORMY MODERNÍ KOMUNIKACE ============
@@ -284,16 +254,18 @@ export default function About() {
       {/* ============ SYSTÉM PÉČE O KLIENTA ============
           Poradie s ekosystémom vymenené (user, 2026-08-18): najprv ucelený
           ekosystém, až za pásom „Kde se potkáme" systém péče.
-          Sekciu nesie od 2026-08-17 večer dodaná kresba `care-system.png` -
-          user ju nahral a vypýtal si ju. Kreslené podoby (linka, schody) žijú
-          ďalej v paneli. Nadpis sekcie zostáva viditeľný aj nad kresbou: jeho
-          verzia v obrázku sa nedá vybrať ani zväčšiť. */}
+          Sekcia má od 2026-08-19 JEDNU PODOBU (user: „nechaj karty s úsekom,
+          odstráň všetky ostatné varianty") - štyri karty v rade, v každej je
+          prvým prvkom úsek linky vo farbe svojho kroku, pod ním číslo v tej
+          istej farbe a text. Osem podôb aj s prepínačom je zmazaných, hľadať
+          ich treba v gite; nepoužitá zostala aj kresba
+          `public/o-nas/care-system.png`. */}
       <section className="sec wrap">
         <SecHead
           ey="Jak to u nás chodí"
           title={<>Systém péče <b>o klienta</b></>}
         />
-        <CareSteps variant={careStyle} />
+        <CareSteps />
       </section>
 
       {/* ============ CERTIFIKACE V OBORU ============ */}
@@ -441,18 +413,7 @@ export default function About() {
       {/* Otvorené voľby stránky. Dlaždice pásu medzi nimi nie sú - rozvrh
           čísel aj podoba veľkej dlaždice sú rozhodnuté (user, 2026-08-17). */}
       <DebugPanel title="O společnosti">
-        <DebugGroup
-          icon={IconLayoutColumns} label="Rozvrh pásu" value={bandStyle} onChange={setBandStyle} wrap
-          options={BAND_VARIANTS}
-        />
-        <DebugGroup
-          icon={IconStairsUp} label="Systém péče" value={careStyle} onChange={setCareStyle} wrap
-          options={CARE_VARIANTS}
-        />
-        <DebugGroup
-          icon={IconCircleDotted} label="Ekosystém - karta" value={ecoStyle} onChange={setEcoStyle} wrap
-          options={ECO_VARIANTS}
-        />
+        <HeaderDebug />
       </DebugPanel>
     </div>
   )

@@ -164,19 +164,8 @@ export const FLEET = [
   { icon: 'storm', label: 'Živel a vandalismus', note: 'Asistence již v základním programu' },
 ]
 
-// Ucelený ekosystém (brožúra s. 10). Šesť línií; tu ide firemný rez, takže
-// pri každej sú vybrané položky, ktoré rieši firma, nie domácnosť.
-export const ECOSYSTEM = [
-  { key: 'pojisteni', icon: 'shield', label: 'Pojištění', desc: 'Pojistné služby pro firmu i její lidi.',
-    items: ['Pojištění průmyslu a podnikatelů', 'Autopojištění a flotily', 'Zemědělské pojištění', 'Životní a úrazové pojištění'] },
-  { key: 'finance', icon: 'chart', label: 'Finanční služby', desc: 'Financování s flexibilním nastavením.',
-    items: ['Podnikatelské úvěry', 'Investice a vkladové produkty', 'Měnové konverze', 'Privátní bankovnictví'] },
-  { key: 'reality', icon: 'building', label: 'Realitní služby', desc: 'Realitní kancelář pro komerční nemovitosti.',
-    items: ['Prodej komerčních objektů', 'Pronájem komerčních prostor', 'Zpětný leasing nemovitostí', 'Developerské projekty'] },
-  { key: 'servis', icon: 'help', label: 'Klientský servis', desc: 'Likvidace škod a autopůjčovna.',
-    items: ['Asistovaná likvidace pojistných událostí', 'Odborné posudky a poradenství ke škodám', 'Náhradní vozidlo po nehodě', 'Autopůjčovna'] },
-  { key: 'pravni', icon: 'law', label: 'Pojištění právní ochrany', desc: 'Nonstop právní a asistenční služby po Evropě.',
-    items: ['Právní ochrana motorových vozidel', 'Právní ochrana budov a prostor', 'Telefonická služba právních informací', 'Administrativně právní asistence'] },
-  { key: 'effective', icon: 'bolt', label: 'Allrisk EFFECTIVE', desc: 'Klubový projekt na snížení provozních nákladů.',
-    items: ['Extrémně levné telefonování', 'Více než operativní leasing', 'Úspora a dlouhodobá péče v oblasti energií'] },
-]
+// ZMAZANÉ 2026-08-19 (user: „necháj label a title, zvyšok vymeň za to, čo je na
+// about"): ECOSYSTEM - firemný rez šiestich línií z brožúry s. 10. Sekciu na
+// úvode aj na /o-nas nesie teraz jeden komponent (components/Ecosystem.jsx) nad
+// LINES z data/company.js, takže druhý text k tým istým líniám už nemá kto
+// vypísať. Je v gite.

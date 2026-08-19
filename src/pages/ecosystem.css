@@ -1,0 +1,274 @@
+/* ============================================================
+   EKOSYSTÉM - šesť obchodných línií (components/Ecosystem.jsx).
+
+   Vlastný súbor, nie kus about.css (2026-08-19): tú istú sekciu nesie aj
+   úvod pre podnikateľov, a stránka, ktorá komponent použije, si nemá ťahať
+   celý šatník cudzej stránky. Štýly patria komponentu, ten si ich importuje
+   sám - preto sú tu aj s responzívnou časťou, ktorá bola predtým rozsypaná
+   v spoločnom `@media` na konci about.css.
+
+   Číta odtiaľto: `.biz-list--lg` (pages/business.css) - zoznam služieb je
+   ten istý prvok ako výpočty na stránke pre podnikateľov.
+   ============================================================ */
+/* ============ EKOSYSTÉM ============
+   JEDNA PODOBA, mechanika v components/Ecosystem.jsx: kružnica na bielej
+   sekcii, bubliny s ikonou a menom, text NALIEHA na vybraný kruh a šípky
+   stoja nad popisom, zľava s ním lícujúce.
+
+   ZMAZANÉ 2026-08-19 (user: „odstráň ostatné varianty, ostáva len Kolo + text
+   a šípky nad popisom zľava") aj s prepínačmi `dbg:eko4` a `dbg:ekonav`:
+   podoby `sloupec` (kategórie na otáčajúcom sa oblúku vľavo) a `hranate`
+   (to isté koleso so štvorcovými bublinami), polohy šípok `pod` (spodok textu
+   pripnutý na dráhu) a `nadpis` (pager v riadku s nadpisom sekcie).
+
+   ZMAZANÉ 2026-08-18 (user: „iba si vytvoril kopec ďalších zbytočných variant"):
+   podoby, ktoré menili LEN PODKLAD POD TEXTOM (`sklo` / `deska` / `vypis` /
+   `velky` a fotka ako podklad karty vo `foto`), a po nich aj `pas` - modrý pás
+   cez celú šírku okna s kolesom prečnievajúcim za okraj obsahu.
+
+   ROZMERY KRUŽNICE A VZŤAH MEDZI NIMI:
+     --eco-rad   polomer dráhy
+     --eco-node  priemer kľudovej bubliny (user, 2026-08-18: menšia -
+                 bublina už nenesie fotku, len ikonu a názov)
+     --eco-hero  priemer vybranej - DVOJNÁSOBOK kľudovej (user, 2026-08-18:
+                 „sprav ju na 200 %"), preto je hero odvodené od node a nie
+                 samostatné číslo. Vo vybranej rastie aj kresba: ikona na
+                 64 px (user, 2026-08-19) a názov o stupeň - v takom kruhu by
+                 pôvodná veľkosť plávala.
+   Vzdialenosť stredov dvoch susedných bublín je pri šiestich polohách presne
+   polomer, takže `hero/2 + node/2` musí zostať pod ním - inak sa vybraná
+   dotkne susedov. Pri 196 / 94 / 141 je to 117 proti 196; v úzkom okne
+   124 / 64 / 96 je to 80 proti 124. Kto mení jedno číslo, prepočíta nerovnosť.
+
+   Kotva je miesto na kružnici, kam sa vybraná línia dotočí, a je to zároveň
+   miesto, kde sa kružnica a text dotýkajú: text začína PRESNE v strede
+   vybraného kruhu, takže kruh sedí polovicou na dráhe a polovicou na ňom.
+   Na ploche mieri kotva doprava, v úzkom okne dole. Ten istý uhol je aj
+   začiatkom gradientu na stuhe - viď `.eco-track`. */
+/* Sekcia je len schránka rozvrhu - `overflow` sa jej NEDÁVA: vybraný kruh
+   zámerne prečnieva k textu a tieň pod ním by sa v úzkom okne orezal. */
+.site .eco-sec{position:relative;}
+.site .eco{--eco-anchor:180deg;--eco-turn:.55s;
+  --eco-rad:clamp(124px,16.5vw,196px);
+  --eco-node:clamp(64px,7.8vw,94px);
+  --eco-w:calc(var(--eco-rad) * .175);
+  --eco-hero:calc(var(--eco-node) * 2);
+  /* O koľko text USTUPUJE od stredu kruhu (user, 2026-08-17: „posuň tú dosku
+     ďalej od kruhu"). Kruh naň stále nalieha, len menšou časťou. */
+  --eco-off:clamp(18px,2.6vw,44px);
+  /* Odsadený prstenec okolo bubliny (user, 2026-08-19). `gap` je čistá medzera
+     za okrajom bubliny, `w` hrúbka samotnej kružnice. */
+  --eco-ring-gap:clamp(4px,.55vw,7px);--eco-ring-w:3px;
+  /* Odstup textu od kruhu, ktorý naň nalieha - polomer VYBRANÉHO kruhu a čistá
+     medzera za jeho okrajom. Tú medzeru user 2026-08-18 zväčšil („ten detail
+     daj trošku ďalej doprava"); `--eco-off` sa v súčte s odsadením schránky
+     vyruší, takže polohu SADZBY riadi jedine toto číslo. */
+  --eco-gap:calc(var(--eco-hero) / 2 + clamp(28px,3.4vw,54px) - var(--eco-off));
+  display:grid;grid-template-columns:1fr;align-items:center;}
+
+/* ---- kružnica ----
+   Schránka drží kľudové uzly; vybraný kruh z nej zámerne prečnieva, preto sa
+   nesmie orezať. Klikať sa dá len na uzly - preto pointer-events až na nich.
+   Stred zostáva PRÁZDNY (user, 2026-08-17): značka z neho odišla a náhrada sa
+   doň nekreslí. */
+.site .eco-ring{position:relative;z-index:2;width:100%;aspect-ratio:1;
+  max-width:calc(2 * var(--eco-rad) + var(--eco-node));
+  margin:clamp(16px,2vw,24px) auto 0;pointer-events:none;}
+
+/* STUHA. Farba beží PO DRÁHE, nie cez štvorec okolo nej: kužeľový gradient
+   otočený do kotvy, orezaný maskou na prstenec. SVG `stroke` to nevedelo -
+   lineárny gradient v schránke kružnice dal vodorovný preliv a stuha z neho
+   brala len to, čo jej na danej súradnici padlo pod ťah.
+   Gradient sa v kotve zatvára do seba (rovnaká farba na 0 % aj 100 %), takže
+   šev nikde nevidno - a kotvu aj tak prekrýva kruh vybranej línie. */
+.site .eco{--eco-seam:#2A0FB4;
+  --eco-mask:radial-gradient(circle at 50% 50%,
+    transparent calc(var(--eco-rad) - var(--eco-w) / 2 - .6px),
+    #000 calc(var(--eco-rad) - var(--eco-w) / 2),
+    #000 calc(var(--eco-rad) + var(--eco-w) / 2),
+    transparent calc(var(--eco-rad) + var(--eco-w) / 2 + .6px));}
+.site .eco-track{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from var(--eco-anchor),
+    var(--eco-seam) 0%,var(--line-1) 10%,var(--line-2) 35%,
+    var(--line-3) 62%,var(--line-4) 88%,var(--eco-seam) 100%);
+  -webkit-mask:var(--eco-mask);mask:var(--eco-mask);}
+
+.site .eco-wheel{position:absolute;inset:0;
+  transform:rotate(calc(var(--eco-anchor) + var(--eco-rot,0deg)));
+  transition:transform var(--eco-turn) var(--ease);}
+/* Uzol je len BOD na kružnici: schránka má veľkosť najväčšieho kruhu a kreslí
+   sa v nej na stred, takže rast a scvrkávanie nepotrebujú prepočítavať okraje.
+   Zväčšenie ide cez rozmer vnútra, NIE cez `scale` - tá sa podľa poradia
+   (translate → rotate → scale → transform) skladá nad `transform` uzla
+   a vynásobila by aj posun o polomer, takže by uzol odletel z dráhy von. */
+.site .eco-node{position:absolute;left:50%;top:50%;
+  width:var(--eco-hero);height:var(--eco-hero);margin:calc(var(--eco-hero) / -2);
+  display:grid;place-items:center;padding:0;border:0;background:none;cursor:pointer;
+  pointer-events:none;
+  transform:rotate(var(--a)) translateY(calc(-1 * var(--eco-rad)));}
+.site .eco-node.on{z-index:1;}
+
+/* Bublina: BIELA S MODROU KRESBOU A TIEŇOM, BIELY PRSTENEC (user, 2026-08-17),
+   ktorý jej vyreže miesto v stuhe - má ho každá vrátane vybranej a je to
+   jediná vec, ktorá ich okolo dokola drží rovnaké.
+   Cez 2026-08-18 z bubliny odišla fotka („nie je to vidno"), po nej plná modrá
+   („nepáči sa mi") aj preliv („takisto nie je cesta"). Dôvod, prečo ani jedno
+   nesadlo, nie je vo výbere výplne: NAJFAREBNEJŠÍ PRVOK SEKCIE JE STUHA a šesť
+   sýtych bublín sa s ňou o farbu bije. Bubliny sú preto ticho - biele, ikona
+   a názov v značkovej modrej - a farbu nesie jedine vybraná (nižšie).
+   BEZ OBRYSU, tvar drží TIEŇ (user, 2026-08-18: „biela ale s drop shadow, bez
+   nejakého stroku"). Biely 3px prstenec nie je obrys - je to zárez do stuhy,
+   na bielej sekcii ho nevidno a bez neho by sa stuha bubliny dotýkala.
+   NÁZOV IDE INTEROM, nie Magistralou (user, ten istý deň): Magistral je písmo
+   nadpisov a v 14 px pod ikonou z neho bol tretí druh nadpisu na obrazovke. */
+.site .eco-node-in{position:relative;pointer-events:auto;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(4px,.55vw,7px);
+  width:var(--eco-node);height:var(--eco-node);padding:clamp(6px,.85vw,11px);
+  border-radius:50%;color:var(--blue);background:var(--card);
+  /* zárez do stuhy + dvojitý tieň: krátky drží hranu, dlhý dvíha bublinu
+     nad bielu sekciu, aby nesplynula s podkladom */
+  box-shadow:0 0 0 3px #fff,0 2px 6px rgba(13,31,91,.14),
+    0 14px 30px -14px rgba(13,31,91,.5);
+  transform:rotate(calc(-1 * (var(--a) + var(--eco-anchor) + var(--eco-rot,0deg))));
+  /* Prechádza sa LEN kontraotočenie a farba. Rozmer bubliny sa prepína naraz
+     (user, 2026-08-17): nafukovanie počas otáčky bolo pohyb navyše a ťahalo
+     oko preč od kolesa, ktoré je vlastným pohybom sekcie. */
+  transition:transform var(--eco-turn) var(--ease),
+    background .35s var(--ease),color .35s var(--ease),box-shadow .35s var(--ease);}
+/* PRSTENEC OKOLO BUBLINY, ODSADENÝ (user, 2026-08-19: „kružnicu okolo bielu,
+   ale s odsadením od bubliny, aby medzi nimi bol priestor"). Je to kružnica,
+   nie obrys - medzi ňou a bublinou je priehľadná medzera, takže tam presvitá
+   stuha. Kreslí sa pseudoprvkom, nie `outline`om: outline si drží fokus.
+   `border-radius:inherit` ho drží v tvare bubliny. */
+.site .eco-node-in::after{content:"";position:absolute;pointer-events:none;
+  inset:calc(-1 * (var(--eco-ring-gap) + var(--eco-ring-w)));
+  border-radius:inherit;border:var(--eco-ring-w) solid #fff;
+  transition:border-color .35s var(--ease);}
+.site .eco-node svg{flex:none;width:clamp(20px,1.85vw,26px);height:auto;}
+.site .eco-node-lb{font-family:var(--sans);font-weight:600;color:var(--ink);
+  font-size:clamp(11px,1.05vw,14px);line-height:1.2;
+  text-align:center;letter-spacing:-.01em;text-wrap:balance;}
+.site .eco-node:hover .eco-node-in{background:var(--blue-50);}
+
+/* Vybraná línia: veľký PLNÝ kruh, do ktorého stuha vteká - a jediné farebné
+   koliesko na dráhe. Plná značková modrá tu nie je to isté ako plná modrá na
+   všetkých šiestich (tú user 2026-08-18 zamietol): tam bola pozadím, tu je
+   výberom, lebo ostatné sú biele.
+   Rozmer sa PREPÍNA NARAZ (nie je v prechode) a s kruhom rastie aj kresba
+   v ňom: ikona na 64 px (user, 2026-08-19: dvojnásobok pôvodných 32 - vo
+   vybranom kruhu je ikona hlavná kresba, nie ozdoba pri názve), názov
+   o stupeň. */
+.site .eco-node.on .eco-node-in{width:var(--eco-hero);height:var(--eco-hero);
+  color:#fff;background:var(--blue);
+  /* BEZ bieleho zárezu (user, 2026-08-19): vo vybranej má stuha do kruhu
+     vtekať, nie sa oň zastaviť - odstup jej drží až modrý prstenec. */
+  box-shadow:0 3px 8px rgba(13,31,91,.18),
+    0 20px 40px -18px rgba(13,31,91,.6);}
+.site .eco-node.on .eco-node-in::after{border-color:var(--blue);}
+.site .eco-node.on svg{width:clamp(52px,5vw,64px);}
+.site .eco-node.on .eco-node-lb{font-weight:700;color:#fff;
+  font-size:clamp(14px,1.35vw,18px);}
+.site .eco-node:focus-visible{outline:0;}
+.site .eco-node:focus-visible .eco-node-in{outline:2px solid var(--blue);outline-offset:6px;}
+
+/* ---- detail vybranej línie ----
+   NADPIS NEMÁ (user, 2026-08-18): meno línie stojí v bubline. Detail preto
+   otvára POPIS a ten si po nadpise berie sadzbu - Magistral medium. */
+.site .eco-lead{color:var(--ink);font-family:var(--display);font-weight:500;
+  font-size:24px;line-height:1.4;max-width:44ch;text-wrap:pretty;}
+/* Zoznam služieb je spoločný `.biz-list--lg` (pages/business.css) - ten istý
+   prvok ako výpočty služby a odborné skúšky nižšie na stránke. Tu sa dopĺňa
+   UŽ LEN odstup - pevných 16 px (user, 2026-08-19), nie škálovaný: rytmus
+   detailu je 24 pod šípkami a 16 pod popisom, teda dve čísla, nie dva rozsahy. */
+.site .eco-rows{margin-top:16px;}
+
+/* ---- text nalieha na vybraný kruh ----
+   Text začína V STREDE vybraného kruhu a leží pod ním (z-index), takže sa kruh
+   a text prekrývajú a čítajú ako jeden predmet; `--eco-off` ho od stredu kruhu
+   o kus posúva späť (user, 2026-08-17: „posuň tú dosku ďalej od kruhu").
+   Miesto pre kruh drží JEDNA premenná (`--eco-gap`) - keby si odsadenie písal
+   rozvrh na ploche zvlášť, prebil by ten základný.
+   ZMAZANÉ 2026-08-18 (user): zvislá značková linka pri texte. Bola to náhrada
+   za doskou, ktorú tu už nikto nechce - text drží pri kružnici to, že na neho
+   vybraný kruh nalieha, nie ďalšia kresba vedľa neho.
+   Zoznam zostáva bez vodorovných liniek: bez dosky robia z výpisu tabuľku.
+   Zostáva odstup riadkov a modrá fajka. */
+.site .eco-sec .eco-detail{position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  margin-top:calc(var(--eco-node) / -2 + var(--eco-off));}
+.site .eco-sec .eco-detail-in{padding-top:var(--eco-gap);}
+.site .eco-sec .eco-rows{border-top:0;}
+.site .eco-sec .eco-rows li{border-bottom:0;padding:9px 0;}
+
+/* Šípky sú ikonové, teda ŠTVORCE - to isté pravidlo ako v hlavičke. Rozmer
+   zadal user (2026-08-17): 48 × 48, teda plnohodnotné tlačidlo, nie ovládací
+   prvok - preto `.btn` bez `.btn-sm` a obe strany písané ručne (výška `.btn`
+   je v prototype 48, šírku by si inak vzalo z odsadenia).
+   Číslovanie strán tu nie je - polohu v šestici ukazuje kružnica sama.
+
+   STOJA NAD POPISOM, ZĽAVA S NÍM LÍCUJÚ (user, 2026-08-19: „daj to nad
+   Komplexní… align left"). Sú preto prvým prvkom detailu, teda priamo v sadzbe:
+   zarovnanie tak drží sám text a platí na ploche aj v úzkom okne. Pôvodne stáli
+   pod zoznamom služieb, ktorý má každá línia inak dlhý, takže s každým
+   prepnutím poskočili - tu ich drží to, že text je pripnutý HORE a začína vždy
+   na tej istej výške. */
+/* Odstup pod hlavičkou je VÄČŠÍ než systémových 30 px (user, 2026-08-19).
+   Pod ňou nezačína sadzba, ale kružnica s bublinami - tá si berie miesto do
+   strán aj hore, takže pri systémovom odstupe naliehala na nadpis. Sekcia je
+   spoločná, takže to platí na /o-nas aj na úvode pre podnikateľov. */
+.site .eco-head{margin-bottom:clamp(38px,4.6vw,60px);}
+/* Odstup nesie hlavička, nie nadpis - inak by sa sčítal s jeho vlastnými 30 px. */
+.site .eco-head .sec-h{margin-bottom:0;}
+
+/* Šípky sú PRVÝ PRVOK DETAILU a zľava lícujú s textom pod sebou (user,
+   2026-08-19). Odstup nesú zdola, nie zhora: nad nimi už nič nie je. */
+.site .eco-nav{display:flex;align-items:center;justify-content:flex-start;
+  gap:10px;margin:0 0 24px;}
+.site .eco-nav-b{width:48px;height:48px;padding:0;flex:none;}
+
+/* Prepnutie línie je zmena obsahu, nie prekreslenie stránky: detail nabehne
+   ako celok a výpočet sa vysype po položkách, takže oko vie, kam sa pozerať.
+   `both` drží koncový stav, ktorý je zároveň prirodzený - keď sa animácia
+   nespustí (vypnutý pohyb), detail je normálne vidieť. */
+@keyframes eco-in{from{opacity:0;translate:0 8px;}to{opacity:1;translate:0 0;}}
+.site .eco-detail-in{animation:eco-in .4s var(--ease) both;}
+.site .eco-rows li{animation:eco-in .4s var(--ease) both;
+  animation-delay:calc(var(--i,0) * 32ms + 60ms);}
+
+/* WCAG 2.3.3 menuje točiace sa prvky ako typický spúšťač vestibulárnych
+   ťažkostí, takže tu nejde o kozmetiku - výber prepne rovno. */
+@media(prefers-reduced-motion:reduce){
+  .site .eco{--eco-turn:.01ms;}
+  .site .eco-node-in{transition:none;}
+  .site .eco-detail-in,.site .eco-rows li{animation:none;}
+}
+
+/* ============ RESPONSIVE ============ */
+@media(min-width:980px){
+
+  /* ---- EKOSYSTÉM na ploche ----
+     Kotva sa otáča doprava, takže vybraná línia stojí pri detaile. */
+  .site .eco{--eco-anchor:90deg;}
+
+  /* Kružnica aj text sedia v JEDNEJ bunke mriežky a OBE SA VIAŽU NA JEJ VRCH
+     (2026-08-19). Odsadenie textu = priemer dráhy plus polovica kľudového uzla,
+     teda súradnica stredu vybraného kruhu - odvodená, nie odhadnutá.
+     Na vrch, a nie na stred, preto, že výšku riadku určuje dlhší z dvojice
+     a zoznam služieb je pri každej línii inak dlhý: čokoľvek zavesené na strede
+     by sa s ním sťahovalo hore-dole. Takto obe strany začínajú vždy na tej
+     istej výške - a to je zároveň to, čo drží na mieste ŠÍPKY, ktoré stoja
+     v sadzbe nad popisom (user, ten istý deň: „daj to nad Komplexní… align
+     left"). Voľné miesto krátkej línie sa preto zbiera dole, kde ho nevidno.
+     `min-height` dáva textu výšku aspoň na priemer dráhy, aby z neho kruh
+     netrčal - sadzba sa v nej ale neplaví, stojí hore. */
+  .site .eco-sec .eco-ring{grid-area:1/1;justify-self:start;align-self:start;margin:0;}
+  .site .eco-sec .eco-detail{grid-area:1/1;align-self:start;
+    margin:0 0 0 calc(2 * var(--eco-rad) + var(--eco-node) / 2 + var(--eco-off));}
+  .site .eco-sec .eco-detail-in{padding:0 0 0 var(--eco-gap);
+    min-height:calc(2 * var(--eco-rad) + var(--eco-node));
+    display:flex;flex-direction:column;justify-content:flex-start;}
+
+  /* Zoznam služieb zostáva JEDNOSTĹPCOVÝ - v zozname sa každá služba číta ako
+     služba; dva stĺpce z neho spravia tabuľku (user, 2026-08-17). */
+}

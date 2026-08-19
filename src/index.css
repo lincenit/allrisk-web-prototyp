@@ -469,6 +469,19 @@ img,svg{display:block;max-width:100%;}
 .crumbs .on-dark{color:rgba(255,255,255,.7);}
 
 /* ============================================================
+   PRÍCHOD OBSAHU (motor v src/reveal.js)
+
+   Skryté je len to, čo JS aj vie odkryť: `.rv` nasadzuje motor a `html[data-rv]`
+   je na dokumente len vtedy, keď observer naozaj beží. Po dobehnutí obe triedy
+   z prvku zmiznú, takže tu nič netreba vracať späť.
+
+   Odstup blokov v sekcii drží prvok v `--rv-d` (poradie × 70 ms, strop 420 ms).
+   ============================================================ */
+html[data-rv] .rv{opacity:0;transform:translateY(18px);}
+html[data-rv] .rv.rv-in{animation:rv-up .58s cubic-bezier(.22,.61,.36,1) var(--rv-d,0ms) both;}
+@keyframes rv-up{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media(min-width:560px){
@@ -484,6 +497,9 @@ img,svg{display:block;max-width:100%;}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none !important;transition-duration:.001ms !important;}
+  /* poistka k reveal.js: keby sa prvok stihol schovať tesne pred prepnutím
+     systémovej voľby, bez animácie by sa už nemal ako vrátiť */
+  .rv{opacity:1 !important;transform:none !important;}
 }
 
 /* ============================================================

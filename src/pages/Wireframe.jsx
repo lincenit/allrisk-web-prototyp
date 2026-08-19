@@ -3,22 +3,27 @@
    pás záložiek v hlavičke nemení len menu, ale všetko pod ním.
 
    Čo publikum mení:
+     hero        - video len pre retail; firma a obec majú foto-hero
      rozcestník  - rodiny a obce dostanú „Co právě řešíte?", podnikatelia
                    namiesto neho „Proč si vybrat Allrisk" (systém péče)
      filozofia   - jedna veta na publikum
      Proč Allrisk- tri bloky pre rodiny a obce; podnikatelia majú na tom
                    mieste celý systém péče zo zrušenej stránky /podnikatele
      banner      - revize smluv / pojistného programu
-     profily     - archetypy daného publika; obce ich nemajú vôbec
+     profily     - len retail; firma ani obec archetypy nemajú
      FAQ         - iné otázky, nie tie isté inými slovami
 
-   Čo publikum NEMENÍ (rozhodnutie usera, 2026-08-11): hero video, reference,
-   blog a kontaktný formulár. Video je značková slučka, nie argument; ostatné
-   tri sú dôkaz a obsah o firme ako celku.
+   Čo publikum NEMENÍ: reference, blog a kontaktný formulár - to sú dôkaz
+   a obsah o firme ako celku.
+
+   HERO bol do 2026-08-18 spoločný (video pre všetkých, „je to značka, nie
+   argument"). User to obrátil: video je kulisa bez tvrdenia a bez cesty ďalej,
+   čo firme ani obci nestačí. Video zostáva retailu, ostatní dvaja dostanú
+   foto-hero s vetou, dvoma tlačidlami a tromi sklenenými kartami.
 
    Obsah samotný žije v data/home.js a data/care.js - tu je len poskladanie.
    ============================================================ */
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './wireframe.css'
 import './profile.css'
@@ -30,13 +35,16 @@ import { profilesFor, countGen } from '../data/profiles.js'
 import { intentsFor, NEED_CLAIM } from '../data/needfinder.js'
 import { segmentBy } from '../data/menu.js'
 import { useSegment } from '../segment.js'
-import { PHIL, WHY, BANNER, PROFILES_HEAD, FAQ, homeFor } from '../data/home.js'
+import { HERO, WHY, BANNER, PROFILES_HEAD, FAQ, homeFor } from '../data/home.js'
 import { BizPrinciples, BizCare } from '../components/BizCare.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
+import { HERO_VARIANTS, HERO_DEFAULT, heroVariant } from '../heroVariants.js'
+import HeaderDebug from '../components/HeaderDebug.jsx'
 import { WHY_VARIANTS, WHY_VARIANT_DEFAULT, whyVariant } from '../bizVariants.js'
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import Illus from '../components/Illus.jsx'
+import HeroVideo from '../components/HeroVideo.jsx'
 import { ReferenceCarousel } from '../components/References.jsx'
 import { REFERENCES_HOME } from '../data/references.js'
 import { BlogSection } from '../components/ArticleParts.jsx'
@@ -49,10 +57,10 @@ import {
   IconChartLine, IconCoin, IconBuildingBank, IconBuildingSkyscraper, IconBolt, IconKey, IconAlertTriangle,
   IconArrowUpRight, IconArrowLeft, IconChevronDown,
   IconTruck, IconPigMoney, IconCreditCard, IconDeviceMobile, IconGavel, IconChecklist,
+  IconMovie,
   IconHomeDollar, IconHomeSearch, IconHomeCheck,
-  IconLicense, IconShieldCheck,
-  IconPlayerPlayFilled, IconPlayerPauseFilled, IconVolume, IconVolumeOff,
-  IconMaximize, IconMinimize, IconLayoutGrid,
+  IconLicense, IconShieldCheck, IconUserCheck, IconArrowRight,
+  IconLayoutGrid,
 } from '@tabler/icons-react'
 
 // Ikony rozcestníka a ilustračné fallbacky: kľúč z dát -> tabler komponent
@@ -64,20 +72,15 @@ const RZ_ICONS = {
   building: IconBuildingSkyscraper, key: IconKey, gavel: IconGavel, bolt: IconBolt,
   mobile: IconDeviceMobile, houseSell: IconHomeDollar, houseSearch: IconHomeSearch,
   houseCheck: IconHomeCheck, license: IconLicense, checklist: IconChecklist,
+  // `partner` sem pribudol s foto-herom: je to ten istý kľúč, aký nesú princípy
+  // v BizCare.jsx, takže dáta hovoria o ikone jedným menom na celom webe.
+  partner: IconUserCheck,
 }
 // Produktové stránky zatiaľ neexistujú - bez vlastnej routy ide položka na kontakt s témou.
 const temaHref = (label) => `/kontakt?tema=${encodeURIComponent(label)}`
 const productHref = (p) => p.to || temaHref(p.label)
 // väzba „vybrat z…" žiada genitív, tam je tvar rovnaký pre všetky počty
 const productPickLabel = (n) => `Vybrat z ${n} produktů`
-
-// Video na pozadí hera. Má to byť tichá značková slučka bez titulkov a bez
-// tvárí - inak text v hero konkuruje deju vo videu. Je zámerne rovnaké pre
-// všetky tri publiká: je to značka, nie argument pre konkrétne publikum.
-// hero.mp4 = webový export z 16x9_Allrisk_smycka.mp4 (koreň workspace, 332 MB):
-//   1920×1080, H.264 high, CRF 25 / max 3,2 Mb/s, +faststart → ~20 MB.
-// TODO(asset): obsahovo je to stále provizórium - má hovorené slovo aj titulky.
-const HERO_VIDEO = '/hero.mp4'
 
 // Modrý akcent v nadpise. Ktorá časť sa zvýrazní, určujú dáta (`accent`) -
 // česky sa to nedá odvodiť pravidlom („Chci se pojistit" vs „Chci úvěr").
@@ -199,6 +202,58 @@ function NeedFinder({ intents, eyebrow }) {
   )
 }
 
+/* Foto-hero úvodu - podoba pre podnikateľov a pre obce.
+   Ten istý mechanizmus ako /vozidla a /o-nas: `.hero photo-hero` + `.photo-hero-bg`
+   s fotkou v pozadí, modrý závoj a značkovú farbu drží CSS (wireframe.css), tu je
+   len obsah. Geometriu (podlezenie pod priehľadnú hlavičku, dva stĺpce na širokom
+   okne) nesie `.wf-phero`.
+
+   Dekoráciu má obe - kružnice aj stuhu. To je pravidlo každého modrého poľa vrátane
+   fotohera (user, 2026-08-16); výnimkou je len videohero, kde je vlásočnica cez
+   pohyblivý záber šmuha.
+
+   Karty vpravo sú tvrdenia, nie odkazy: `<li>` bez `<a>`. Nemajú kam viesť a náznak
+   kliknuteľnosti v hero je sľub, ktorý stránka nesplní. Jeden riadok na kartu -
+   vysvetľujúca veta pod tvrdením padla 2026-08-16 a platí to aj tu.
+
+   Prvé tlačidlo je kotva na tej istej stránke, preto `<a href="#…">` a nie `<Link>`:
+   router by z kotvy urobil novú adresu a scroll-margin z `[id]` by sa neuplatnil. */
+function HeroPhoto({ hero }) {
+  return (
+    <section className="hero wf-phero photo-hero">
+      {/* fotka je pozadie, nie obsah - preto div s background-image a aria-hidden.
+          Keby súbor chýbal, ostane pod ňou --hero-base, teda značkový modrý
+          prechod: hero tým nestratí tvar, len fotku. */}
+      <div className="photo-hero-bg" style={{ backgroundImage: `url(${asset(hero.img)})` }} aria-hidden="true" />
+      <Decor />
+      <Line pos="hero" />
+      <div className="wrap hero-in wf-phero-in">
+        <div className="hero-tx">
+          <h1>{hero.h} <b>{hero.hb}</b></h1>
+          <p>{hero.p}</p>
+          <div className="hero-cta">
+            <a href={hero.cta.to} className="btn fill">
+              {hero.cta.label} <IconArrowRight size={18} stroke={2.2} aria-hidden="true" />
+            </a>
+            <Link to={hero.cta2.to} className="btn">{hero.cta2.label}</Link>
+          </div>
+        </div>
+        <ul className="hero-points">
+          {hero.points.map((pt) => {
+            const C = RZ_ICONS[pt.icon] || IconShield
+            return (
+              <li key={pt.t}>
+                <span className="hp-ic"><C size={24} stroke={1.7} /></span>
+                <span className="hp-tx"><b>{pt.t}</b></span>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
 // Časté dotazy. Vlastný komponent kvôli stavu: pri prepnutí publika je otvorená
 // otázka iná otázka, takže sa musí zavrieť. Rieši to `key={seg}` na tomto
 // komponente - React ho odmontuje aj so stavom. Efekt, ktorý index resetuje,
@@ -231,199 +286,40 @@ export default function Wireframe() {
   const [seg] = useSegment()
   const segObj = segmentBy(seg)
   const intents = intentsFor(seg)
-  const phil = homeFor(PHIL, seg)
   const why = homeFor(WHY, seg)
   const banner = homeFor(BANNER, seg)
   const faq = homeFor(FAQ, seg)
   const profHead = homeFor(PROFILES_HEAD, seg)
   const profiles = profilesFor(seg)
+  // `null` = video (retail), objekt = foto-hero (firma, obec). Tá istá konvencia
+  // ako pri WHY: null znamená „iný tvar", nie „obsah chýba".
+  const hero = homeFor(HERO, seg)
   // Podoba sekcie „Proč si vybrat Allrisk". Prepínač je v ladiacom paneli a ten
   // je na úvode len pre podnikateľov - ostatné publiká tú sekciu nemajú.
   const [whyRaw, setWhy] = useDebugOption('bizWhy', WHY_VARIANT_DEFAULT)
   const whyStyle = whyVariant(whyRaw)
+  // Podoba hera pre rodiny: `video` (kulisa) alebo `classic` (motto, čísla, dve
+  // tlačidlá a video ako karta) - viď src/heroVariants.js. Podobu si nesie
+  // sekcia triedou, dokument o nej nemusí vedieť.
+  const [heroRaw, setHeroVar] = useDebugOption('hero', HERO_DEFAULT)
+  const heroMode = heroVariant(heroRaw)
 
-  /* ---- video v hero ----
-     Video kryje celú sekciu a beží samo a potichu - je to kulisa, nie obsah.
-     Preto je aj bez tlačidla „přehrát": ovládanie je len pauza a zvuk pre
-     toho, koho pohyb ruší. */
-  const videoRef = useRef(null)
-  const heroRef = useRef(null)
-  // Video beží aj pod hlavičkou (na každej šírke), takže header nesmie mať vlastnú
-  // plochu - hook ho sprehľadní a plné pozadie mu vráti až scroll.
+  // Priehľadná hlavička nad hero. Platí pre obe podoby - video aj fotku -
+  // takže hook patrí stránke, nie jednému z dvoch hero komponentov.
   useHeroHeader()
-  const [videoPlaying, setVideoPlaying] = useState(true)
-  const [videoMuted, setVideoMuted] = useState(true)
-  const [videoFs, setVideoFs] = useState(false)
-  // Hlasitosť je posuvník, nie len prepínač - kulisa má znieť potichu, nie naplno.
-  // Autoplay ale beží stlmene (inak ho prehliadač nespustí), takže je to hodnota
-  // „ako nahlas to bude, keď to odtlmíš".
-  const [videoVol, setVideoVol] = useState(0.5)
-  const videoBoxRef = useRef(null)
-  const playVideo = () => {
-    setVideoPlaying(true)
-    videoRef.current?.play().catch(() => {})
-  }
-  const pauseVideo = () => {
-    setVideoPlaying(false)
-    videoRef.current?.pause()
-  }
-  const toggleMute = () => {
-    const v = videoRef.current
-    if (!v) return
-    // odtlmiť na nulovej hlasitosti je ticho, ktoré vyzerá ako porucha - vrátime slušnú hodnotu
-    if (v.muted && videoVol === 0) { v.volume = 0.5; setVideoVol(0.5) }
-    v.muted = !v.muted
-    setVideoMuted(v.muted)
-  }
-  // Ťahanie posuvníka je zároveň žiadosť o zvuk; nula naopak stlmí.
-  const changeVol = (e) => {
-    const val = Number(e.target.value)
-    const v = videoRef.current
-    setVideoVol(val)
-    if (!v) return
-    v.volume = val
-    v.muted = val === 0
-    setVideoMuted(v.muted)
-  }
-  /* ---- ovládanie priamo na ploche videa ----
-     Klik = pauza/beh, vodorovný ťah = pretáčanie (doľava späť, doprava vpred).
-     Mierka: ťah cez CELÚ šírku prejde celé video, takže sa nemá čo učiť - to,
-     ako ďaleko si zašiel, sedí s tým, koľko plochy si prešiel.
-     Rad tlačidiel vpravo dole zostáva: je to jediná cesta pre klávesnicu a pre
-     toho, kto ťahanie neobjaví. */
-  const dragRef = useRef(null)
-  const onVideoDown = (e) => {
-    const v = videoRef.current
-    const box = videoBoxRef.current
-    if (!v || !box) return
-    dragRef.current = { x: e.clientX, t: v.currentTime, w: box.clientWidth, was: !v.paused, moved: false }
-    e.currentTarget.setPointerCapture?.(e.pointerId)
-  }
-  const onVideoMove = (e) => {
-    const d = dragRef.current
-    const v = videoRef.current
-    if (!d || !v) return
-    const dx = e.clientX - d.x
-    // Prah 6px: bez neho by sa z každého klepnutia stalo pretočenie o pár snímok
-    // a klik by prestal spoľahlivo pauzovať.
-    if (!d.moved && Math.abs(dx) < 6) return
-    // Počas pretáčania video stojí - inak sa čas posúva pod rukou aj sám od seba
-    // a snímka nesedí s tým, kde človek drží prst.
-    if (!d.moved) { d.moved = true; v.pause() }
-    const dur = v.duration
-    if (!Number.isFinite(dur) || dur <= 0 || !d.w) return
-    v.currentTime = Math.min(dur, Math.max(0, d.t + (dx / d.w) * dur))
-  }
-  const onVideoUp = (e) => {
-    const d = dragRef.current
-    const v = videoRef.current
-    dragRef.current = null
-    e.currentTarget.releasePointerCapture?.(e.pointerId)
-    if (!d || !v) return
-    // Po pretáčaní sa prehrávanie vráti do stavu spred ťahu - kto si video
-    // predtým zastavil, nechce, aby mu ho pretočenie zase rozbehlo.
-    if (d.moved) { if (d.was) playVideo(); return }
-    if (v.paused) playVideo(); else pauseVideo()
-  }
-
-  // Pomer stránke nediktujeme natvrdo - berieme ho z videa samotného, nech sedí
-  // aj keď klient nahrá iný export než 16:9.
-  const readVideoRatio = () => {
-    const v = videoRef.current
-    const hero = heroRef.current
-    // hlasitosť z posuvníka platí od prvej snímky (video beží stlmene, kým ju človek nepustí)
-    if (v) v.volume = videoVol
-    if (!hero || !v?.videoWidth || !v.videoHeight) return
-    // Pomer bezrozmerne (calc() so zápisom `16 / 9` ako aspect-ratio pracovať nevie).
-    // Na sekciu, nie na samotný pás - vlastné vlastnosti sa dedia nadol.
-    hero.style.setProperty('--vid-arn', String(v.videoWidth / v.videoHeight))
-  }
-  const toggleFullscreen = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen?.().catch(() => {})
-      return
-    }
-    const box = videoBoxRef.current
-    const v = videoRef.current
-    // Otočiť displej sa dá vyžiadať len vo fullscreene a len tam, kde to prehliadač
-    // vie (Android). Na iOS si telefón otočí človek sám, preto chybu ticho ignorujeme.
-    const lockLandscape = () => { screen.orientation?.lock?.('landscape').catch(() => {}) }
-    if (box?.requestFullscreen) box.requestFullscreen().then(lockLandscape, () => {})
-    // iOS Safari nevie fullscreen na ľubovoľnom elemente - tam ide do fullscreenu
-    // samotné video cez natívny prehrávač (a ten si otočenie rieši sám).
-    else if (v?.webkitEnterFullscreen) v.webkitEnterFullscreen()
-  }
-  useEffect(() => {
-    const onFsChange = () => {
-      const on = document.fullscreenElement === videoBoxRef.current
-      setVideoFs(on)
-      if (!on) screen.orientation?.unlock?.()
-    }
-    document.addEventListener('fullscreenchange', onFsChange)
-    return () => document.removeEventListener('fullscreenchange', onFsChange)
-  }, [])
-
-  // Filozofia sa rozsvecuje po slovách podľa scrollu. Sekcia existuje len pre
-  // rodiny, takže `el` môže byť null - efekt sa vtedy ticho neprihlási.
-  const philRef = useRef(null)
-  useEffect(() => {
-    const el = philRef.current
-    if (!el) return undefined
-    const words = el.querySelectorAll('.w')
-    const onScroll = () => {
-      const r = el.getBoundingClientRect()
-      const vh = window.innerHeight
-      const prog = Math.min(1, Math.max(0, (vh * 0.8 - r.top) / (vh * 0.55)))
-      const lit = Math.round(prog * words.length)
-      words.forEach((w, i) => w.classList.toggle('lit', i < lit))
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [phil?.text])
-
-  const philAccent = new Set(phil?.accent)
 
   return (
     <div className="site">
       {/* ============ HERO ============ */}
-      <section className="hero wf-hero" ref={heroRef}>
-        <div className="hero-bgvid" ref={videoBoxRef}>
-          <video ref={videoRef} className="hero-video-el" muted loop playsInline autoPlay
-                 onLoadedMetadata={readVideoRatio}
-                 onPointerDown={onVideoDown} onPointerMove={onVideoMove}
-                 onPointerUp={onVideoUp} onPointerCancel={onVideoUp}>
-            <source src={asset(HERO_VIDEO)} type="video/mp4" />
-          </video>
-          <div className="hero-video-ctrls">
-            <button onClick={videoPlaying ? pauseVideo : playVideo} aria-label={videoPlaying ? 'Pozastavit video' : 'Přehrát video'}>
-              {videoPlaying ? <IconPlayerPauseFilled size={17} /> : <IconPlayerPlayFilled size={17} />}
-            </button>
-            {/* zvuk = prepínač + rozsah; posuvník sa rozbalí pri prejdení myšou,
-                aby rad tlačidiel na telefóne nezaberal pol šírky videa */}
-            <div className="hero-vol">
-              <button onClick={toggleMute} aria-label={videoMuted ? 'Zapnout zvuk' : 'Ztlumit'}>
-                {videoMuted ? <IconVolumeOff size={18} /> : <IconVolume size={18} />}
-              </button>
-              <input
-                type="range" className="hero-vol-range" min="0" max="1" step="0.05"
-                value={videoVol} onChange={changeVol} aria-label="Hlasitost videa"
-                style={{ '--vol': `${videoVol * 100}%` }}
-              />
-            </div>
-            {/* na telefóne je hero len pás v pomere videa - celá obrazovka je tu, po otočení na šírku */}
-            <button onClick={toggleFullscreen} aria-label={videoFs ? 'Ukončit celou obrazovku' : 'Přehrát přes celou obrazovku'}>
-              {videoFs ? <IconMinimize size={18} /> : <IconMaximize size={18} />}
-            </button>
-          </div>
-        </div>
-        {/* Videohero nemá ani jednu dekoráciu. Stuha tu bola skúšaná 2026-08-16
-            a padla: záber si nesie vlastnú sadzbu („Vítejte ve finanční…") a
-            stuha jej ide rovno cez ňu. Kružnice cez pohyblivý záber sú šmuha.
-            Prvú stuhu úvodu preto nesie až banner nižšie. */}
-      </section>
+      {/* Video LEN PRE RETAIL (user, 2026-08-18). Značková slučka je kulisa bez
+          tvrdenia a bez cesty ďalej - to sedí jednotlivcom a rodinám, ktorí prídu
+          bez konkrétneho zadania. Firma a obec dostanú foto-hero: veta, dva kroky
+          a tri sklenené karty s dôkazom (data/home.js HERO).
+          Podnikatelia majú späť presne to hero, aké mala zrušená stránka
+          /podnikatele - tá istá fotka, ten istý titulok, tá istá veta. */}
+      {hero ? <HeroPhoto hero={hero} /> : <HeroVideo variant={heroMode} />}
 
-      {/* Za videom nič nenasleduje - stránka ide rovno do rozcestníka. */}
+      {/* Za herom nič nenasleduje - stránka ide rovno do rozcestníka. */}
 
       {/* ============ ROZCESTNÍK / PROČ ALLRISK PRO FIRMY ============ */}
       {/* Prvá vec po videu odpovedá na „co tu pro mě je". Rodinám a obciam je
@@ -437,21 +333,10 @@ export default function Wireframe() {
           : <BizPrinciples variant={whyStyle} />}
       </section>
 
-      {/* ============ FILOZOFIA ============ */}
-      {/* Len jednotlivci a rodiny (user, 2026-08-11). Firma ani obec sa
-          nerozhodujú podľa vety o životných situáciách. */}
-      {phil && (
-        <section className="phil">
-          <div className="wrap">
-            <span className="ey">Naše filozofie</span>
-            <p className="phil-text" ref={philRef}>
-              {phil.text.split(' ').map((w, i) => (
-                <span key={`${w}-${i}`}><span className={`w${philAccent.has(w) ? ' acc' : ''}`}>{w}</span>{' '}</span>
-              ))}
-            </p>
-          </div>
-        </section>
-      )}
+      {/* ZMAZANÉ 2026-08-19 (user): sekcia „Naše filozofie" - jedna veta,
+          ktorá sa pri scrollovaní rozsvecovala po slovách. Mala ju len rodina
+          a jednotlivci, ostatné publiká nie, takže s ňou padol celý tvar aj
+          jeho motor (.phil vo wireframe.css, PHIL v data/home.js). */}
 
       {/* ============ PROČ ALLRISK ============ */}
       {/* Rodiny a obce: tri bloky text + ilustrácia, striedavo.
@@ -497,7 +382,10 @@ export default function Wireframe() {
 
       {/* ============ KLIENTSKÉ PROFILY ============ */}
       {/* Dlaždica už nie je tab s panelom - každý profil má vlastnú stránku /profil/:slug.
-          Města a obce sekciu nemajú: obec nie je archetyp človeka. */}
+          LEN RETAIL (user, 2026-08-18): firma ani obec sekciu nemajú. Archetyp je
+          pomôcka pre toho, kto sa v ponuke nevyzná; firma svoju kategóriu pozná.
+          Podmienka zostáva dvojitá - `profHead` je vypnutá sekcia (null v dátach),
+          `profiles.length` poistka proti publiku bez archetypov. */}
       {profHead && profiles.length > 0 && (
         <section className="sec wrap">
           <SecHead
@@ -544,6 +432,16 @@ export default function Wireframe() {
           ostatné nemajú. Voľba „Spolupráce" tu od 2026-08-16 nie je - kroky
           majú rozhodnutý tvar. */}
       <DebugPanel>
+        <HeaderDebug />
+        {/* Skupina má zmysel len tam, kde je video - firma a obec majú na úvode
+            fotohero a prepínať by nemali čo. Obe podoby platia na každej šírke;
+            na telefóne je `video` rozhodnuté na pás pod hlavičkou (heroVariants.js). */}
+        {!hero && (
+          <DebugGroup
+            icon={IconMovie} label="Hero" value={heroMode} onChange={setHeroVar} wrap
+            options={HERO_VARIANTS}
+          />
+        )}
         {!intents && (
           <DebugGroup
             icon={IconLayoutGrid} label="Proč Allrisk" value={whyStyle} onChange={setWhy} wrap

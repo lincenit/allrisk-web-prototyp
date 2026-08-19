@@ -13,6 +13,7 @@ import About from './pages/About.jsx'
 import Blog from './pages/Blog.jsx'
 import ArticleDetail from './pages/ArticleDetail.jsx'
 import { setSegment, readSegment } from './segment.js'
+import { useReveal } from './reveal.js'
 
 // Zrušená adresa /podnikatele. Presmerovať na úvod nestačí - kto na ňu príde
 // zvonku, musí pristáť na obsahu, ktorý si vyžiadal, nie na verzii pre rodiny.
@@ -24,6 +25,12 @@ function BusinessRedirect() {
 }
 
 export default function App() {
+  // Príchod obsahu je motor pre celý web (src/reveal.js), preto stojí tu a nie
+  // na stránkach - sekcie majú na všetkých rovnaký tvar a nové stránky ho tak
+  // dostanú bez toho, aby si ho musela pripájať každá zvlášť. Bez voľby: podoba
+  // je jedna (user, 2026-08-19) a prepínač s jedinou možnosťou je horší než žiadny.
+  useReveal()
+
   // Jeden spoločný header pre celý prototyp.
   // URL zostávajú v češtine (user-facing + SEO), názvy komponentov sú anglické.
   return (

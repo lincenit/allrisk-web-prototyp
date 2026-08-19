@@ -22,14 +22,14 @@ import { SecHead } from './PageParts.jsx'
 import Illus from './Illus.jsx'
 import { Decor } from './Decor.jsx'
 import { Line } from './Line.jsx'
-import { STEPS, PRINCIPLES, AFTERCARE, CLAIMS, FLEET, ECOSYSTEM } from '../data/care.js'
+import Ecosystem from './Ecosystem.jsx'
+import { STEPS, PRINCIPLES, AFTERCARE, CLAIMS, FLEET } from '../data/care.js'
 import { whyVariant, WHY_VARIANT_DEFAULT } from '../bizVariants.js'
 import {
   IconUserCheck, IconCar, IconShieldCheck, IconChevronDown,
   IconCircleCheck, IconLifebuoy, IconZoomCheck, IconRefresh, IconAward, IconChecklist,
   IconCheck, IconTruck, IconHeadset, IconPaw,
   IconWheel, IconDisc, IconPlugConnected, IconCaravan, IconScale, IconCloudStorm,
-  IconShieldHalf, IconChartLine, IconBuildingSkyscraper, IconHelpCircle, IconGavel, IconBolt,
 } from '@tabler/icons-react'
 
 const PRINCIPLE_ICONS = {
@@ -44,10 +44,6 @@ const PRINCIPLE_ICONS = {
 const FLEET_ICONS = {
   car: IconCar, tow: IconTruck, help: IconHeadset, animal: IconPaw, tyre: IconWheel,
   disc: IconDisc, cable: IconPlugConnected, trailer: IconCaravan, law: IconScale, storm: IconCloudStorm,
-}
-const ECO_ICONS = {
-  shield: IconShieldHalf, chart: IconChartLine, building: IconBuildingSkyscraper,
-  help: IconHelpCircle, law: IconGavel, bolt: IconBolt,
 }
 
 /* ---------- Proč si vybrat Allrisk ----------
@@ -188,7 +184,7 @@ export function BizCare() {
             />
             <StepList items={STEPS} />
           </div>
-          <Illus src="/illus/tabler/podnikatele/spoluprace.svg" icon={IconChecklist} />
+          <Illus src="/illus/tabler/podnikatele/spoluprace.png" icon={IconChecklist} />
         </div>
       </section>
 
@@ -208,7 +204,7 @@ export function BizCare() {
               ))}
             </ul>
           </div>
-          <Illus src="/illus/tabler/podnikatele/garant.svg" icon={IconUserCheck} />
+          <Illus src="/illus/tabler/podnikatele/pece.png" icon={IconUserCheck} />
         </div>
       </section>
 
@@ -269,31 +265,23 @@ export function BizCare() {
         </div>
       </section>
 
-      {/* ============ EKOSYSTÉM (brožúra s. 10) ============
+      {/* ============ EKOSYSTÉM ============
           Až na konci: je to odpoveď na „a co ještě umíte", nie argument
-          stránky. Firemný rez, nie celý katalóg pre všetkých. */}
-      <section className="sec wrap" id="ekosystem">
-        <SecHead
-          ey="Vše pod jednou střechou"
-          title={<>Ucelený unikátní <b>ekosystém Allrisk</b></>}
-          lead="Služby na sebe navazují. Na jednom místě vyřešíte i financování, nemovitosti a provozní náklady."
-        />
-        <div className="biz-eco">
-          {ECOSYSTEM.map((e) => {
-            const I = ECO_ICONS[e.icon]
-            return (
-              <article key={e.key}>
-                <span className="biz-eco-ic">{I && <I size={22} stroke={1.7} />}</span>
-                <b>{e.label}</b>
-                <p>{e.desc}</p>
-                <ul>
-                  {e.items.map((i) => <li key={i}>{i}</li>)}
-                </ul>
-              </article>
-            )
-          })}
-        </div>
-      </section>
+          stránky.
+
+          TÁ ISTÁ SEKCIA AKO NA /o-nas (user, 2026-08-19: „necháj label a title,
+          zvyšok vymeň za to, čo je na about"). Do tejto zmeny tu stála vlastná
+          mriežka šiestich kariet nad firemným rezom dát (`ECOSYSTEM` z care.js,
+          `.biz-eco` v business.css) - druhá podoba toho istého tvrdenia. Teraz
+          je to komponent s kružnicou, takže sa ekosystém na oboch miestach
+          kreslí, otáča aj číta rovnako.
+
+          Zostáva JEDINE oko nad nadpisom: „Vše pod jednou střechou" je vetná
+          hlavička úvodu, kde sekcia nadväzuje na predchádzajúce pásy; /o-nas má
+          na tom mieste holé „Ekosystém". Nadpis je na oboch miestach ten istý,
+          takže ho nesie komponent. Odišla veta pod ním - na /o-nas žiadna nie je
+          a popis línie ju hovorí presnejšie. */}
+      <Ecosystem id="ekosystem" ey="Vše pod jednou střechou" />
     </>
   )
 }

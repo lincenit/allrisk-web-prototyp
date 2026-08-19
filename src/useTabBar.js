@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { attachDragScroll } from './dragScroll.js'
 
-// Vodorovný rad záložiek (.tabbar) drží aktívnu záložku vo výreze.
+// Vodorovný rad záložiek drží aktívnu záložku vo výreze. Používajú ho záložky
+// v obsahu (.tabbar), dlaždice profilov (.prof-tabs) aj publikum v hlavičke
+// (.hdr-tabs-in) - je to na webe jeden a ten istý pohyb, tak nech ho robí jeden kód.
 // Na mobile sa do šírky zmestia 2-3 taby, takže bez tohto po prepnutí často nevidno,
 // ktorá je vybraná - a po scrollnutí späť hore je rad odrolovaný inde, než ho človek nechal.
 // Prvé nastavenie je bez animácie (žiadny pohyb pri načítaní stránky), ďalšie plynulé.
@@ -14,7 +16,7 @@ export function useTabBar(activeKey) {
     const on = bar?.querySelector('.on')
     if (!bar || !on) return
     // posúva sa vnútorná dráha, nie obal - ten drží odsadenie a fokusový prstenec
-    const box = bar.querySelector('.tabbar-track') || bar
+    const box = bar.querySelector('.tabbar-track,.hdr-tabs-in') || bar
     // aktívny tab vycentrujeme; keď sa celý rad zmestí, scrollTo nič neurobí
     const left = Math.max(0, on.offsetLeft - (box.clientWidth - on.offsetWidth) / 2)
     box.scrollTo({ left, behavior: first.current ? 'auto' : 'smooth' })
@@ -26,7 +28,7 @@ export function useTabBar(activeKey) {
   useEffect(() => {
     const bar = ref.current
     if (!bar) return
-    return attachDragScroll(bar.querySelector('.tabbar-track') || bar)
+    return attachDragScroll(bar.querySelector('.tabbar-track,.hdr-tabs-in') || bar)
   }, [])
 
   return ref

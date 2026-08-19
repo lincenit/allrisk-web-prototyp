@@ -138,6 +138,17 @@ export function ProfileTabs({ profiles, value, onChange }) {
 // Jedna situácia. `context` mení iba CTA a nadpisové drobnosti - telo je zhodné.
 //   context='profil'  → z profilu klikáš na produkt
 //   context='produkt' → z produktu klikáš na profil
+// Krok riešenia býva písaný ako „Krátký popisek: co se stalo". Popisek chceme tučne,
+// aby sa štyri kroky dali preletieť očami. Delíme len vtedy, keď je to naozaj popisek:
+// krátky (do 40 znakov) a bez vety v sebe - inak by sa tučným stala polovica príbehu.
+const splitFixLead = (text) => {
+  const i = text.indexOf(': ')
+  if (i < 0 || i > 40) return [null, text]
+  const lead = text.slice(0, i)
+  if (lead.includes('.')) return [null, text]
+  return [lead, text.slice(i + 2)]
+}
+
 export function SituationPanel({ profile, situation, context = 'profil' }) {
   // Z profilu je „druhá strana" produkt, z produktu je to samotný profil.
   const toProduct = context === 'profil'
@@ -152,11 +163,19 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
         <p className="sit-story">{situation.story}</p>
 
         <div className="sit-fix">
-          <div className="sit-lbl">Jak to vyřešilo pojištění</div>
+          {/* Klientske zadanie strieda znenie podľa toho, čo prípad rieši („Jak jsme to
+              vyřešili investováním"). Prípady bez `fixLbl` padnú na všeobecné. */}
+          <div className="sit-lbl">{situation.fixLbl || 'Jak to vyřešilo pojištění'}</div>
           <ul>
-            {situation.fix.map((f) => (
-              <li key={f}><IconCircleCheck size={18} stroke={1.8} /><span>{f}</span></li>
-            ))}
+            {situation.fix.map((f) => {
+              const [lead, rest] = splitFixLead(f)
+              return (
+                <li key={f}>
+                  <IconCircleCheck size={18} stroke={1.8} />
+                  <span>{lead ? <><b>{lead}:</b> {rest}</> : f}</span>
+                </li>
+              )
+            })}
           </ul>
         </div>
 
@@ -210,7 +229,7 @@ export function SituationPanel({ profile, situation, context = 'profil' }) {
 // Pôvodne jeden stĺpec so štítkom naliehavosti na každom riadku; naliehavosť sa tak
 // dala prečítať až po položkách a rovnaké úrovne držala pri sebe len zhoda triedenia.
 // Dnes je delenie samotné rozloženie: úroveň je hlavička skupiny, položka pod ňu patrí.
-// Preto na karte NIE JE štítok - v skupine „Nutnost" by bol na každej karte ten istý.
+// Preto na karte NIE JE štítok - v skupine „Absolutní základ" by bol na každej karte ten istý.
 export function SolvedList({ items }) {
   const sorted = [...items].sort((a, b) => needRank(a.need) - needRank(b.need))
   const groups = groupByNeed(sorted)

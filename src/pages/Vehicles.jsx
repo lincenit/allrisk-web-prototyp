@@ -10,6 +10,7 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
+import HeaderDebug from '../components/HeaderDebug.jsx'
 import { TAB_VARIANTS, TAB_VARIANT_DEFAULT, tabVariant } from '../tabVariants.js'
 import { BLOG_PROD_VARIANTS, BLOG_PROD_DEFAULT } from '../blogVariants.js'
 import { ProductArticles } from '../components/ArticleParts.jsx'
@@ -249,6 +250,7 @@ export default function Vehicles() {
       {/* rad záložiek je ten istý prvok ako v profile klienta - variant sa prepína
           na oboch stránkach naraz, aby sa dal porovnať v oboch kontextoch */}
       <DebugPanel>
+        <HeaderDebug />
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}

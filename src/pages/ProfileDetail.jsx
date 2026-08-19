@@ -8,6 +8,7 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import TabBar from '../components/TabBar.jsx'
 import { DebugPanel, DebugGroup, useDebugOption } from '../components/DebugPanel.jsx'
+import HeaderDebug from '../components/HeaderDebug.jsx'
 import { TAB_VARIANTS, TAB_VARIANT_DEFAULT, tabVariant } from '../tabVariants.js'
 import { profilesFor, profileBySlug, situationCount } from '../data/profiles.js'
 import { useSegmentPage } from '../segment.js'
@@ -97,9 +98,11 @@ export default function ProfileDetail() {
           inak človek po kliknutí nevie, či je tam, kam mieril */}
       <section id="prof-reseni" className="sec wrap">
         {/* zámerne bez skloňovania názvu profilu - „u podnikatel“ česky nedáva zmysel */}
+        {/* Lede je per profil, keď ho profil má (`solvedLead` - klientovo znenie);
+            profily bez neho padnú na všeobecné, ktoré platí pre ktorýkoľvek archetyp. */}
         <SecHead
           title={<>Co je dobré mít <b>vyřešeno</b></>}
-          lead="Pro tenhle profil dává smysl tohle - rozdělené podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje."
+          lead={p.solvedLead || 'Pro tenhle profil dává smysl tohle - rozdělené podle toho, co by chybělo nejvíc. Nejde o kompletní katalog, jde o to, co v téhle situaci skutečně rozhoduje.'}
         />
         <SolvedList items={p.solved} />
       </section>
@@ -136,6 +139,7 @@ export default function ProfileDetail() {
 
       {/* ten istý prepínač variantov ako na /vozidla - rad záložiek je tam aj tu ten istý prvok */}
       <DebugPanel>
+        <HeaderDebug />
         <DebugGroup
           icon={IconLayoutNavbar} label="Záložky" value={tabStyle} onChange={setTabStyle} wrap
           options={TAB_VARIANTS}

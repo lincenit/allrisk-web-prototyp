@@ -26,6 +26,13 @@ export function setSegment(next) {
   window.dispatchEvent(new CustomEvent(EVENT, { detail: next }))
 }
 
+// Odber zmeny publika pre kód MIMO Reactu (dekorácie sa losujú v module, nie
+// v komponente - viď decorPick.js). Vracia odhlásenie, aby sa dal odber zrušiť.
+export function onSegmentChange(fn) {
+  window.addEventListener(EVENT, fn)
+  return () => window.removeEventListener(EVENT, fn)
+}
+
 export function useSegment() {
   const [seg, setSeg] = useState(readSegment)
 

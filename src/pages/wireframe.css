@@ -275,6 +275,76 @@
 .site .hero-video-el{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;object-position:center;background:var(--grad-blue);}
 
+/* ---- TELEFÓN: PÁS POD HLAVIČKOU ----
+   ROZHODNUTÉ, nie voľba (user, 2026-08-19: „pri variante video musí byť Pás pod
+   hlavičkou na mobile"). Pri 390px má 16:9 video 219px a hlavička (128px) z toho
+   zakryje viac než polovicu - aj s titulkom, ktorý si video nesie samo. Preto
+   video začína POD hlavičkou a pás je vyšší: 27:20 namiesto 16:9. Orezáva boky
+   (schránka je užšia než pomer videa), pri 390px ostáva vidieť ~76 % šírky -
+   titulok videa zaberá 50 %. Prečo to orez nerieši, je v src/heroVariants.js.
+
+   Odsadenie je padding, nie zrušený záporný margin: hero tak stále podlieza
+   hlavičku a plochu za priehľadnou hlavičkou drží značkový gradient z .hero,
+   teda presne to, čo hlavička kreslí, keď zosolidnie.
+
+   Platí len pre podobu `video`: `classic` je bežné hero s vlastným odsadením
+   a videom ako kartou v mriežke, takže by mu tieto dve pravidlá rozhodili
+   rozvrh (zdvojený padding a pás cez celú šírku namiesto karty).
+
+   ZMAZANÉ v ten istý deň: os `data-vidm` s podobami `karta` (video v ráme zo
+   značkového gradientu) a `prekryv` (video od vrchu okna, hlavička naň ľahla),
+   a s nimi aj `.wf-hero--ram`. Sú v gite. */
+@media(max-width:699px){
+  .site .wf-hero:not(.wf-hero--classic){padding-top:var(--hdr-h);}
+  .site .wf-hero:not(.wf-hero--classic) .hero-bgvid{height:min(100svh,calc(100vw / 1.35));}
+}
+
+/* ---- podoba `classic`: hero s tvrdením a videom ako súčasťou ----
+   Platí na KAŽDEJ šírke (user, 2026-08-19), preto stojí mimo mobilného bloku
+   vyššie. Hero má odsadenie ako každé iné podstránkové hero
+   (podlieza hlavičku a pripočíta si jej výšku) a vnútri spoločnú mriežku .hero-in:
+   text vľavo, video vpravo, na úzkom okne pod sebou. Titulok je väčší než na
+   ostatných hero - drží ho --fs-hero cez existujúce `.wf-hero .hero-tx h1`. */
+/* Selektory sú trojtriedne zámerne (`.site .wf-hero--classic .hero-in`): desktopové
+   pravidlo `.site .hero-in{min-height:calc(100svh - 64px)}` stojí v tomto súbore
+   NIŽŠIE a pri rovnakej váhe by vyhralo poradím - hero by malo výšku okna a video
+   by v ňom plávalo v prázdnote (namerané: stĺpec 936px na obsah 477px).
+   Tu má hero výšku svojho obsahu, ako každé iné hero podstránky. */
+.site .wf-hero--classic{padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+.site .wf-hero--classic .hero-in{min-height:auto;gap:clamp(28px,4vw,52px);padding-block:0;align-items:center;}
+.site .wf-hero--classic .hero-tx{max-width:640px;}
+/* zvýraznená časť motta sa nesmie zalomiť: na telefóne z nej inak zostane
+   samotné „sny" na vlastnom riadku */
+.site .wf-hero--classic h1 b{white-space:nowrap;}
+.site .wf-hero--classic .hero-tx>p{margin-top:16px;}
+.site .wf-hero--classic .hero-tx p{max-width:52ch;}
+/* Výšku tu neurčuje okno, ale stĺpec: video je karta v pomere svojho záberu.
+   `--vid-arn` dopĺňa JS z videoWidth/videoHeight, kým nie je, platí 16:9. */
+.site .wf-hero--classic .hero-bgvid{width:100%;height:auto;aspect-ratio:var(--vid-arn,1.7778);
+  border-radius:18px;box-shadow:0 30px 60px -30px rgba(0,16,54,.7);}
+/* Dôkaz pod číslami: kolieska klientov + hviezdičky, celé je to odkaz na /reference.
+   BEZ POZADIA (user, 2026-08-19): sklenená pilulka z toho robila štvrtý útvar
+   v stĺpci, kde už stoja čísla aj dve tlačidlá. Tváre a hviezdičky sa na modrom
+   presadia samy. */
+.site .hero-proof{display:inline-flex;align-items:center;gap:14px;margin-top:clamp(20px,2.6vw,26px);
+  text-decoration:none;transition:.2s var(--ease,ease);}
+.site .hero-proof:hover .hero-proof-tx{color:#fff;}
+.site .hero-proof-av{display:flex;}
+/* kolieska sa prekrývajú - je to jeden rad ľudí, nie štyri samostatné značky */
+.site .hero-proof-av .av{width:40px;height:40px;border-radius:50%;margin-right:-12px;object-fit:cover;
+  display:flex;align-items:center;justify-content:center;flex:none;
+  background:var(--blue-100);color:var(--blue);border:2px solid rgba(255,255,255,.9);
+  font-family:var(--display);font-weight:700;font-size:var(--fs-label);}
+.site .hero-proof-av .av:last-child{margin-right:0;}
+.site .hero-proof-tx{display:flex;flex-direction:column;gap:2px;
+  color:rgba(255,255,255,.82);font-size:var(--fs-sm);line-height:1.3;}
+.site .hero-proof-tx b{color:#fff;font-weight:700;}
+.site .hero-proof .stars{display:flex;gap:2px;color:var(--orange);}
+
+@media(min-width:980px){
+  .site .wf-hero--classic .hero-in{grid-template-columns:1.05fr .95fr;}
+}
+
 /* Plocha videa sa dá ovládať priamo: klik pauzuje, vodorovný ťah pretáča
    (Wireframe.jsx). `touch-action:pan-y` je tu to podstatné - vodorovné ťahy
    dostaneme my, ale ZVISLÝ musí ďalej scrollovať stránku. Bez neho by sa hero
@@ -282,6 +352,34 @@
    `user-select` preto, že ťah cez video inak označuje text v sekcii pod ním. */
 .site .hero-video-el{cursor:pointer;touch-action:pan-y;-webkit-user-select:none;user-select:none;}
 .site .hero-video-el:active{cursor:ew-resize;}
+
+/* ---- spúšťacie tlačidlo (podoba `classic`) ----
+   Terčom je celá plocha karty, nie 64px kruh: na telefóne sa mieri palcom.
+   Kruh je len značka, kam sa pozerať, preto je to <span> vnútri tlačidla. */
+/* ---- prezentácia záberov, kým video stojí ----
+   Prelínanie, nie posun: karta má vlastný tvar a zábery sa v nej majú vymieňať
+   ticho, nie sa v nej hýbať. Sú pod tlačidlom (z3 proti z4), ale nad videom. */
+.site .hero-stills{position:absolute;inset:0;z-index:3;border-radius:inherit;overflow:hidden;}
+.site .hero-stills img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  opacity:0;transition:opacity .9s var(--ease,ease);}
+.site .hero-stills img.on{opacity:1;}
+@media(prefers-reduced-motion:reduce){.site .hero-stills img{transition:none;}}
+
+.site .hero-video-start{position:absolute;inset:0;z-index:4;border:0;cursor:pointer;
+  padding:clamp(14px,1.6vw,20px);background:linear-gradient(to top,rgba(6,18,54,.5),rgba(6,18,54,.16) 60%);
+  display:flex;align-items:center;justify-content:center;
+  border-radius:inherit;transition:.2s var(--ease,ease);}
+.site .hero-video-start:hover{background:linear-gradient(to top,rgba(6,18,54,.6),rgba(6,18,54,.26) 60%);}
+/* Kruh je v STREDE karty a je na nej sám (user, 2026-08-19). Do rohu putoval
+   len kvôli titulkovej karte z videa, ktorú by prekryl - premietané zábery žiadny
+   vypálený text nemajú, takže stred je zase voľný.
+   ZMAZANÉ 2026-08-19: popisok „Podívejte se, co jsme zač" pod kruhom. */
+.site .hero-video-start{flex-direction:column;gap:14px;}
+.site .hero-video-start-ic{width:64px;height:64px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;color:var(--blue);background:#fff;
+  box-shadow:0 14px 34px -14px rgba(0,16,54,.6);padding-left:4px;}
+/* kým video stojí, nie je čo ovládať - len spustiť */
+.site .wf-hero.is-idle .hero-video-ctrls{display:none;}
 
 /* fullscreen: tu naopak celý záber a nič orezané - schránkou je celá obrazovka,
    takže contain na čiernej (letterbox je vo fullscreene očakávaný, orez nie) */
@@ -322,19 +420,51 @@
   .site .hero-vol-range{width:56px;}
 }
 
-/* ============ FILOZOFIA - centrované, scroll highlight ============ */
-/* jeden rytmus ako každá iná sekcia - citát mal predtým dvojnásobnú dávku, ale žiadny
-   pás na webe nemá výnimku v hornom a spodnom paddingu */
-/* Bez vlastnej výplne - biely pás medzi sivými sekciami z nej robil samostatnú
-   dosku, hoci je to sekcia ako každá iná. Podklad drží stránka. */
-.site .phil{padding-block:var(--sec-pad);text-align:center;}
-.site .phil .ey{display:block;margin-bottom:30px;}
-/* Váhy sú tie isté ako v hlavičke sekcie (.sec-h h2): veta 500, zvýraznené slová 700.
-   Celá veta v 700 bola o stupeň tučnejšia než ktorýkoľvek nadpis na webe. */
-.site .phil-text{font-family:var(--display);font-weight:500;font-size:var(--fs-title);line-height:1.26;letter-spacing:-.02em;color:var(--g300);max-width:22ch;margin:0 auto;}
-.site .phil-text .w{display:inline-block;transition:color .2s linear;}
-.site .phil-text .w.acc{font-weight:700;}
-.site .phil-text .w.lit{color:var(--ink);} .site .phil-text .w.lit.acc{color:var(--blue);}
+/* ============================================================
+   FOTO-HERO ÚVODU - podoba pre podnikateľov a pre obce (od 2026-08-18).
+   Video ostáva retailu, ostatní dvaja dostanú fotku s tvrdením a tromi kartami.
+
+   Farbu, závoj aj spracovanie fotky drží spoločné `.photo-hero` vyššie - tu je
+   len GEOMETRIA, presne ako to mala zrušená stránka /podnikatele a ako to má
+   /vozidla: hero podlieza pod priehľadnú hlavičku (záporný margin), a to isté
+   miesto si vráti späť ako horný padding. Deti odsadenie nepridávajú.
+
+   Rozdiel oproti .wf-hero: video žiadny padding nemá (ide od samého vrchu okna
+   a text v ňom nie je), tu sadzba je - takže by ju hlavička prekryla.
+   ============================================================ */
+.site .wf-phero{margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+/* Dve veci sa tu VYPÍNAJÚ, obe zdedené z `.hero-in`:
+     padding-block  - zvislý odstup už dal rodič, druhá dávka by ho zdvojila
+     min-height     - `.hero-in` má od 980px `calc(100svh - 64px)`, teda hero
+                      na celú obrazovku. To je pravidlo pre hero, ktorého
+                      obsahom je záber; tu je obsahom sadzba a tá by sa v ňom
+                      topila (meraný stav pred opravou: hero 1118 px vysoké,
+                      z toho 300 px prázdna plocha nad titulkom).
+   Selektor je trojtriedny zámerne: pravidlo s `min-height` stojí v CSS NIŽŠIE,
+   takže pri rovnakej váhe by vyhralo poradím. Presne toto riešila zrušená
+   stránka /podnikatele cez `min-height:auto` na vlastnej triede. */
+.site .wf-phero .wf-phero-in{grid-template-columns:1fr;gap:clamp(28px,4vw,52px);
+  padding-block:0;min-height:auto;align-items:start;}
+.site .wf-phero .hero-tx{max-width:620px;}
+.site .wf-phero .hero-tx>p{max-width:52ch;}
+/* Titulok zostáva na `--fs-title` (dedí sa z .hero-tx h1), NIE na landing
+   `--fs-hero`. Vyzerá to ako výnimka z pravidla „úvod má veľký nadpis", ale
+   pravidlo vzniklo pre hero BEZ textu: video nemá titulok vôbec, takže sa
+   veľkosť nemá s čím porovnávať. Titulky týchto dvoch publík sú dlhé vety
+   („Pojištění, které posouvá hranice vašeho podnikání") a v 68px by z nich
+   v 620px stĺpci bolo päť riadkov. Je to tá istá veľkosť, akú mal titulok na
+   zrušenej stránke /podnikatele - odkiaľ hero prišlo späť. */
+
+@media(min-width:860px){
+  /* Karty dostanú užší stĺpec než sadzba: sú to tri jednoriadkové tvrdenia,
+     nie druhý obsahový stĺpec. Zvislo na stred oproti textu. */
+  .site .wf-phero .wf-phero-in{grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);align-items:center;}
+}
+
+/* ZMAZANÉ 2026-08-19 (user): `.phil` / `.phil-text` - centrovaná veta
+   filozofie, ktorá sa rozsvecovala po slovách. Sekcia je preč z úvodu
+   (pages/Wireframe.jsx), takže tu nie je čo sadzať. */
 
 /* ============ SECTIONS ============ */
 /* Rytmus sekcií: každá .sec nesie padding hore aj dole, takže medzi dvoma sekciami
@@ -623,7 +753,16 @@
   scroll-padding-inline:clamp(16px,4vw,28px);}
 .site .carou-track::-webkit-scrollbar{display:none;}
 .site .carou-track>*{flex:0 0 84%;scroll-snap-align:start;}
-.site .refs-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+/* Každá karta má vlastnú výšku (user, 2026-08-19). Prevzaté z reality webu, kde
+   výpis recenzií stojí na `columns` + `break-inside-avoid` (routes/reviews.tsx) -
+   viď [[reality-web-as-structure-reference]]. Mriežka zrovná riadok na najvyššiu
+   kartu a pod krátkym citátom ostane prázdne pole; stĺpce nechajú kartu presne
+   taká vysokú, aký je text. Odsadenie zdola nesie karta, nie `gap` - v stĺpcoch
+   sa medzera medzi susedmi pod sebou inak nedá povedať. */
+.site .refs-grid{columns:1;column-gap:14px;}
+/* Selektor musí byť na `.ref`, nie na `>*`: `.site .ref{margin:0}` stojí nižšie
+   v súbore a s rovnakou váhou by odsadenie prebilo (namerané - medzera bola 0). */
+.site .refs-grid>.ref{break-inside:avoid;margin-bottom:14px;}
 /* Bez hoveru (user, 2026-08-17): karta referencie nikam nevedie, takže zdvih
    ani zosilnený rám nemá čo sľubovať - je to text na čítanie, nie ovládanie. */
 .site .ref{margin:0;border:1px solid var(--l);border-radius:var(--r);background:var(--box);padding:22px;display:flex;flex-direction:column;gap:12px;
@@ -674,29 +813,24 @@
 .site .page-head.photo-hero::after{display:none;}
 .site .page-head.photo-hero>.wrap{position:relative;z-index:2;}
 
-/* ---- hlavička /reference: text vľavo, hodnotenie vpravo ----
-   Priemerné hodnotenie nie je riadok údajov pod vetou (tam ho nikto nečíta),
-   ale samostatná sklenená dlaždica - ten istý recept ako .hero-points. */
-.site .ref-head-in{display:grid;grid-template-columns:1fr;gap:clamp(26px,4vw,52px);align-items:center;}
-/* odstup pod drobečkovou navigáciou tu drží mriežka (gap), nie margin navyše */
-.site .ref-head-in .page-crumb{grid-column:1/-1;margin-bottom:0;}
-.site .ref-score{justify-self:start;min-width:min(100%,236px);padding:var(--pad-card);
-  border-radius:var(--r-card);background:var(--tile-blue);backdrop-filter:var(--tile-blur);
-  box-shadow:0 12px 30px -22px rgba(0,0,0,.6);}
-.site .ref-score-stars{display:flex;gap:4px;color:var(--orange);}
-.site .ref-score-stars .off{color:rgba(255,255,255,.3);}
-/* číslo je jediná vec, ktorú tu človek hľadá ako prvú, ale nesmie konkurovať h1 -
-   preto stupeň nadpisu panelu (--fs-h2), nie titulku */
-.site .ref-score-num{margin-top:12px;font-family:var(--display);font-weight:700;
-  font-size:var(--fs-h2);line-height:1;color:#fff;}
-.site .ref-score-num span{font-size:var(--fs-body);font-weight:500;color:rgba(255,255,255,.6);}
-.site .ref-score-cap{margin-top:8px;font-size:var(--fs-sm);color:rgba(255,255,255,.78);line-height:1.4;}
-/* počet klientov je iný údaj než hodnotenie - vlastný riadok pod vlasovou linkou */
-.site .ref-score-foot{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.16);
-  font-size:var(--fs-sm);color:rgba(255,255,255,.7);}
-.site .ref-score-foot b{font-family:var(--display);font-weight:700;font-size:var(--fs-body);color:#fff;}
+/* ---- hero /reference: text vľavo, dve sklenené karty vpravo ----
+   Rovnaká kostra ako /vozidla a /profil (user, 2026-08-19: „title a breadcrumbs
+   nie sú ako na ostatných hero sekciách"). Stránka teda stojí na .hero + .photo-hero
+   a vnútri na .hero-in / .hero-tx / .hero-points - žiadne vlastné triedy na to isté.
+   ZMAZANÉ 2026-08-19: .ref-head-in a dlaždica .ref-score (hviezdičky, veľké číslo
+   a počet klientov pod vlasovou linkou). Boli to tri údaje v jednom poli, kde majú
+   ostatné heroy dve karty po jednom fakte.
+   Rytmika je preto tá istá: breadcrumbs → 28 → title → 16 → text, celá vnútri
+   textového stĺpca, takže nezávisí od výšky kariet vedľa (tie sa centrujú samy). */
+.site .ref-hero{margin-top:calc(-1 * var(--hdr-h));
+  padding-top:calc(var(--hdr-h) + var(--sec-pad));padding-bottom:var(--sec-pad);}
+.site .ref-hero .hero-in{grid-template-columns:1fr;min-height:auto;gap:clamp(28px,4vw,52px);
+  padding-block:0;align-items:start;}
+.site .ref-hero .hero-tx{max-width:640px;gap:0;}
+.site .ref-hero .hero-tx>p{margin-top:16px;}
+.site .ref-hero .hero-tx p{max-width:56ch;}
 @media(min-width:980px){
-  .site .ref-head-in{grid-template-columns:1.15fr auto;}
+  .site .ref-hero .hero-in{grid-template-columns:1.1fr .9fr;}
 }
 
 /* filter referencií */
@@ -798,7 +932,7 @@
 @media(min-width:620px){.site .stories{grid-template-columns:repeat(2,1fr);}}
 @media(min-width:620px){
   .site .carou-track>*{flex:0 0 calc(50% - 7px);}
-  .site .refs-grid{grid-template-columns:repeat(2,1fr);}
+  .site .refs-grid{columns:2;}
 }
 
 /* ============ DESKTOP ============ */
@@ -822,7 +956,7 @@
      viewportu (to je mobilný swipe trik), takže štvrtá kartička nevykúka */
   .site .carou-track{margin-inline:0;padding:2px 0 6px;scroll-padding-inline:0;}
   .site .carou-track>*{flex:0 0 calc(33.333% - 9.34px);}
-  .site .refs-grid{grid-template-columns:repeat(3,1fr);}
+  .site .refs-grid{columns:3;}
   /* šípky a odkaz idú do hlavičky sekcie až tam, kde sa nescrolluje prstom */
   .site .sec-h-row{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:24px;}
   .site .sec-h-act{display:flex;}
@@ -830,7 +964,6 @@
   .site .contact{grid-template-columns:1.3fr 1fr;gap:26px;}
   .site .contact-band{grid-template-columns:1fr 1.05fr;align-items:start;gap:44px;}
 }
-@media(prefers-reduced-motion:reduce){.site .phil-text .w{color:var(--ink) !important;}}
 
 /* SAFETY NET - text na modrých/tmavých plochách je vždy svetlý */
 .site .hdr h1,

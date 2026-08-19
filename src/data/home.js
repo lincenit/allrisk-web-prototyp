@@ -5,8 +5,12 @@
    v hlavičke mení celý web pod ňou, nie len rozcestník. Tento súbor drží to,
    čo sa na úvode mení: filozofia, „Proč Allrisk", banner a časté dotazy.
 
-   Čo sa NEMENÍ a preto tu nie je: hero video (je to značková slučka, nie
-   argument pre publikum), reference, blog a kontaktný formulár.
+   Čo sa NEMENÍ a preto tu nie je: reference, blog a kontaktný formulár - to
+   sú dôkaz a obsah o firme ako celku.
+
+   Hero sa od 2026-08-18 mení tiež (HERO nižšie): video zostáva retailu, firma
+   a obec majú foto-hero. Do toho dňa tu hero nebolo, lebo bolo pre všetkých
+   rovnaké - „je to značka, nie argument".
 
    Podnikatelia tu `why` nemajú a mať nebudú: ich argumentom je systém péče
    zo zrušenej stránky /podnikatele (data/care.js PRINCIPLES a STEPS), ktorý
@@ -26,23 +30,104 @@ const ILL = {
   claims: '/illus/tabler/claims.png',
 }
 
-/* ---------- filozofia ----------
-   Jedna veta, ktorá sa pri scrollovaní rozsvecuje po slovách. `accent` sú
-   slová vysadené modro - porovnávajú sa presne tak, ako vyjdú zo split(' '),
-   teda vrátane čiarky na konci.
+/* ---------- hero ----------
+   VIDEO JE LEN PRE RETAIL (user, 2026-08-18). Značková slučka je kulisa bez
+   tvrdenia a bez CTA - to je v poriadku pre jednotlivcov a rodiny, ktorí na
+   úvod prídu bez konkrétneho zadania. Firma ani obec sa na video nepozerá:
+   prišli si overiť, či to s nimi niekto vie, a chcú vetu, dôkaz a cestu ďalej.
 
-   LEN pre jednotlivcov a rodiny (user, 2026-08-11). Firma ani obec sa
-   nerozhodujú podľa vety o životných situáciách - tam hovorí systém péče,
-   respektíve výberové řízení. Ostatné publiká sekciu nemajú vôbec, nedostanú
-   jej variantu: `null` znamená „nevykresliť", nie „doplniť neskôr". */
-export const PHIL = {
-  rodiny: {
-    text: 'Neprodáváme produkty. Jsme partner, který poradí, postará se a stojí při vás v každé životní situaci.',
-    accent: ['partner,', 'poradí,', 'postará', 'stojí', 'vás'],
-  },
-  podnikatele: null,
-  mesta: null,
+   `null` = video (rovnaká konvencia ako pri WHY: null znamená
+   „nevykresliť tento tvar", nie „doplniť neskôr"). Objekt = foto-hero.
+
+   Tvar foto-hera je ten istý ako na /vozidla a /o-nas - jeden mechanizmus
+   .photo-hero pre celý web, stránka rieši len geometriu. Podnikatelia dostali
+   späť presne to hero, aké mala zrušená stránka /podnikatele (user, 2026-08-18:
+   „daj taky aky sme mali"): tá istá fotka, ten istý titulok aj tá istá veta.
+
+   `points` sú sklenené karty vedľa titulku (.hero-points). JEDEN RIADOK na
+   kartu - vysvetľujúca veta pod tvrdením padla 2026-08-16 a neplatí ani tu.
+   Sú to tvrdenia, nie odkazy: mieria na sekcie, ktoré úvod má, ale klikať sa
+   na ne nedá, lebo karta v hero nie je navigácia.
+
+   `cta` je dvojica - prvé tlačidlo je kotva do sekcie na tej istej stránke,
+   druhé vedie na kontakt. Kotva musí existovať v tom publiku: podnikateľom
+   `#spoluprace` nesie BizCare, obciam `#rozcestnik` ich trojica zámerov.
+
+   Fotka obcí je LETECKÝ ZÁBER MESTA (2026-08-18). Vzatá z klientovho vlastného
+   webu, zo stránky „Pojištění majetku měst a obcí" (allrisk.cz, wp-content
+   2024/04/Pojisteni_mest_a_obci_header.jpg) - je to teda ich vlastný obrazový
+   materiál k tomu istému publiku, nie náhodný stock. Prekomprimovaná na 239 kB,
+   teda do rovnakého pásma ako ostatné heroy (podnikatelia 228 kB, /vozidla 250 kB).
+   Pomer 1250×479 sedí na hero takmer presne, takže `cover` skoro nič neoreže.
+   Prečo práve pohľad zhora: obec nie je jedna budova ani jeden úradník, je to
+   celok - strechy, ulice, škola a park naraz. Portrét starostu by hovoril
+   o človeku, tu ide o majetok. Mrakodrapy z /pobocky sme skúšali a nesedia:
+   české obce tak nevyzerajú.
+   TODO(asset): je to jediná dostupná veľkosť, na 4K displeji bude záber mäkký.
+   Keby klient našiel originál vo vyššom rozlíšení, vymeniť. */
+/* Text hera pre podobu `classic` (heroVariants.js) - podoba, kde má video okolo
+   seba tvrdenie a cestu ďalej, a nie je teda kulisa. Rodiny inak hero text
+   nemajú (HERO.rodiny je null), preto stojí zvlášť a nie v HERO: nesmie zapnúť
+   foto-hero podľa publika.
+   Tlačidlo sa volá presne ako sekcia, do ktorej kotví - kto klikne, musí
+   spoznať, že je tam, kam mieril. */
+export const HERO_VIDEO_TX = {
+  // Značkové motto (user, 2026-08-19). To isté nesie h1 na /o-nas - je to motto
+  // firmy, nie nadpis jednej stránky, takže sa opakovať smie.
+  h: 'Pomáháme lidem',
+  hb: 'plnit sny',
+  p: 'Jeden poradce pro celou rodinu - od auta a bydlení po hypotéku i rezervu na horší časy.',
+  cta: { to: '#rozcestnik', label: 'Co právě řešíte' },
+  cta2: { to: '/kontakt', label: 'Domluvit setkání' },
+  // Fotka pod modrým závojom - ten istý recept .photo-hero, aký má hero firmy
+  // aj obce. Rodina na nej je to isté publikum, ktoré túto podobu úvodu vidí.
+  // TODO(asset): zdieľa sa s profilom „Rodina v nejlepších letech"; keď klient
+  // dodá vlastnú fotku pre úvod, mení sa tento riadok.
+  img: '/profily/rodina-v-nejlepsich-letech.jpg',
+  // Kým video stojí, karta sa premieta ako prezentácia (user, 2026-08-19: „dal by
+  // som tam iba tie obrázky ako prezentaci a by sa iba premietali"). Sú to výrezy
+  // zo slučky, nie cudzie fotky - viď public/hero/README.md. Poradie je príbeh:
+  // auto → bydlení → reality → servis. Prvý je zároveň `poster` videa.
+  stills: ['/hero/still-1.jpg', '/hero/still-2.jpg', '/hero/still-3.jpg', '/hero/still-4.jpg'],
 }
+
+export const HERO = {
+  rodiny: null,
+  podnikatele: {
+    img: '/podnikatele/hero.jpg',
+    h: 'Pojištění, které posouvá hranice',
+    hb: 'vašeho podnikání',
+    p: 'Neprodáváme produkty. Díváme se na vaše podnikání v souvislostech, hledáme rizika a zůstáváme u toho i po podpisu smlouvy.',
+    cta: { to: '#spoluprace', label: 'Jak s vámi pracujeme' },
+    cta2: { to: '/kontakt', label: 'Domluvit setkání' },
+    points: [
+      { icon: 'shieldCheck', t: 'Vlastní Centrum likvidace registrované u ČNB' },
+      { icon: 'partner', t: 'Odborný garant, který zná vaši firmu' },
+      { icon: 'car', t: 'Jedna platba za celý vozový park' },
+    ],
+  },
+  mesta: {
+    img: '/mesta/hero.jpg',
+    // Titulok je zámerne kratší než pri podnikateľoch: „Majetek obce i
+    // odpovědnost zastupitelů" sa v hero lámalo na tri riadky a tretí bol
+    // jediné slovo. Čo všetko program kryje, hovorí veta pod ním.
+    h: 'Celý pojistný program obce',
+    hb: 'pod jednou správou',
+    p: 'Od majetku a bytového fondu po odpovědnost zastupitelů. Zadání připravíme, program vysoutěžíme a zůstaneme u něj - včetně škod, které vyřídíme za obec.',
+    cta: { to: '#rozcestnik', label: 'Co pro obec řešíme' },
+    cta2: { to: '/kontakt', label: 'Domluvit setkání' },
+    points: [
+      { icon: 'checklist', t: 'Výběrové řízení připravíme i vyhodnotíme' },
+      { icon: 'gavel', t: 'Krytí zastupitelů i po skončení mandátu' },
+      { icon: 'shieldCheck', t: 'Škody řešíme za obec, vlastním centrem' },
+    ],
+  },
+}
+
+/* ZMAZANÉ 2026-08-19 (user): PHIL - jedna veta filozofie („Neprodáváme
+   produkty…"), ktorá sa na úvode rozsvecovala po slovách podľa scrollu.
+   Sekciu mali len jednotlivci a rodiny, firma ani obec ju nemali vôbec -
+   s publikom, ktoré ju nieslo, padla celá. Je v gite. */
 
 /* ---------- Proč Allrisk ----------
    Striedavo text a ilustrácia. Tri bloky, nie viac: je to argument pred
@@ -121,32 +206,33 @@ export const BANNER = {
 }
 
 /* ---------- klientské profily ----------
-   Hlavička sekcie. Titulok si stránka skladá sama, lebo v ňom je počet
-   profilov a ten sa mení podľa publika (data/profiles.js).
-   Města a obce sekciu nemajú: obec nie je archetyp človeka a tri vymyslené
-   „profily obce" by boli len iný názov pre veľkostnú kategóriu. */
-// `pre` je začiatok vety pred zvýraznenou časťou. Nie je to len iné slovo:
-// „Najděte se v jednom ze tří profilů firem" je krkolomné, firmu hľadá človek,
-// nie seba - preto sa mení sloveso, nie podstatné meno na konci.
+   LEN PRE RETAIL (user, 2026-08-18). Sekcia zostáva jednotlivcom a rodinám,
+   firma ani obec ju už nemá - `null` znamená „nevykresliť", rovnako ako pri
+   HERO.
+
+   Prečo to sedí. Archetyp je pomôcka pre toho, kto sa v ponuke nevyzná a hľadá
+   niekoho, kto je na tom podobne: singl, rodina, samoživiteľka, před penzí.
+   Firma svoju veľkostnú kategóriu pozná a nepotrebuje sa v nej „nájsť" - a obec
+   už vôbec, tam bol archetyp len iný názov pre počet obyvateľov. Podnikateľom
+   navyše to isté miesto obsluhuje systém péče, ktorý je konkrétnejší než tri
+   typové firmy.
+
+   Titulok si stránka skladá sama, lebo v ňom je počet profilov (data/profiles.js).
+   `pre` je začiatok vety pred zvýraznenou časťou.
+
+   ZAPARKOVANÉ, NIE ZMAZANÉ: tri firemné profily (podnikatel, zivnostnik,
+   vyrobni) aj tri obecné zostávajú v data/profiles.js. Firemné majú vlastné
+   stránky /profil/:slug s modelovými situáciami a maticou „co mít vyřešeno" -
+   je to hotový obsah, ktorý dnes nemá na úvode odkaz. Keby sa mal zmazať aj on,
+   musí to byť samostatné rozhodnutie. */
 export const PROFILES_HEAD = {
   rodiny: {
     ey: 'Klientské profily',
     pre: 'Najděte se v',
     lead: 'Vyberte typ klienta, který je vám nejblíž. Ukážeme, co je v jeho situaci dobré mít vyřešeno a co se stane, když to chybí.',
   },
-  podnikatele: {
-    ey: 'Firemní profily',
-    pre: 'Najděte svou firmu v',
-    lead: 'Vyberte typ firmy, který je vaší nejblíž. Ukážeme, co je v její situaci dobré mít vyřešeno a co se stane, když to chybí.',
-  },
-  // Obce od 2026-08-12 sekciu majú (user), ale ich dlaždice nikam nevedú -
-  // popis preto nesľubuje „ukážeme, co je dobré mít vyřešeno" ako u ostatných
-  // dvoch publík, len pomenuje, čím sa obec od obce líši.
-  mesta: {
-    ey: 'Profily obcí',
-    pre: 'Najděte svou obec v',
-    lead: 'Jinak vypadá pojistný program vesnice s hasičárnou a jinak města se školami a bytovým fondem. Vyberte, co je vám nejblíž - podle toho se liší rozsah krytí i cesta k němu.',
-  },
+  podnikatele: null,
+  mesta: null,
 }
 
 /* ---------- časté dotazy ----------

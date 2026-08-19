@@ -204,127 +204,174 @@ export const PROFILES = [
   },
 
   {
+    // JEDINÝ profil naplnený REÁLNYM zadaním od klienta (user, 2026-08-19).
+    // Ostatné archetypy sú stále vymyslené - keď na ne dôjde rad, tento je vzor:
+    // konkrétne sumy, kategórie v „solved" pomenované klientom a ku každému
+    // prípadu `hook` (jednoveta nad nadpisom), ktorý ostatné profily zatiaľ nemajú.
     key: 'rodina', seg: 'rodiny',
     slug: 'rodina',
-    // foto pár ~38 s dvomi školákmi - presne tento zlúčený archetyp
-    // (súbor sa volá po pôvodnom profile „rodina v nejlepších letech", obsah sedí)
+    // foto pár ~35 s dvomi malými deťmi - súbor sa volá po pôvodnom profile
+    // „rodina v nejlepších letech", obsah stále sedí
     photo: '/profily/rodina-v-nejlepsich-letech.jpg',
     ic: 'heart',
     // tabler „shopping" - pár s nákupným vozíkom
     img: '/illus/tabler/stories/rodina.svg',
     ey: 'Rodina',
-    t: 'Jana a Tomáš, 38 let',
-    p: 'Hypotéka, dvě děti a všechno najednou.',
-    lead: 'Byt na hypotéku, dvě děti a jedno auto na všechno. Nejvíc majetku i nejvíc závazků za celý život - a rozpočet, který stojí na dvou příjmech.',
+    t: 'Petr a Lucie, 35 let',
+    p: 'Stavba domu, dvě děti a živnost.',
+    lead: 'Bydlí v nájmu a kousek za Brnem si staví vlastní dům. Petr má truhlářskou živnost, Lucie je na půl úvazku - všechno tak stojí na jednom hlavním příjmu a na rozestavěné stavbě.',
     pts: [
       'Životní pojištění navázané na splátku hypotéky',
-      'Pojištění nemovitosti, domácnosti i odpovědnosti',
-      'Investice na studium dětí a vlastní rezervu',
+      'Pojištění rozestavěné stavby, domácnosti i odpovědnosti',
+      'Rezerva a investice na studia dětí',
     ],
     // ---- krátky popis osoby do hera detailnej stránky (/profil/:slug) ----
-    intro: 'Splácejí hypotéku, vozí dvě děti na kroužky a byt mají čerstvě po rekonstrukci. Je to období, kdy mají nejvyšší příjem a největší majetek - a zároveň nejvíc toho, co se může pokazit.',
+    intro: 'Aktivní rodina z Brna se dvěma dětmi, 6 a 4 roky. Zatím bydlí v nájmu a kousek za městem si staví vlastní dům. Petr se před dvěma lety osamostatnil jako truhlář a zakázky se mu jen hrnou, díky tomu může Lucie jako dětská sestra pracovat na půl úvazku a být víc s dětmi. Volný čas patří sportu - Petr hraje amatérský hokej, Lucie volejbal, na kole jezdí všichni a v létě se jede k moři.',
     // ---- „Co je dobré mít vyřešeno" ----
+    // Lede sekcie je per profil (klientovo znenie); bez neho padne na všeobecné.
+    solvedLead: 'Bez zbytečností navíc. Soustředíme se výhradně na to, co drží rodinný rozpočet v klidu.',
     solved: [
-      { product: 'zivot', need: 'nutnost', note: 'Výplata sjednané částky při úrazu, vážné nemoci nebo úmrtí. Pojistnou částku navážeme na zůstatek hypotéky.' },
-      { product: 'hypoteka', need: 'nutnost', note: 'Sazba a podmínky napříč trhem, ne jen u vlastní banky. Refinancování řešíme včas před koncem fixace, ne až když přijde nabídka na prodloužení.' },
-      { product: 'nemovitost', need: 'nutnost', note: 'Stavba bytu či domu proti požáru, vodě a živlu - včetně sklepa a garáže. Po rekonstrukci částku přepíšeme na novou cenu.' },
-      { product: 'domacnost', need: 'nutnost', note: 'Vybavení, elektronika a osobní věci uvnitř. Kryje i krádež, vytopení a poškozené spotřebiče.' },
-      { product: 'vozidla', need: 'nutnost', note: 'Povinné ručení i havarijní pojištění. Všechna auta v rodině na jednom vyúčtování, bonus lze mezi nimi převádět.' },
-      { product: 'odpovednost', need: 'doporuceno', note: 'Škoda, kterou způsobíte někomu jinému v běžném životě - vytopený soused i rozbitá věc v cizím bytě.' },
-      { product: 'investice', need: 'doporuceno', note: 'Investice a spoření s odlišnou strategií podle horizontu - peníze na školu dětí zvlášť od vlastní rezervy.' },
+      { product: 'zivot', need: 'nutnost', note: 'Ochrana příjmu truhláře i celé rodiny. Kdyby přišel úraz nebo nemoc, pojistka podrží splátku hypotéky i běžný chod domácnosti.' },
+      { product: 'hypoteka', need: 'nutnost', note: 'Hlídáme výhodné sazby napříč trhem a plynulé financování výstavby bez zbytečného papírování.' },
+      { product: 'nemovitost', need: 'nutnost', note: 'Ochrana rozestavěného domu před živly. S tím, jak dům roste, pojistnou částku průběžně navyšujeme.' },
+      { product: 'domacnost', need: 'nutnost', note: 'Kompletní ochrana vybavení, elektroniky a osobních věcí proti krádeži, vodě nebo poruchám.' },
+      { product: 'vozidla', need: 'nutnost', note: 'Povinné ručení i havarijní pojištění pro rodinné auto - včetně asistenčních služeb na cesty k moři, na hokej i do školy.' },
+      { product: 'odpovednost', need: 'doporuceno', note: 'Takzvaná pojistka na blbost. Když děti něco rozbijí nebo se stane karambol na kolech či na volejbale, kryje škody, které nechtěně způsobíte druhým.' },
+      { product: 'cesty', need: 'zvazit', note: 'Celoroční varianta vyřeší pracovní cesty i rodinnou dovolenou jednou smlouvou. Vyrazíte za hranice kdykoliv, bez stresu a neustálého papírování.' },
+      { product: 'investice', need: 'zvazit', note: 'Oddělené peníze na krizovou rezervu rodiny a na dlouhodobé odkládání na budoucnost a studia dětí.' },
     ],
     // ---- situácie („Proč je dobré mít toto pojištění") ----
+    // POZOR: `title`, `story`, `fix` a `outcome` sú DOSLOVA klientske znenie (user, 2026-08-19).
+    // Nadpis prípadu = tá jednoveta, ktorou zadanie každý prípad otvára; pomenovanie
+    // typu „Pojištění odpovědnosti zaměstnance - Lucie špatně uskladnila vakcíny" je len
+    // pracovný názov zo zadania a na stránku nejde (nesie ho `tab` v skrátenej podobe).
+    // Nič z toho neprepisovať bez klienta - zmenené sú len mená, ktoré v zadaní ostali
+    // po staršej verzii (Jana -> Lucie, Tomáš -> Petr), zjavné preklepy a dlhé pomlčky.
     situations: [
       {
-        key: 'rodina-nehoda', ic: 'crash',
-        product: 'vozidla', sub: 'Technické asistence',
-        tab: 'Stala se nehoda',
-        title: 'Na kruhovém objezdu do nich zezadu naboural dodávkař',
-        story: 'Jana vezla malou z kontroly. Škoda na zadní části vozu 78 000 Kč, auto nepojízdné, viník uznal zavinění na místě. Rodina má jedno auto a Tomáš jím jezdí do práce 40 km denně.',
+        key: 'rodina-asistence', ic: 'garage',
+        product: 'vozidla', sub: 'Rozšířené asistenční služby',
+        tab: 'Zradila technika',
+        title: 'Když vám auto vypadne ze dne na den, rodinný život se nezastaví. My vás v tom nenecháme.',
+        story: 'Lucie jela pro děti do školy, když jí auto z ničeho nic zhaslo na kruhovém objezdu a už nenastartovalo. Verdikt servisu? Závada na motoru, oprava na 4 dny a auto úplně mimo provoz. Pro rodinu s jedním autem, které je v zápřahu od rána do večera, obrovský problém.',
+        fixLbl: 'Jak to vyřešila asistence od Allrisku',
         fix: [
-          'Škodu jsme nahlásili za ně - likvidaci vede přímo oddělení Allrisk, ne cizí pojišťovna.',
-          'Náhradní vůz přistavený do druhého dne, Tomáš nevynechal jedinou směnu.',
-          'Vymáhání po viníkově pojišťovně jsme převzali my, Jana neřešila ani jeden telefonát.',
+          'Nulový stres s organizací: Lucie nám jen zavolala a my jsme se o všechno postarali. Žádné zmatené shánění odtahovky na vlastní pěst ani řešení logistiky.',
+          'Žádný výpadek v režimu: Rozvoz dětí i dojíždění do práce běžely dál bez přerušení. Díky našemu pojištění jsme Lucii okamžitě přistavili náhradní auto - i když šlo „jen" o poruchu.',
+          'Auto v dobrých rukách: Nepojízdný vůz jsme odtáhli přímo do jejího prověřeného servisu.',
+          'Ani koruna navíc: Veškeré náklady na odtah i náhradní vůz ve výši 26 600 Kč plně pokryly naše rozšířené asistenční služby.',
         ],
-        outcome: 'Rodina doplatila 0 Kč. Auto se vrátilo ze servisu za 3 týdny, celou dobu jezdili náhradním.',
+        outcome: 'Výsledek? Odtah i náhradní auto na 4 dny v hodnotě 26 600 Kč zatáhla asistenční služba, takže Lucie zaplatila čistě jen opravu svého auta v servisu a rodina zůstala po celou dobu plně mobilní. Krize vyřešena, rodina v pohybu. Tak funguje péče od Allrisku.',
       },
       {
         key: 'rodina-vytopeni', ic: 'water',
         product: 'domacnost', sub: 'Škoda vodou z vodovodního zařízení',
         tab: 'Vytopili sousedy',
-        title: 'Praskla přívodní hadička u pračky, když nikdo nebyl doma',
-        story: 'Voda tekla šest hodin. Zničená plovoucí podlaha v novém bytě a promáčený strop u sousedů pod nimi, kteří měli rok starou rekonstrukci koupelny.',
+        title: 'Když praskne přívodní hadička, je to noční můra. S dobrým pojištěním sice sousedy vytopíte, ale peněženku ochráníte.',
+        story: 'Voda tekla celých šest hodin, když nikdo nebyl doma. Výsledek? Zničená plovoucí podlaha v pronajatém bytě a promáčený strop u sousedů, kteří si zrovna před rokem zrekonstruovali koupelnu. Celková škoda se vyšplhala na 190 000 Kč.',
         fix: [
-          'Pojištění domácnosti pokrylo podlahu, nábytek a vysoušení jejich bytu.',
-          'Pojištění odpovědnosti zaplatilo škodu sousedům - 112 000 Kč, kterou by jinak platili ze svého.',
-          'Vysoušeče a firmu na sanaci zařídila asistenční služba, ne oni.',
+          'Pronajatý byt v pořádku: Pojištění domácnosti zaplatilo novou podlahu, poškozený nábytek i kompletní vysoušení.',
+          'Sousedské vztahy zachráněny: Škodu u sousedů za 112 000 Kč vyřešilo pojištění odpovědnosti. Rodina tak nemusela vytáhnout statisíce z vlastní kapsy.',
+          'Bez starostí s organizací: Vysoušeče i specializovanou sanační firmu zařídila asistenční služba, nebylo potřeba nic složitě shánět.',
         ],
-        outcome: 'Z celkové škody 190 000 Kč zaplatila rodina spoluúčast 1 000 Kč. Se sousedy zůstali zadobře.',
+        outcome: 'Výsledek? Z celkové škody 190 tisíc zaplatila rodina jen spoluúčast 1 000 Kč. A co je nejlepší - se sousedy zůstali dál v pohodě.',
       },
       {
         key: 'rodina-vypadek', ic: 'injury',
         product: 'zivot', sub: 'Trvalé následky úrazu',
         tab: 'Vypadl příjem',
-        title: 'Tomáš si při pádu ze žebříku zlomil nohu na třech místech',
-        story: 'Pět měsíců na neschopence. Nemocenská pokryla necelou polovinu jeho čisté mzdy, splátka hypotéky 21 400 Kč přitom běžela dál a Jana pracuje na zkrácený úvazek.',
+        title: 'Když ze dne na den vypadne hlavní příjem, rozpočet to usmaží. Správné pojištění ale rodinu podrží nad vodou.',
+        story: 'Petr spadl ze žebříku a skončil se zlomenou nohou na třech místech. Výsledek? Pět měsíců na neschopence. Nemocenská od státu pokryla ani ne polovinu jeho čisté mzdy, zatímco hypotéka 21 400 Kč měsíčně běžela dál a jeho žena Lucie pracuje jen na zkrácený úvazek.',
         fix: [
-          'Denní dávka při pracovní neschopnosti dorovnala výpadek od 29. dne.',
-          'Plnění za trvalé následky úrazu přišlo jednorázově po ustálení stavu.',
-          'Splátky hypotéky ani jednou nevypadly - nemuseli sahat na rezervu ani žádat o odklad.',
+          'Příjem v bezpečí: Denní dávka při pracovní neschopnosti dorovnala výpadek od 29. dne léčby plus dostal denní odškodné úrazu, které se Petrovi počítá od prvního dne.',
+          'Pomoc do budoucna: Po ustálení zdravotního stavu dostal Petr jednorázové plnění za trvalé následky úrazu.',
+          'Hypotéka bez ohrožení: Splátky odešly včas a v plné výši. Rodina nemusela žebrat o odklad ani drancovat úspory.',
         ],
-        outcome: 'Za pět měsíců přišlo plnění 168 000 Kč. Rodina neřešila peníze, jen Tomášovu nohu.',
+        outcome: 'Výsledek? Za 5 měsíců poslala pojišťovna celkem 168 000 Kč. Rodina nemusela řešit složenky, ale mohla se plně soustředit na Petrovo uzdravení.',
       },
       {
         key: 'rodina-hypoteka', ic: 'newhome',
         product: 'hypoteka', sub: 'Zprostředkování hypotéky',
-        tab: 'Kupovali byt',
-        title: 'První nabídka z banky nebyla ta, kterou nakonec podepsali',
-        story: 'Vlastní banka jim schválila sazbu o 0,4 p. b. vyšší a odhad nemovitosti chtěla za 6 900 Kč. K tomu tlačila balíček pojištění, který se splátkou vůbec nesouvisel.',
+        tab: 'Stavěli dům',
+        title: 'První nabídka hypotéky z vlastní banky nebyla ta, kterou nakonec podepsali.',
+        story: 'Stavba rodinného domu je náročný projekt sám o sobě. Domovská banka jim ale nabídla úrokovou sazbu o 0,4 % vyšší a za odhad si řekla 6 900 Kč. Navíc tlačila balíček pojištění, který byl pro stavbu nevýhodný.',
+        fixLbl: 'Jak jsme to vyřešili',
         fix: [
-          'Srovnali jsme nabídky napříč trhem a vyjednali podmínky u banky, kde nejsou klienty.',
-          'Životní pojištění jsme napojili na skutečný zůstatek úvěru, ne na balíček od banky.',
-          'Pojištění nemovitosti sjednali u nás - levněji a s vyšší pojistnou částkou než v bankovním balíčku.',
+          'Srovnání napříč trhem: Proklepli jsme nabídky všech bank a vyjednali skvělé podmínky u banky, kde dosud neměli ani účet.',
+          'Životní pojištění na míru: Pojištění jsme napojili na klesající zůstatek úvěru, ne na drahý univerzální balíček od banky.',
+          'Výhodné pojištění rozestavěné stavby: Pojištění nemovitosti sjednali u nás - levněji a s vyšším krytím, které přesně odpovídá fázím výstavby.',
         ],
-        outcome: 'Úspora 0,4 p. b. na sazbě znamená za dobu fixace zhruba 94 000 Kč, které zůstaly rodině.',
+        outcome: 'Výsledek? Úspora 0,4 % na sazbě ušetřila rodině za dobu fixace zhruba 94 000 Kč. Tyhle peníze jim zůstaly v rozpočtu - třeba na dokončení zahrady nebo vybavení domu.',
       },
       {
         key: 'rodina-vichrice', ic: 'storm',
-        product: 'nemovitost', sub: 'Živelní pojištění stavby',
+        product: 'vozidla', sub: 'Havarijní pojištění',
         tab: 'Přišla vichřice',
-        title: 'Orkán vytrhl okna v posledním patře a voda zatekla až do bytu',
-        story: 'Škoda 340 000 Kč na oknech, podlahách a rozvodech. Byt byl po rekonstrukci za 1,4 milionu, ale pojistka pořád běžela na částku z původní smlouvy - 2,6 milionu místo reálných 5 milionů.',
+        title: 'Silná vichřice se spadlou větví zdemolovala zaparkované auto.',
+        story: 'Silný vítr během noční bouřky ulomil masivní větev, která spadla přímo na zaparkované auto. Výsledek? Zničená střecha, rozbité čelní sklo a škoda za 180 000 Kč. Auto přitom před rokem prošlo velkým servisem a úpravami za 70 tisíc, jenže stará pojistka počítala s podstatně nižší hodnotou vozu.',
         fix: [
-          'Pojistnou částku jsme aktualizovali při revizi devět měsíců před vichřicí - bez toho by pojišťovna plnila zhruba polovinu.',
-          'Škodu likvidovalo oddělení Allrisk, zálohu na materiál měli na účtu do deseti dnů.',
-          'Provizorní zabednění oken zajistila asistenční služba ještě týž večer.',
+          'Aktualizovaná smlouva: Pojistnou částku u havarijního pojištění jsme zaktualizovali při pravidelné revizi pár měsíců před vichřicí. Bez toho by pojišťovna krátila plnění kvůli podpojištění téměř na polovinu.',
+          'Blesková likvidace: Škodu vyřídilo přímo oddělení Allrisk. Zálohu na opravu a náhradní díly měl servis na účtu do 10 dnů.',
+          'Okamžitá pomoc na místě: Odtah nepojízdného auta a provizorní zakrytí proti dešti zařídila asistenční služba ještě ten večer.',
         ],
-        outcome: 'Plnění v plné výši 335 000 Kč. Bez aktualizované částky by dostali zhruba o 160 000 Kč méně.',
+        outcome: 'Výsledek? Pojišťovna vyplatila plnění v plné výši 175 000 Kč. Díky správně nastavené smlouvě tak majitel nepřišel o cca 80 000 Kč, které by mu jinak pojišťovna kvůli zastaralé pojistce škrtla.',
       },
       {
         key: 'rodina-studium', ic: 'school',
         product: 'investice', sub: 'Pravidelné investování',
         tab: 'Děti půjdou na vysokou',
-        title: 'Za osm let Praha, podnájem a pět let studia',
-        story: 'Podnájem, jídlo a doprava dnes vycházejí na 14 000 Kč měsíčně. Za pět let studia je to zhruba 840 000 Kč na dítě - a doma jsou děti dvě, s odstupem tří let.',
+        title: 'Kolej, kapesné a startovací balíček do života. Jak dětem připravit půdu bez finančního šoku?',
+        story: 'Ubytování na koleji dnes vychází okolo 7 000 Kč měsíčně. Když k tomu připočtete kapesné, skripta, jídlo a nějakou tu finanční injekci do startu samostatného života, jste na statisících na jedno dítě. A doma jsou děti dvě, jen pár let od sebe. Bez přípravy je to pro rodinný rozpočet pořádný náraz.',
+        fixLbl: 'Jak jsme to vyřešili investováním',
         fix: [
-          'Peníze na studium jsme oddělili od rodinné rezervy, aby se z nich neuždibovalo na běžné výdaje.',
-          'Horizont je dost dlouhý na dynamické portfolio - ke konci ho postupně překlopíme do konzervativního.',
-          'Nastavili jsme pravidelnou platbu, která se z rozpočtu neztratí, ale za osm let udělá rozdíl.',
+          'Oddělené peníze s jasným cílem: Investice na studia a start do života jsme oddělili od běžné rezervy, aby se z nich neujídalo na průběžné výdaje.',
+          'Strategie na míru času: Pro dlouhý horizont jsme zvolili dynamické portfolio, které využije sílu trhu. Ke konci studia ho postupně překlopíme do konzervativnějšího režimu, aby byly peníze bezpečně připravené.',
+          'Měsíční částka, co nebolí: Nastavili jsme odkládání sumy, která běžný rozpočet nijak neškrtí, ale za ty roky udělá obrovský rozdíl.',
         ],
-        outcome: 'Při dnešní platbě 3 500 Kč měsíčně pokryjí studium obou dětí, aniž by sahali na hypotéku nebo rezervu.',
+        outcome: 'Výsledek? Měsíční odkládání cca 3 000 Kč bohatě pokryje náklady na kolej, kapesné i startovací kapitál pro obě děti. Rodiče tak nebudou muset v budoucnu sahat na úspory na stáří ani do rezerv na hypotéku.',
       },
       {
         key: 'rodina-odpovednost', ic: 'claim',
         product: 'odpovednost', sub: 'Odpovědnost členů domácnosti',
         tab: 'Dítě způsobilo škodu',
-        title: 'Syn při fotbale na hřišti rozbil zaparkované auto souseda',
-        story: 'Míč trefil čelní sklo a promáčkl bok vozu, oprava 46 000 Kč. Soused chtěl škodu uhradit do měsíce v hotovosti, jinak že to předá právníkovi.',
+        title: 'Když uletí míč na hřišti, je z toho malér za desítky tisíc. Správná pojistka ale ušetří peněženku i sousedské vztahy.',
+        story: 'Syn při fotbale trefil zaparkované auto souseda. Výsledek? Prasklé čelní sklo a oprava za 46 000 Kč. Soused byl ale od první chvíle pasivně agresivní, odmítal normální domluvu a hrozil právníky i okamžitým zaplacením v hotovosti.',
         fix: [
-          'Pojištění odpovědnosti kryje i škody způsobené dětmi - ty za sebe právně neodpovídají, platí rodiče.',
-          'Stačilo nahlásit škodu a doložit fotky, s pojišťovnou i se sousedem jednalo oddělení Allrisk.',
-          'Rodinná varianta pokrývá oba rodiče, obě děti i psa na jedné smlouvě.',
+          'Krytí i pro ty nejmenší: Pojištění odpovědnosti automaticky kryje škody způsobené dětmi, za které ze zákona platí rodiče.',
+          'Právní ochrana kryje záda: Rodina využila připojištění právní ochrany. Právníci si souseda převzali, nastavili jasná pravidla a usměrnili jeho přehnané požadavky.',
+          'Vyřizování bez nervů: Stačilo nahlásit škodu a poslat fotky. Všechno jednání se sousedem i pojišťovnou si převzalo centrum likvidace pojistných událostí Allrisk.',
+          'Jedna pojistka pro celou rodinu: Rodinná varianta na jediné smlouvě chrání oba rodiče, děti i domácího mazlíčka.',
         ],
-        outcome: 'Pojišťovna vyplatila 45 000 Kč, rodina doplatila spoluúčast 1 000 Kč. Se sousedem se nesoudili.',
+        outcome: 'Výsledek? Pojišťovna vyplatila 45 000 Kč a rodina doplatila jen 1000 Kč spoluúčasti. Soused dostal peníze na účet a celá věc se vyřešila v klidu a bez sporů.',
+      },
+      {
+        key: 'rodina-cesty', ic: 'plane',
+        product: 'cesty', sub: 'Celoroční cestovní pojištění',
+        tab: 'Jezdí za hranice',
+        // Jediný prípad, ktorý v zadaní úvodnú jednovetu nemal - nadpisom je preto
+        // pomenovanie prípadu (user, 2026-08-19). Príbeh tak začína celý odznova.
+        title: 'Roční cestovní pojištění - časté cesty do zahraničí',
+        story: 'Petr je v jednom kole. V rámci práce občas narychlo vyjede do zahraničí, s rodinou rádi vyrazí na prodloužený víkend do Alp a v létě nesmí chybět klasická dovolená u moře. Řešit před každým odjezdem cestovní pojištění na poslední chvíli na čerpací stanici v mobilu ho ale neskutečně otravovalo - a párkrát na to v shonu téměř zapomněl.',
+        fixLbl: 'Jak to vyřešilo roční cestovní pojištění',
+        fix: [
+          'Klid po celý rok: Sjednali si celoroční variantu pro celou rodinu. Ať už jedou na plánovanou dovolenou, nebo spontánní víkend za hranice, jsou automaticky krytí.',
+          'Práce i rodina v jednom: Pojistka kryje Petrovy pracovní cesty i všechny rodinné výlety a sportovní aktivity na horách.',
+          'Vysoké limity a asistence: Léčebné výlohy, úrazové pojištění i odpovědnost mají nastavené tak, aby nemuseli řešit doplatky ani při zásahu horské služby.',
+        ],
+        outcome: 'Výsledek? Jedna smlouva, jedno zaplacení ročně a nulový stres. Petr ušetřil spoustu času i peněz za opakované jednorázové pojistky a rodina vyrazí za hranice kdykoliv bez přemýšlení.',
+      },
+      {
+        key: 'rodina-prace', ic: 'hospital',
+        product: 'odpovednost', sub: 'Odpovědnost zaměstnance za škodu',
+        tab: 'Chyba v práci',
+        title: 'Když v práci selže lidský faktor, škoda jde za zaměstnancem. S pojištěním odpovědnosti ale peněženka nepláče.',
+        story: 'Lucie pracuje jako dětská zdravotní sestra a v denním shonu přehlédla správné uskladnění šarže drahých vakcín. Ty se kvůli špatné teplotě znehodnotily a zkazily. Zaměstnavatel po ní podle zákoníku práce požadoval úhradu škody - maximálních 4,5násobku jejího průměrného platu, což dělalo 145 000 Kč.',
+        fix: [
+          'Krytí na míru profesi: Pojištění odpovědnosti zaměstnance zohledňuje specifika práce ve zdravotnictví a kryje i chyby způsobené spěchem nebo nepozorností.',
+          'Přímá komunikace: Lucie nemusela řešit právní kličky se zaměstnavatelem. Podklady předala nám a my jsme se spojili přímo s vedením nemocnice.',
+          'Žádný zásah do rodinného rozpočtu: Pojišťovna uhradila celou požadovanou částku v zákonné výši.',
+        ],
+        outcome: 'Výsledek? Škodu 145 000 Kč zaplatila pojišťovna a Lucie doplatila jen drobnou spoluúčast. V práci neměla žádný škraloup a mohla dál v klidu pracovat bez strachu, že ji jedna chyba finančně potopí.',
       },
     ],
     // ---- modely pre produktové stránky (kľúč = produkt) ----
@@ -333,16 +380,19 @@ export const PROFILES = [
       // TODO(design): vlastná ilustrácia pre každý profil - zatiaľ 3 existujúce SVG na 4 profily.
       img: '/cars/driver.svg',
       tagIcon: 'users',
-      driver: 'Řidiči 38 let · děti v autě',
-      car: 'Škoda Fabia', year: '2018', engine: '1.0 TSI · 70 kW',
-      mileage: '14 000 km / rok', deductible: '5 000 Kč',
-      usage: 'Hlavní auto na všechno - do práce, s dětmi k lékaři a o víkendu za rodiči. Když stojí, stojí celá domácnost.',
-      base: 480, preset: ['havarie', 'skla', 'asistence', 'nahradni'],
-      why: 'Jediné auto v rodině musí být pojízdné. Havarijka na starší Fabii nestojí moc a náhradní vůz řeší to, co by rodinu položilo nejvíc.',
+      driver: 'Řidiči 35 let · dvě děti v autě',
+      // POZOR: konkrétny vůz v klientskom zadaní nebol. Odvodené z prípadu
+      // „Přišla vichřice" - škoda 180 000 Kč a servis za 70 000 Kč dávajú zmysel
+      // u kombi, na Fabii (pôvodná hodnota) by to bola totálna škoda.
+      car: 'Škoda Octavia Combi', year: '2017', engine: '1.5 TSI · 110 kW',
+      mileage: '18 000 km / rok', deductible: '5 000 Kč',
+      usage: 'Jediné auto v rodině. Ráno děti do školky a do školy, přes den materiál na stavbu, o víkendu hokej a volejbal a v létě cesta k moři.',
+      base: 560, preset: ['havarie', 'skla', 'asistence', 'nahradni'],
+      why: 'Když stojí tohle auto, stojí celá domácnost i Petrovy zakázky. Havarijka a náhradní vůz řeší přesně to, co by rodinu položilo nejvíc.',
       perks: [
-        'Náhradní vůz do druhého dne, když jde Fabia do servisu',
-        'Nižší cena díky krátkému ročnímu nájezdu',
-        'Asistence 24/7 i pro cesty s malým dítětem v autě',
+        'Náhradní vůz do druhého dne, a to i při obyčejné poruše',
+        'Asistence 24/7 na cesty k moři i na výjezdy za zakázkami',
+        'Pojistnou částku revidujeme, aby po servisu neplnila podle staré hodnoty',
       ],
     },
     },
@@ -978,7 +1028,7 @@ export const countGen = (n) => COUNT_GEN[n] || String(n)
 
 // „Čtyři situace" / „Pět situací" - česky sa s číslovkou 5+ mení aj pád podstatného mena,
 // preto to vracia celú frázu, nie len číslovku. Počet situácií je per profil.
-const COUNT_NOM = { 1: 'Jedna', 2: 'Dvě', 3: 'Tři', 4: 'Čtyři', 5: 'Pět', 6: 'Šest', 7: 'Sedm' }
+const COUNT_NOM = { 1: 'Jedna', 2: 'Dvě', 3: 'Tři', 4: 'Čtyři', 5: 'Pět', 6: 'Šest', 7: 'Sedm', 8: 'Osm', 9: 'Devět' }
 export const situationCount = (n) =>
   `${COUNT_NOM[n] || n} ${n === 1 ? 'situace' : n <= 4 ? 'situace' : 'situací'}`
 
@@ -986,9 +1036,12 @@ export const situationCount = (n) =>
 // bežnej reči - samotné „Zvážit" nepovie, podľa čoho sa má človek rozhodnúť.
 // Ikony sú KĽÚČE, komponenty k nim mapuje ProfileParts.jsx (rovnako ako pri produktoch).
 export const NEED_META = {
-  nutnost: { label: 'Nutnost', hint: 'Bez tohohle to nedává smysl', ic: 'need-must' },
-  doporuceno: { label: 'Doporučujeme', hint: 'Chybí to nejčastěji ze všeho', ic: 'need-rec' },
-  zvazit: { label: 'Zvážit', hint: 'Podle toho, jak na tom jste', ic: 'need-opt' },
+  // Znenie z klientskeho zadania pre rodinu (user, 2026-08-19), použité GLOBÁLNE.
+  // Hinty ostávajú všeobecné - klientovo „Bez tohohle to stavět a žít v klidu nejde"
+  // je viazané na stavbu domu a podnikateľovi ani obci by nesedelo.
+  nutnost: { label: 'Absolutní základ', hint: 'Bez tohohle to nedává smysl', ic: 'need-must' },
+  doporuceno: { label: 'Chytré řešení navíc', hint: 'Chybí to nejčastěji ze všeho', ic: 'need-rec' },
+  zvazit: { label: 'Co stojí za zvážení', hint: 'Podle toho, jak na tom jste', ic: 'need-opt' },
 }
 // Poradie naliehavosti - zoznam sa ním triedi, nutnosti idú navrch.
 export const NEED_ORDER = ['nutnost', 'doporuceno', 'zvazit']

@@ -42,16 +42,19 @@ export const CATS = [
 
 // Segmenty sú prvou úrovňou navigácie - pás záložiek NAD lištou, presne ako na
 // allrisk.cz. Prepnutie nemení len menu, ale celý web pod ním (src/segment.js).
-//   short = skrátený label. Pás sa doň skladá pod 1180px, kde tri plné názvy
-//           spolu s utility napravo prestanú vychádzať.
-//   pro   = nadpis/eyebrow panelu a úvodu. Dopovie to, čo sa do záložky
-//           nevošlo („Rodiny" samo o sebe zamlčuje jednotlivcov).
+//   label = názov v záložke hlavičky, VŽDY v plnom znení (user, 2026-08-18:
+//           „rodiny musia byť všade v plnom znení - Rodiny a jednotlivci").
+//           Pole `short` („Rodiny") je preto zrušené: jediný, kto ho čítal, bola
+//           hlavička, a tá teraz musí ukázať celé meno publika. Skracovať sa
+//           nesmie ani podľa šírky okna (user, 2026-08-12) - je to nastavenie
+//           celého webu a nemôže sa volať zakaždým inak.
+//   pro   = nadpis/eyebrow panelu a úvodu, v tvare „Pro …".
 //   icon  = kľúč ikony publika (mapuje ju SiteHeader). V mobilnom prepínači
 //           dáva výber najavo aj bez čítania textu.
 export const SEGMENTS = [
-  { key: 'rodiny', label: 'Jednotlivci a rodiny', short: 'Rodiny', pro: 'Pro jednotlivce a rodiny', icon: 'users', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
-  { key: 'podnikatele', label: 'Podnikatelé', short: 'Podnikatelé', pro: 'Pro podnikatele a firmy', icon: 'briefcase', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
-  { key: 'mesta', label: 'Města a obce', short: 'Města a obce', pro: 'Pro města a obce', icon: 'city', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
+  { key: 'rodiny', label: 'Rodiny a jednotlivci', pro: 'Pro rodiny a jednotlivce', icon: 'users', desc: 'Auto, bydlení, zdraví a úspory pro vaši domácnost.' },
+  { key: 'podnikatele', label: 'Podnikatelé', pro: 'Pro podnikatele a firmy', icon: 'briefcase', desc: 'Majetek, odpovědnost a lidé ve vaší firmě.' },
+  { key: 'mesta', label: 'Města a obce', pro: 'Pro města a obce', icon: 'city', desc: 'Obecní majetek, zastupitelé a bytové domy.' },
 ]
 
 // koľko služieb ponúkame danému segmentu (číslo v hlavičke menu)

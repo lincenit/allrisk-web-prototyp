@@ -1,7 +1,8 @@
 /* ============================================================
-   MegaMenu - panel JEDNEJ obchodnej línie (viď MegaMenu.jsx). Veľký panel
-   „Produkty" (`.mm--all`, štyri stĺpce) odišiel 2026-08-12 s verziou hlavičky
-   `jeden`, ku ktorej patril - v gite ho nájdeš.
+   MegaMenu - katalóg hlavičky v dvoch podobách (viď MegaMenu.jsx):
+   `.mm` sám       = úzky stĺpec jednej línie, visí pod svojím tlačidlom.
+   `.mm.mm--all`   = veľký panel „Produkty", línie ako stĺpce na plnú šírku
+                     obsahu. Od 2026-08-18 späť (user), do 2026-08-12 už raz žil.
    ============================================================ */
 
 /* Zaoblený zo VŠETKÝCH strán, aj hore (user, 2026-08-12) - je to karta, a karta
@@ -42,3 +43,50 @@
 .mm-item svg{flex:none;width:22px;height:22px;stroke:var(--blue);}
 .mm-item:hover{background:var(--blue-50);color:var(--blue);}
 .mm-item:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;}
+
+
+/* ============================================================
+   VEĽKÝ PANEL „PRODUKTY"
+   Nevisí z tlačidla, ale z PÁSU: kotví sa na `.hdr-top` / `.hdr-bar` (obe sú
+   `position:relative`) a ťahá sa cez celú ich šírku. Keby visel zľava od
+   tlačidla, pri poslednej položke lišty by vytiekol z okna, a keby sa
+   zarovnával sprava, skákal by podľa toho, kde tlačidlo práve stojí.
+   Preto má položka „Produkty" v lište `position:static` - viď SiteHeader.css.
+   ============================================================ */
+/* `top:100%` = pod CELOU hlavičkou. Panel je súrodenec oboch pásov (viď
+   SiteHeader.jsx), takže sa kotví na `.hdr` a nie na rad, v ktorom stojí jeho
+   tlačidlo - vo variante `listy` by inak prekryl záložky publika pod sebou. */
+.mm--all{position:absolute;top:100%;left:0;right:0;
+  width:auto;max-height:none;overflow:visible;
+  background:none;border:0;border-radius:0;box-shadow:none;padding:0;}
+/* Karta je až vnútro - obsah hlavičky je obmedzený na --maxw a panel musí
+   lícovať s ním, nie s oknom. */
+/* Šírka je presne šírka OBSAHU hlavičky, nie lišty: `--maxw` zahŕňa aj jej
+   odsadenie, takže sa musí odpočítať, inak by panel na širokom okne prečnieval
+   o 56px na každú stranu a nelícoval by s logom. */
+.mm-in{width:calc(100% - 2 * clamp(14px,4vw,28px));
+  max-width:calc(var(--maxw) - 2 * clamp(14px,4vw,28px));margin-inline:auto;
+  display:grid;grid-template-columns:repeat(var(--mm-cols,4),minmax(0,1fr));
+  gap:0 clamp(12px,1.8vw,24px);align-items:start;
+  background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);
+  box-shadow:0 24px 48px -20px rgba(13,31,91,.34);
+  padding:clamp(18px,2vw,26px) clamp(14px,1.6vw,22px);}
+/* Nadpis stĺpca je o stupeň nad položkami (16 proti 14) - v rade piatich musí
+   byť na prvý pohľad vidieť, kde stĺpec začína. Linku pod ním user zmazal
+   (2026-08-19): stĺpce oddeľuje medzera, druhý predel je navyše. Odsadenie
+   po prvú položku zostalo rovnaké, aby sa panel nezmenil na výšku. */
+.mm-col{min-width:0;}
+.mm-col h3{font-family:var(--sans);font-size:var(--fs-body);font-weight:700;
+  letter-spacing:-.015em;color:var(--ink);margin:0 0 10px;
+  padding:0 var(--hdr-item-px,16px) 10px;}
+/* Nad foto-hero je pás priehľadný a panel nemá na čo dosadnúť - odlepí sa,
+   rovnako ako úzky panel línie. */
+.hero-hdr:not(.hero-hdr-solid) .mm--all{margin-top:8px;}
+
+/* V piatich stĺpcoch zostane na názov ~150px, takže dlhšie sa zalomia na dva
+   riadky („Likvidace pojistných událostí" má aj tak 190px a nezmestí sa nikdy).
+   Odsadenie položky je preto v tomto paneli menšie než v úzkom (10 proti 16)
+   a riadkovanie tesnejšie - dva riadky sa musia vojsť do 44px plochy. */
+.mm--all .mm-item{padding-inline:10px;line-height:1.28;}
+.mm--all .mm-item span{min-width:0;}
+.mm-col h3{padding-inline:10px;}

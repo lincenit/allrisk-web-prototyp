@@ -131,10 +131,10 @@ export const OFFICES = [
    brožúra nemala. Texty sú prepis z tlače, nie parafráza.
    ============================================================ */
 
-// Ucelený unikátní ekosystém Allrisk (s. 6-7) - CELÝ, tak ako ho vidí
-// ktokoľvek. Firemný rez tých istých šiestich línií (kratšie zoznamy, len to,
-// čo rieši firma) žije v `care.js` ako ECOSYSTEM a je to zámerne iný text -
-// preto tu iný názov: pre `/o-nas` je to úplný výpočet z tlače.
+// Ucelený unikátní ekosystém Allrisk (s. 6-7) - CELÝ, tak ako ho vidí ktokoľvek.
+// JEDINÝ zdroj sekcie (2026-08-19): firemný rez tých istých línií (`ECOSYSTEM`
+// v care.js, kratšie zoznamy) je zmazaný spolu s mriežkou kariet na úvode -
+// obe miesta kreslí komponent nad týmto výpočtom z tlače.
 //
 // `img` sú kolečka z tlače (`public/o-nas/eko-*.jpg`, ~560 px štvorec).
 // Ikonu ani názov nenahrádzajú - z výrezov sa nedá poznať, ktorá línia to je,
