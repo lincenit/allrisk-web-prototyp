@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { IconArrowLeft } from '@tabler/icons-react'
+import { IconArrowLeft, IconChevronRight } from '@tabler/icons-react'
 import { asset } from '../asset.js'
 import { Decor } from './Decor.jsx'
 import { Line } from './Line.jsx'
@@ -19,7 +19,15 @@ import { Line } from './Line.jsx'
 // Do 2026-08-16 platil opak (nad fotkou z nej bol fialový opar), teraz je to
 // druhá vrstva nad závojom a pod sadzbou. Ktorá zo štyroch stúh a ktoré plátno
 // kružníc to bude, si oba komponenty losujú samy pri každom načítaní.
-export function PageHero({ back, backLabel, title, subtitle, photo, media, children }) {
+//
+// NAD TITULKOM STOJÍ BUĎ DROBEČEK, ALEBO TLAČIDLO SPÄŤ - nikdy oboje. Rozhoduje
+// hĺbka, nie stránka: `crumb` patrí stránke, na ktorú sa chodí z hlavičky
+// (/kontakt), lebo tá má polohu v strome webu; `back` patrí detailu, kam sa
+// človek preklikol z konkrétneho zoznamu (pobočka, poradce), a preto sa vracia
+// tam, odkiaľ prišiel, nie „o úroveň vyššie".
+//   crumb  názov stránky v drobečku; cesta je vždy Domů › <názov>, tak ako na
+//          /blog, /reference a /o-nas. Tvar `.page-crumb` je spoločný.
+export function PageHero({ crumb, back, backLabel, title, subtitle, photo, media, children }) {
   return (
     <section className="phero photo-hero">
       {photo && (
@@ -28,6 +36,11 @@ export function PageHero({ back, backLabel, title, subtitle, photo, media, child
       <Decor />
       <Line pos="hero" />
       <div className="wrap phero-in">
+        {crumb && (
+          <nav className="page-crumb">
+            <Link to="/">Domů</Link><IconChevronRight size={14} stroke={2} /><b>{crumb}</b>
+          </nav>
+        )}
         {back && (
           <Link to={back} className="phero-back">
             <IconArrowLeft size={18} stroke={2.2} aria-hidden="true" />

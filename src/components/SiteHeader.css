@@ -32,6 +32,24 @@
    riadkoch prepínača publika vyšlo 0 a text sedel na hrane modrého podkladu.
    Premenná drawra sa preto neriedi späť: obe strany čítajú tie isté tri. */
 .hdr,.hdr-drawer{--hdr-item-px:16px;--drw-px:clamp(10px,3vw,20px);--drw-in:14px;}
+
+/* ---- ODSADENIE ROZBAĽOVACÍCH PANELOV ----
+   JEDNA hodnota pre všetky panely hlavičky - Produkty (MegaMenu.css), Společnost
+   aj hľadanie. Merá sa od SPODNEJ HRANY HLAVIČKY, nie od tlačidla, lebo tak to
+   vidí človek: panel visí pod hlavičkou, nie pod položkou.
+
+   Do 2026-08-20 mal každý panel vlastné číslo a vlastný bod merania, takže
+   žiadne dva nezačínali rovnako (namerané: Produkty 0, Společnost -4, teda
+   4px ZA hlavičkou, hľadanie 10). Produkty k tomu mali odsadenie len nad
+   priehľadným hero - po zoskrolovaní pravidlo prestalo platiť a panel skočil
+   na hlavičku, akoby sa k nej pri scrolle prilepil (user, 2026-08-20).
+
+   Panel visiaci z TLAČIDLA má k tomu ešte kus lišty pod sebou: tlačidlo je 48px
+   a stojí v strede pásu, takže pod ním zostáva polovica rozdielu. `--hdr-btn-drop`
+   je to spolu - odstup po hranu hlavičky plus samotná medzera. Fallback 80px sedí
+   s `.hdr-top-in`, ktorá `--hdr-top-h` číta s tým istým fallbackom. */
+.hdr{--hdr-panel-gap:8px;
+  --hdr-btn-drop:calc((var(--hdr-top-h,80px) - 48px) / 2 + var(--hdr-panel-gap));}
 .hdr{position:sticky;top:0;z-index:200;--hdr-bg:var(--grad-blue);}
 /* MODRÚ PLOCHU NESIE CELÁ HLAVIČKA, nie jednotlivé rady (user, 2026-08-19: „verzia
    okno má mať rovnakú farbu ako header, čiže byť súčasťou headru a nie mať vlastný
@@ -321,7 +339,7 @@ html[data-hdrtop="obrys"].hero-hdr .hdr--solid .hdr-tabs .hdr-tab.on{color:#fff;
 
 /* malý dropdown v páse (Společnost) */
 .hdr-dd-wrap{position:relative;display:inline-flex;}
-.hdr-dd{position:absolute;top:calc(100% + 8px);left:0;min-width:200px;
+.hdr-dd{position:absolute;top:calc(100% + var(--hdr-btn-drop));left:0;min-width:200px;
   background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);
   box-shadow:0 24px 48px -20px rgba(13,31,91,.34);padding:8px;
   display:flex;flex-direction:column;gap:2px;z-index:120;}
@@ -479,7 +497,7 @@ html[data-hdrtop="obrys"].hero-hdr .hdr--solid .hdr-tabs .hdr-tab.on{color:#fff;
   display:flex;justify-content:flex-end;
   max-width:var(--maxw);margin:0 auto;padding-inline:clamp(14px,4vw,28px);
   z-index:110;pointer-events:none;}
-.hdr-search{pointer-events:auto;width:min(620px,calc(100vw - 32px));margin-top:10px;
+.hdr-search{pointer-events:auto;width:min(620px,calc(100vw - 32px));margin-top:var(--hdr-panel-gap);
   background:var(--box);border:1px solid var(--l);border-radius:var(--r-card);
   box-shadow:0 30px 60px -28px rgba(13,31,91,.45);overflow:hidden;}
 .hdr-search-bar{display:flex;align-items:center;gap:11px;padding:14px 16px;border-bottom:1px solid var(--l2);color:var(--blue);}

@@ -14,10 +14,11 @@
    na jeden riadok aj s ikonou. Podnikatelia majú v Pojištění dvanásť položiek
    - `max-height` z výšky okna a scroll vnútri, nech panel nikdy nekončí pod
    spodnou hranou obrazovky. */
-/* Panel visí z TLAČIDLA, ale dosadá na spodnú hranu hlavičky - preto sa
-   k `top:100%` pripočíta odsadenie spodného pásu (`--hdr-bar-pb`). Bez neho
-   by od zmenšenia tlačidiel línií končil o kus vyššie a prekryl by pás. */
-.mm{position:absolute;top:calc(100% + var(--hdr-bar-pb,0px));left:0;z-index:110;
+/* Panel visí z TLAČIDLA, ale meria sa od spodnej hrany hlavičky - preto sa
+   k `top:100%` pripočíta `--hdr-btn-drop` (SiteHeader.css): kus lišty, ktorý
+   pod tlačidlom ešte zostáva, plus spoločná medzera všetkých panelov hlavičky.
+   Bez toho by panel podľa výšky tlačidla končil raz vyššie, raz nižšie. */
+.mm{position:absolute;top:calc(100% + var(--hdr-btn-drop,8px));left:0;z-index:110;
   width:288px;max-height:calc(100vh - var(--hdr-h) - 24px);overflow-y:auto;
   background:var(--box);border:1px solid var(--l);
   border-radius:var(--r-card);
@@ -26,10 +27,6 @@
 /* Posledné dve línie stoja pri pravej hrane obsahu - panel zarovnaný zľava by
    im vytiekol z okna. */
 .hdr-navitem:nth-last-child(-n+2) .mm{left:auto;right:0;}
-/* Nad foto-hero je pás priehľadný, takže panel nemá na čo dosadnúť - tam sa
-   od hlavičky odlepí o 8px a stojí ako samostatná karta. Rám aj rádius má
-   dokola už z pravidla vyššie. */
-.hero-hdr:not(.hero-hdr-solid) .mm{margin-top:8px;}
 
 .mm-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;}
 /* Riadok, nie karta: karta v karte je vždy chyba a panel sám je tá karta.
@@ -55,8 +52,11 @@
    ============================================================ */
 /* `top:100%` = pod CELOU hlavičkou. Panel je súrodenec oboch pásov (viď
    SiteHeader.jsx), takže sa kotví na `.hdr` a nie na rad, v ktorom stojí jeho
-   tlačidlo - vo variante `listy` by inak prekryl záložky publika pod sebou. */
-.mm--all{position:absolute;top:100%;left:0;right:0;
+   tlačidlo - vo variante `listy` by inak prekryl záložky publika pod sebou.
+   Medzera je tá istá `--hdr-panel-gap` ako u ostatných panelov a platí v KAŽDOM
+   stave hlavičky: do 2026-08-20 ju mal panel len nad priehľadným hero, takže sa
+   pri zoskrolovaní prilepil na hlavičku (user). */
+.mm--all{position:absolute;top:100%;left:0;right:0;margin-top:var(--hdr-panel-gap,8px);
   width:auto;max-height:none;overflow:visible;
   background:none;border:0;border-radius:0;box-shadow:none;padding:0;}
 /* Karta je až vnútro - obsah hlavičky je obmedzený na --maxw a panel musí
@@ -79,9 +79,6 @@
 .mm-col h3{font-family:var(--sans);font-size:var(--fs-body);font-weight:700;
   letter-spacing:-.015em;color:var(--ink);margin:0 0 10px;
   padding:0 var(--hdr-item-px,16px) 10px;}
-/* Nad foto-hero je pás priehľadný a panel nemá na čo dosadnúť - odlepí sa,
-   rovnako ako úzky panel línie. */
-.hero-hdr:not(.hero-hdr-solid) .mm--all{margin-top:8px;}
 
 /* V piatich stĺpcoch zostane na názov ~150px, takže dlhšie sa zalomia na dva
    riadky („Likvidace pojistných událostí" má aj tak 190px a nezmestí sa nikdy).
