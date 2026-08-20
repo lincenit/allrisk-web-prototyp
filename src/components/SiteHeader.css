@@ -383,12 +383,18 @@ html[data-hdrtop="obrys"].hero-hdr .hdr--solid .hdr-tabs .hdr-tab.on{color:#fff;
 .hdr-tabs::before{content:'';position:absolute;inset:0;z-index:-1;
   background:#fff;transition:opacity .3s var(--ease,ease),background-color .3s var(--ease,ease);}
 .hdr-tabs .hdr-tabs-in{gap:2px;}
-.hdr-tabs .hdr-tab{padding:0 16px;font-size:var(--fs-body);font-weight:500;
+/* Sadzba je PRESNE tá istá ako u položky lišty („Produkty", „Kontakt"): rovnaké
+   písmo, rovnakých 16px, rovnaká váha 500 a rovnaké odsadenie z --hdr-item-px
+   (user, 2026-08-20). Do tohto dňa mala zvolená záložka váhu 600 - a keďže
+   zvolená je vždy práve jedna, „Rodiny a jednotlivci" v hlavičke tučnela proti
+   „Produkty" hneď vedľa. Výber kreslí značka pod záložkou (`.hdr-mark`) a farba
+   sadzby, nie hrubšie písmo; dve rôzne váhy toho istého radu sú len nepokoj. */
+.hdr-tabs .hdr-tab{padding:0 var(--hdr-item-px);font-size:var(--fs-body);font-weight:500;
   color:var(--blue);}
 .hdr-tabs .hdr-tab-ic{width:24px;height:24px;}
 /* Hover má len NEZVOLENÁ záložka - pod značkou by presvital. */
 .hdr-tabs .hdr-tab:not(.on):hover{background:var(--blue-50);}
-.hdr-tabs .hdr-tab.on{color:#fff;font-weight:600;}
+.hdr-tabs .hdr-tab.on{color:#fff;}
 
 /* Značka výberu. Dosadá na spodnú hranu pásu a zaoblená je len HORE - dole
    pokračuje do lišty. `--hdr-tabs-cap` je vzduch nad ňou. */
