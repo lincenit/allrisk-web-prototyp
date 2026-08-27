@@ -374,7 +374,7 @@ export default function SiteHeader() {
     </div>
   )
 
-  const contactLink = <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakt</NavLink>
+  const contactLink = <NavLink to="/kontakt" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeAll}>Kontakty</NavLink>
   const searchBtn = (
     <button className={`hdr-searchbtn ${searchOpen ? 'on' : ''}`} aria-label="Hledat" aria-expanded={searchOpen} onClick={openSearch}>
       <IconSearch size={19} stroke={2} /> <span>Hledat</span>
@@ -544,7 +544,7 @@ export default function SiteHeader() {
 
           <div className="hdr-mlinks">
             {COMPANY.map(([l, to]) => <CompanyLink key={l} label={l} to={to} onClick={closeDrawer} />)}
-            <Link to="/kontakt" onClick={closeDrawer}>Kontakt</Link>
+            <Link to="/kontakt" onClick={closeDrawer}>Kontakty</Link>
           </div>
           <div className="hdr-mfoot">
             <Link to={CLAIM_TO} className="hdr-claim" onClick={closeDrawer}><IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span></Link>

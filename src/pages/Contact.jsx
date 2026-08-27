@@ -68,9 +68,9 @@ export default function Contact() {
   return (
     <div className="site">
       <PageHero
-        crumb="Kontakt"
+        crumb="Kontakty"
         photo="/kontakt/hero.jpg"
-        title="Kontakt"
+        title="Kontakty"
         subtitle="Najdete nás po celé České republice. Vyberte si nejbližší pobočku, prohlédněte si tým - nebo nám rovnou napište."
       >
         <div className="hchips">

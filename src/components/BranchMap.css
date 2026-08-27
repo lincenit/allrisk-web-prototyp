@@ -6,8 +6,13 @@
    Je to KRESBA, nie tile provider: podklad je preliv a mriežka, polohu pinu
    nesú dáta (`map: [left %, top %]` v data/branches.js). Preto sa nič nesťahuje
    a mapa má rovnaký tvar v každom okne. */
+/* Rádius je 20px, teda ten istý ako `.banner` a `.contact-band` (wireframe.css),
+   nie --r-card (user, 2026-08-27). Mapa je PÁS cez celú šírku obsahu, nie karta -
+   na úvode stojí priamo nad kontaktným boxom a na /kontakt nad záložkami, takže
+   sa jej roh porovnáva s rohom modrého pásu vedľa. Kto zmení rádius pásov,
+   mení aj tento. */
 .site .cmap{position:relative;height:clamp(260px,32vw,380px);
-  border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
+  border-radius:20px;overflow:hidden;border:1px solid var(--l);
   background:linear-gradient(135deg,#e8eef7,#dbe6f5);}
 .site .cmap::before{content:"";position:absolute;inset:0;
   background-image:linear-gradient(rgba(0,70,200,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,70,200,.06) 1px,transparent 1px);

@@ -1,5 +1,5 @@
 import './NumbersBand.css'
-import { NUMBERS, numbers } from '../data/company.js'
+import { numbers } from '../data/company.js'
 import { Decor } from './Decor.jsx'
 import { Line } from './Line.jsx'
 
@@ -41,9 +41,10 @@ import { Line } from './Line.jsx'
 // argument neniesli. Dáta zostávajú v company.js (FACTS, OFFICES).
 // ============================================================
 
-// Šesť čísel radu. „2003" tu nie je - je to samostatná veľká dlaždica vľavo
-// a nesie ju NUMBERS.odRoku.
-const ROW = numbers('klienti', 'poradci', 'pojistne', 'skody', 'uvery', 'pobocky')
+// OSEM ROVNAKÝCH DLAŽDÍC v poradí od usera (2026-08-27). Veľká dlaždica cez dva
+// riadky tu už nie je: osem kusov a jedna z nich cez dva riadky je deväť buniek,
+// čo sa do štyroch stĺpcov nezmestí. Osem rovnakých vyplní 4 × 2 presne.
+const ORDER = numbers('naTrhu', 'klienti', 'pojistne', 'uvery', 'vypujcky', 'poradci', 'skody', 'pobocky')
 
 export default function NumbersBand({
   ey = 'O společnosti',
@@ -61,14 +62,12 @@ export default function NumbersBand({
           <h2>{title}</h2>
         </div>
         <div className="nums">
-          {/* Jediná veľká dlaždica pásu. Popis je nad číslom, takže sa
-              zhora nadol číta ako veta „na trhu již od roku 2003". */}
-          <div className="num num--lead">
-            <span className="c">{NUMBERS.odRoku.label}</span>
-            <b>{NUMBERS.odRoku.value}</b>
-          </div>
-          {ROW.map((n) => (
+          {/* Dlaždica sa číta zhora nadol ako veta: „Více než | 78 000 výpůjček |
+              vozů z autopůjčovny Allrisk". Riadok nad číslom má len tá, ktorá
+              ho v znení má - obsah sa kvôli rovnakému tvaru nedopĺňa. */}
+          {ORDER.map((n) => (
             <div className="num" key={n.label}>
+              {n.pre && <span className="c">{n.pre}</span>}
               <b>{n.value}</b>
               <span className="c">{n.label}</span>
             </div>

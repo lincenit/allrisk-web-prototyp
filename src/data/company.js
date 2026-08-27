@@ -22,21 +22,25 @@
 // POZOR: brožúra si v číslach protirečí sama - úvodný text hovorí
 // „více než 250 000 klientů", číselná strana „230 000". Platí 230 000
 // (číselná strana aj PDF). Kým to klient nepotvrdí, inde sa neopisuje.
+// OSEM DLAŽDÍC, poradie aj znenie od usera (2026-08-27). Dlaždica nesie:
+//   pre    riadok NAD číslom („Více než", „Staráme se o více než") - je to
+//          predložka vety, ktorú dlaždica zhora nadol vyslovuje. Nemá ju každá.
+//   value  samotné číslo
+//   label  riadok POD číslom
+// Riadok nad hodnotou sa raz zmazal (2026-08-17), lebo z neho v úzkej dlaždici
+// bol tretí riadok textu naviac; vracia sa, lebo päť z ôsmich čísel je bez neho
+// tvrdenie bez miery („23 let" vs „více než 23 let").
 export const NUMBERS = {
-  // Dlaždica nesie len číslo a popis. Nadväzujúci riadok NAD hodnotou
-  // („Staráme se o …") mal v tlači zmysel vo vete, v úzkej dlaždici z neho
-  // bol tretí riadok textu naviac (user, 2026-08-17).
-  klienti: { value: '230 000', label: 'klientů' },
-  poradci: { value: '300+', label: 'poradců' },
-  skody: { value: '70 000+', label: 'úspěšně zlikvidovaných škod' },
-  pojistne: { value: '1,6 mld. Kč', label: 've spravovaném pojistném' },
-  uvery: { value: '8,6 mld. Kč', label: 'v poskytnutých úvěrech' },
-  pobocky: { value: '50+', label: 'poboček po ČR a SK' },
-  odRoku: { value: '2003', label: 'na trhu již od roku' },
+  naTrhu: { pre: 'Více než', value: '23 let', label: 'na trhu' },
+  klienti: { pre: 'Staráme se o více než', value: '240 000', label: 'klientů' },
+  pojistne: { pre: 'Více než', value: '1,7 miliardy', label: 've spravovaném pojistném' },
+  uvery: { pre: 'Více než', value: '10 miliard Kč', label: 'v poskytnutých úvěrech' },
+  vypujcky: { pre: 'Více než', value: '78 000 výpůjček', label: 'vozů z autopůjčovny Allrisk' },
+  poradci: { value: '400+', label: 'poradců' },
+  skody: { value: '70 000+', label: 'úspěšně zlikvidovaných pojistných škod' },
+  pobocky: { value: '70+', label: 'poboček po ČR a SK' },
 }
 
-// Výber čísel pre konkrétnu stránku. Firmu zaujíma niečo iné než domácnosť:
-// na /podnikatele stoja škody a spravované pojistné, na úvode klienti a úvery.
 export const numbers = (...keys) => keys.map((k) => NUMBERS[k])
 
 // Pozičný text firmy. Patrí na /o-nas - je publikum-neutrálny a na predajnej

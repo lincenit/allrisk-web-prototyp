@@ -128,7 +128,7 @@ export const COVERS = [
 // na každej stránke zvlášť. Tu je len výber, ktorý dáva zmysel firme:
 // vyriešené škody a spravované pojistné hovoria B2B, počet klientov a úvery
 // na bydlení patria skôr na úvod pre domácnosti.
-export const PROOF = numbers('skody', 'pojistne', 'poradci', 'odRoku')
+export const PROOF = numbers('skody', 'pojistne', 'poradci', 'naTrhu')
 
 /* ============================================================
    Zvyšné štyri strany brožúry, ktoré patria podnikateľom.
