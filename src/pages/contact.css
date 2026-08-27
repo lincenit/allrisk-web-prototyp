@@ -68,7 +68,7 @@
   font-size:18px;letter-spacing:.02em;}
 /* karta poradce ako na reality webe: biela plocha bez rámu, foto 80 px, meno a rola.
    Odlíšenie od pozadia nesie samotná biela, nie hairline - hover ju preleje do modrej. */
-.site .pcard{display:flex;align-items:center;gap:24px;padding:16px;border-radius:var(--r-btn);
+.site .pcard{display:flex;align-items:center;gap:24px;padding:16px;border-radius:var(--r-btn);min-width:0;
   background:var(--box);color:inherit;text-decoration:none;transition:background .2s;}
 .site a.pcard:hover{background:var(--blue-50);}
 .site .pcard.plain{background:var(--blue-50);}
@@ -85,19 +85,32 @@
   border-radius:var(--r-pill);padding:4px 10px;}
 .site .chip-tag.lg{font-size:var(--fs-sm);padding:8px 16px;}
 
-/* ===== KONTAKT: zoznam pobočiek + sticky mapa ===== */
-.site .contact-layout{display:flex;flex-direction:column;gap:26px;}
-.site .branch-side{flex:1;min-width:0;}
-.site .branch-search{position:relative;}
+/* ===== KONTAKT: mapa + záložky Pobočky / Poradci ===== */
+/* Poradie je prevzaté z reality webu (vetva realman): mapa cez celú šírku obsahu,
+   pod ňou prepínač a zoznam. Do 2026-08-27 tu stál sticky stĺpec s mapou vpravo -
+   padol s druhou záložkou: poradcovia sa do 400px stĺpca nezmestili a mapa platí
+   pre obe záložky rovnako, takže patrí nad ne, nie vedľa jednej z nich. */
+.site .branch-search{position:relative;margin-bottom:22px;}
 .site .branch-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--g400);}
 .site .branch-search input{width:100%;height:52px;border:1px solid var(--g300);border-radius:var(--r-card);background:#fff;
   padding:0 16px 0 46px;font:inherit;font-size:var(--fs-body);color:var(--ink);}
 .site .branch-search input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-50);}
-/* jeden súvislý rad kariet - bez medzititulkov regiónov (poradie ich stále rešpektuje) */
-.site .branch-list{display:flex;flex-direction:column;gap:12px;}
+
+/* zoznamy: pobočky sú širšie karty (2 stĺpce), poradci užšie (až 3).
+   Stĺpce sú minmax(0,1fr), nie 1fr: 1fr je minmax(auto,1fr), takže stĺpec nikdy
+   neklesne pod min-content karty (avatar 80 + gap + najdlhšie slovo v mene) a karta
+   z mriežky vytečie. Skrátenie textu na tri bodky drží až nula ako spodná hranica. */
+.site .branch-list,.site .adv-list{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;}
+@media(min-width:980px){.site .branch-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(min-width:620px){.site .adv-list{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(min-width:1100px){.site .adv-list{grid-template-columns:repeat(3,minmax(0,1fr));}}
+/* v troch stĺpcoch je karta o tretinu užšia než v tíme pobočky - menšia medzera
+   vedľa avatara vráti riadku s rolou a mestom šírku, ktorú by inak zjedli bodky */
+@media(min-width:1100px){.site .adv-list .pcard{gap:16px;}}
+
 /* karta pobočky ako na reality webe: biela plocha bez rámu a bez tieňa, foto 80 px,
    názov a pod ním adresa. Hover preleje kartu do modrej a názov na AllBlue. */
-.site .branch-row{display:flex;align-items:center;gap:24px;border-radius:var(--r-btn);
+.site .branch-row{display:flex;align-items:center;gap:24px;border-radius:var(--r-btn);min-width:0;
   background:var(--box);padding:16px;transition:background .2s;color:inherit;text-decoration:none;}
 .site .branch-row:hover{background:var(--blue-50);}
 .site .branch-row img{width:80px;height:80px;border-radius:var(--r-btn);object-fit:cover;flex:none;background:var(--g100);}
@@ -112,54 +125,10 @@
 .site .branch-row .loc svg{flex:none;}
 .site .branch-empty{padding:30px 4px;color:var(--g500);font-size:var(--fs-body);}
 
-/* štylizovaná mapa (bez tile providera).
-   --cmap-gap je medzera, ktorá mape ostane nad ňou aj pod ňou, keď je pripnutá:
-   hore ju odsadí od sticky hlavičky, dole od spodnej hrany okna. Preto vstupuje
-   do výpočtu dvakrát (výška) aj raz do `top` - keby sa rozišli, mapa by sa
-   o spodnú hranu orezala. Odsadenie počíta z --hdr-stick, teda z výšky, ktorá pri
-   scrolle naozaj zostane - tá je iná pri každom variante lepivosti. */
-.site .contact-layout{--cmap-gap:20px;--cmap-min:340px;}
-.site .cmap-wrap{width:100%;}
-.site .cmap{position:relative;height:var(--cmap-min);border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
-  background:linear-gradient(135deg,#e8eef7,#dbe6f5);}
-.site .cmap::before{content:"";position:absolute;inset:0;
-  background-image:linear-gradient(rgba(0,70,200,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,70,200,.06) 1px,transparent 1px);
-  background-size:40px 40px;}
-.site .cmap-pin{position:absolute;transform:translate(-50%,-100%);color:var(--blue);
-  filter:drop-shadow(0 6px 8px rgba(0,70,200,.35));transition:transform .2s,color .2s;}
-.site .cmap-pin:hover{color:var(--blue-800);transform:translate(-50%,-100%) scale(1.18);}
-@media(min-width:980px){
-  .site .contact-layout{flex-direction:row;align-items:flex-start;gap:30px;}
-
-  /* Sticky sedí na SAMOTNEJ MAPE, nie na stĺpci - a stĺpec sa naťahuje na výšku
-     riadku (align-self:stretch). Znie to zbytočne, ale je to jediné usporiadanie,
-     kde mapa nikdy neprerastie zoznam:
-
-       stĺpec sticky + mapa 100dvh   → pri vysokom okne je mapa vyššia než zoznam,
-                                       riadok narastie na ňu a sticky nemá kam ísť
-                                       (namerané: okno 1300 px → mapa 1196 > zoznam 1054)
-       stĺpec stretch + mapa sticky  → výška riadku ostáva daná zoznamom a mapa sa
-                                       oň stropuje cez min(100%, …)
-
-     Kľúčové je, že `min()` má percentuálnu vetvu: tá robí výšku stĺpca pre výpočet
-     riadku neurčitou, takže mapa doň nezapočíta svojich 100dvh a riadok si drží
-     výšku zoznamu. Keby tu stálo len calc(100dvh − …), sme späť pri prvom prípade. */
-  /* min-height musí poznať aj stĺpec, nielen mapa: inak by pri vyfiltrovanom zozname
-     riadok ostal na výške tej jednej kartičky (186 px) a mapa by z neho vytiekla na
-     sekciu pod sebou. Takto riadok narastie s ňou. Výšku okna stĺpec zámerne nepozná -
-     tú nesie až mapa cez min(100%, …), aby riadok neprerástol zoznam. */
-  .site .cmap-wrap{width:400px;flex:none;align-self:stretch;min-height:var(--cmap-min);}
-  /* --cmap-min je podlaha: pri vyfiltrovanom zozname by sa mapa inak stiahla na výšku
-     jednej kartičky a ostal by z nej prúžok. */
-  .site .cmap{position:sticky;top:calc(var(--hdr-stick) + var(--cmap-gap));
-    height:max(var(--cmap-min), min(100%, calc(100vh - var(--hdr-stick) - 2 * var(--cmap-gap))));}
-  /* dvh počíta so zaťahovacími lištami prehliadača, vh nie - s vh by mapa na
-     prehliadači s plávajúcou lištou presiahla pod spodnú hranu okna. Cez @supports,
-     nech to na starších prehliadačoch spadne späť na vh. */
-  @supports (height:100dvh){
-    .site .cmap{height:max(var(--cmap-min), min(100%, calc(100dvh - var(--hdr-stick) - 2 * var(--cmap-gap))));}
-  }
-}
+/* Kresba mapy je od 2026-08-27 v components/BranchMap.css - nesie ju okrem
+   tejto stránky aj úvod pre rodiny. Stránke zostáva len to, čo je jej: medzera
+   pod pásom nad záložkami. */
+.site .cmap.band{margin-bottom:clamp(20px,2.6vw,28px);}
 
 /* ===== DETAIL POBOČKY ===== */
 /* mobil: foto → hodiny a mapa → tím. Desktop: vľavo foto a pod ním tím,

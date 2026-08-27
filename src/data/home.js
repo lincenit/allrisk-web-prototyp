@@ -130,26 +130,36 @@ export const HERO = {
    s publikom, ktoré ju nieslo, padla celá. Je v gite. */
 
 /* ---------- Proč Allrisk ----------
-   Striedavo text a ilustrácia. Tri bloky, nie viac: je to argument pred
-   rozhodnutím, nie výpočet služieb - ten je v menu a v ekosystéme. */
+   Striedavo text a ilustrácia. Je to argument pred rozhodnutím, nie výpočet
+   služieb - ten je v menu a v kolese ekosystému nad touto sekciou.
+
+   ZMAZANÝ 2026-08-27 (user): blok `ekosystem` pre rodiny („Unikátní ekosystém
+   služeb" + ilustrácia). Sekciu odteraz otvára samotné koleso ekosystému,
+   takže veta s obrázkom hovorila to isté druhýkrát a hneď pod tým. */
 export const WHY = {
   rodiny: [
     {
-      key: 'ekosystem', ey: 'Vše pod jednou střechou',
-      t: 'Unikátní ekosystém služeb', accent: 'ekosystém služeb',
-      p: 'Pojištění, reality, finance i energie pod jednou střechou - propojené tak, ať spolu dávají smysl a nikde nevznikají díry.',
-      cta: 'Prozkoumat ekosystém', img: ILL.ecosystem, ic: 'globe',
-    },
-    {
       key: 'produkty', ey: 'Vlastní produkty',
       t: 'Inkasní pojištění, které jinde nedostanete', accent: 'jinde nedostanete',
-      p: 'Vyvíjíme vlastní pojistné produkty - řešení šitá na míru situacím, na které běžné pojišťovny nemyslí.',
+      // Znenie z podkladov (user, 2026-08-27). DVA ODSTAVCE, tak ako prišli:
+      // prvý je AKO produkty staviame, druhý ČÍM prevyšujú trh. `p` preto smie
+      // byť aj pole - blok ich vysadí pod seba (viď Wireframe.jsx).
+      // Odstavec smie byť veta alebo `{ t, b }`, kde `b` je jeho tučný začiatok
+      // (user, 2026-08-27). Tučné je vždy PODREŤAZEC `t`, nie druhé znenie -
+      // zvýraznenie sa tým nemôže rozísť s vetou, ktorú zvýrazňuje. Je to ten
+      // istý mechanizmus ako `accent` pri nadpise, len na odstavci.
+      p: [
+        { t: 'Naše produkty jsou navrženy s využitím dlouholetých zkušeností z trhu a pečlivým výběrem jednotlivých řešení. Každý produkt připravujeme s důrazem na kvalitu, kterou bychom očekávali i my sami.', b: 'Naše produkty jsou navrženy' },
+        { t: 'Nabízíme vám řešení, která svým rozsahem převyšují běžné standardy na českém trhu. Naše produkty představují kombinaci toho nejlepšího, co je aktuálně dostupné na pojistném trhu.', b: 'Nabízíme vám řešení' },
+      ],
       cta: 'Naše produkty', img: ILL.products, ic: 'license',
     },
     {
       key: 'likvidace', ey: 'Vlastní likvidace',
-      t: 'Škodu vyřešíme za vás', accent: 'vyřešíme za vás',
-      p: 'Žádné přehazování mezi pojišťovnami. Škodu likvidujeme interně - jeden kontakt, rychleji a férově.',
+      // Znenie z brožúry (user, 2026-08-27): nadpis je plný názov útvaru
+      // a text stavia našu plnú asistenciu proti trhovému štandardu.
+      t: 'Centrum likvidace pojistných událostí Allrisk', accent: 'pojistných událostí Allrisk',
+      p: 'Zatímco standardem na trhu je základní asistence ze strany makléře, Allrisk klientům poskytuje plnou asistenci prostřednictvím vlastního Centra likvidace pojistných událostí. Právě tato služba je jednou z našich klíčových konkurenčních výhod a důvodem, proč mají naši klienti jistotu, že v krizových situacích nezůstanou sami.',
       cta: 'Jak to funguje', img: ILL.claims, ic: 'shieldCheck',
     },
   ],

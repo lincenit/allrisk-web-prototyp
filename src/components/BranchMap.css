@@ -1,0 +1,21 @@
+/* ============ ŠTYLIZOVANÁ MAPA S PINMI ============
+   Presunuté 2026-08-27 z pages/contact.css: mapu nesie okrem /kontakt aj úvod
+   pre rodiny, takže si štýly importuje komponent sám (components/BranchMap.jsx)
+   a nie stránka. Ten istý postup ako pri ekosystéme a páse s číslami.
+
+   Je to KRESBA, nie tile provider: podklad je preliv a mriežka, polohu pinu
+   nesú dáta (`map: [left %, top %]` v data/branches.js). Preto sa nič nesťahuje
+   a mapa má rovnaký tvar v každom okne. */
+.site .cmap{position:relative;height:clamp(260px,32vw,380px);
+  border-radius:var(--r-card);overflow:hidden;border:1px solid var(--l);
+  background:linear-gradient(135deg,#e8eef7,#dbe6f5);}
+.site .cmap::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(0,70,200,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,70,200,.06) 1px,transparent 1px);
+  background-size:40px 40px;}
+.site .cmap-pin{position:absolute;transform:translate(-50%,-100%);color:var(--blue);
+  filter:drop-shadow(0 6px 8px rgba(0,70,200,.35));transition:transform .2s,color .2s;}
+.site .cmap-pin:hover{color:var(--blue-800);transform:translate(-50%,-100%) scale(1.18);}
+/* zhluk: koľko poradcov sedí na tej istej pobočke */
+.site .cmap-count{position:absolute;top:-6px;right:-10px;min-width:20px;height:20px;padding:0 5px;border-radius:var(--r-pill);
+  background:var(--blue);color:#fff;border:2px solid #fff;font-style:normal;font-weight:700;font-size:11px;line-height:16px;
+  text-align:center;}

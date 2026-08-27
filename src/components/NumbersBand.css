@@ -1,0 +1,51 @@
+/* ============ ALLRISK V ČÍSLECH - modrý pás ============
+   Presunuté 2026-08-27 z pages/about.css: pás nesie okrem /o-nas aj úvod,
+   takže si štýly importuje komponent sám (components/NumbersBand.jsx) a nie
+   stránka. Ten istý postup ako pri ekosystéme - stránka, ktorá si sekciu
+   zavolá, si nemá ťahať šatník cudzej stránky.
+
+   Modrý pás je spoločný .banner (pozadie, rádius, žiara, tieň aj sadzba
+   nadpisu žijú tam) - tu je len jeho vnútorný rozvrh. Kopírovať recept
+   pásu do tohto súboru sa nesmie: v prototype sú takéto pásy štyri
+   a druhá kópia gradientu by sa raz rozišla s prvou. */
+
+/* Obsah pásu nad jeho vlastnú žiaru. Dekorácie sú z toho vyňaté: majú rovnakú
+   špecifickosť ako `.site .decor`, ale tento súbor sa načítava po index.css,
+   takže by im to prebilo position:absolute a kresba by spadla do toku ako
+   obrázok. */
+.site .nums-band>*:not(.decor):not(.decor-line){position:relative;z-index:1;}
+.site .nums-head{margin-bottom:clamp(26px,3.5vw,40px);}
+.site .nums-band .ey{display:block;margin-bottom:22px;}
+
+/* Rozvrh dlaždíc je z tlače: „2003" je vysoká dlaždica vľavo cez dva riadky,
+   zvyšných šesť čísel je mriežka vedľa nej. Preto pevný počet stĺpcov a nie
+   auto-fit - pri ňom vychádzalo sedem dlaždíc ako 6 + 1 osamotená. */
+.site .nums{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,1.2vw,14px);}
+.site .num{display:flex;flex-direction:column;gap:6px;padding:var(--pad-card);
+  border-radius:var(--r-card);background:var(--tile-blue);backdrop-filter:var(--tile-blur);}
+.site .num b{font-family:var(--display);font-weight:800;font-size:var(--fs-stat);line-height:1.05;color:#fff;}
+/* popis je o stupeň väčší než systémový popisok pod hodnotou (user, 2026-08-17):
+   na modrom páse s veľkými číslami sa 12px stráca, 14px sa ešte číta ako popis */
+.site .num .c{font-size:var(--fs-sm);color:rgba(255,255,255,.72);line-height:1.4;}
+/* „na trhu již od roku 2003" - v tlači samostatná veľká dlaždica vľavo:
+   popis je nad číslom, dlaždica je vyššia a má opačný kontrast než rad okolo nej.
+
+   JEDINÝ ROZDIEL PROTI RADU JE MIERKA SADZBY (user, 2026-08-17). Značkové gesto
+   na nej neskončilo: dlaždica je to isté sklo ako susedia, len väčšie. Rok drží
+   --fs-title (mierka h1 podstránky, o dva stupne nad --fs-stat radu) a popis
+   stúpa zo 14 na 16px, aby veta „na trhu již od roku 2003" niesla váhu aj
+   v hornom riadku. Žiadne vlastné čísla - obe hodnoty sú systémové tokeny,
+   takže dlaždica rastie a klesá s prepínačom veľkostí ako zvyšok webu. */
+.site .num--lead{grid-row:span 2;justify-content:center;
+  background:var(--tile-blue-h);}
+.site .num--lead .c{font-size:var(--fs-body);}
+.site .num--lead b{font-size:var(--fs-title);}
+
+@media(min-width:620px){
+  .site .nums{grid-template-columns:repeat(3,1fr);}
+}
+@media(min-width:980px){
+  /* 4 stĺpce × 2 riadky = 8 buniek; vysoká dlaždica „2003" berie dve, zvyšných
+     šesť čísel vyplní mriežku presne - žiadna prázdna bunka na konci */
+  .site .nums{grid-template-columns:repeat(4,1fr);}
+}

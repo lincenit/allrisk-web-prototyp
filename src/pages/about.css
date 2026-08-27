@@ -58,44 +58,12 @@
    sedeli na jednej linke; na úzkom okne sa zalomia pod seba. */
 .site .ab-sign img{display:block;height:clamp(60px,7vw,84px);width:auto;max-width:300px;opacity:.85;}
 
-/* ============ ČÍSLA + REGISTROVÉ ÚDAJE ============
-   Modrý pás je spoločný .banner (pozadie, rádius, žiara, tieň aj sadzba
-   nadpisu žijú tam) - tu je len jeho vnútorný rozvrh. Kopírovať recept
-   pásu do stránkového CSS sa nesmie: v prototype sú takéto pásy štyri
-   a druhá kópia gradientu by sa raz rozišla s prvou. */
-/* Obsah pásu nad jeho vlastnú žiaru. Dekorácie sú z toho vyňaté: majú rovnakú
-   špecifickosť ako `.site .decor`, ale about.css sa načítava po index.css, takže
-   by im to prebilo position:absolute a kresba by spadla do toku ako obrázok. */
-.site .ab-band>*:not(.decor):not(.decor-line){position:relative;z-index:1;}
-.site .ab-band-head{margin-bottom:clamp(26px,3.5vw,40px);}
-.site .ab-band .ey{display:block;margin-bottom:22px;}
-/* ZMAZANÉ 2026-08-17 (user): tiráž s registrovými údajmi (.ab-facts) aj s jej
-   dvoma rozvrhmi. Pás nesie čísla, ktoré niečo tvrdia - údaje z rejstříku
-   vedľa nich argument neniesli. */
-
-/* Rozvrh dlaždíc je z tlače: „2003" je vysoká dlaždica vľavo cez dva riadky,
-   zvyšných šesť čísel je mriežka vedľa nej. Preto pevný počet stĺpcov a nie
-   auto-fit - pri ňom vychádzalo sedem dlaždíc ako 6 + 1 osamotená. */
-.site .ab-nums{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(10px,1.2vw,14px);}
-.site .ab-num{display:flex;flex-direction:column;gap:6px;padding:var(--pad-card);
-  border-radius:var(--r-card);background:var(--tile-blue);backdrop-filter:var(--tile-blur);}
-.site .ab-num b{font-family:var(--display);font-weight:800;font-size:var(--fs-stat);line-height:1.05;color:#fff;}
-/* popis je o stupeň väčší než systémový popisok pod hodnotou (user, 2026-08-17):
-   na modrom páse s veľkými číslami sa 12px stráca, 14px sa ešte číta ako popis */
-.site .ab-num .c{font-size:var(--fs-sm);color:rgba(255,255,255,.72);line-height:1.4;}
-/* „na trhu již od roku 2003" - v tlači samostatná veľká dlaždica vľavo:
-   popis je nad číslom, dlaždica je vyššia a má opačný kontrast než rad okolo nej.
-
-   JEDINÝ ROZDIEL PROTI RADU JE MIERKA SADZBY (user, 2026-08-17). Značkové gesto
-   na nej neskončilo: dlaždica je to isté sklo ako susedia, len väčšie. Rok drží
-   --fs-title (mierka h1 podstránky, o dva stupne nad --fs-stat radu) a popis
-   stúpa zo 14 na 16px, aby veta „na trhu již od roku 2003" niesla váhu aj
-   v hornom riadku. Žiadne vlastné čísla - obe hodnoty sú systémové tokeny,
-   takže dlaždica rastie a klesá s prepínačom veľkostí ako zvyšok webu. */
-.site .ab-num--lead{grid-row:span 2;justify-content:center;
-  background:var(--tile-blue-h);}
-.site .ab-num--lead .c{font-size:var(--fs-body);}
-.site .ab-num--lead b{font-size:var(--fs-title);}
+/* ============ ČÍSLA ============
+   Presunuté 2026-08-27 do components/NumbersBand.css - pás nesie okrem tejto
+   stránky aj úvod pod „Proč Allrisk?", takže si štýly importuje komponent sám
+   (components/NumbersBand.jsx) a nie stránka. Ten istý postup ako pri
+   ekosystéme, aj s responzívnou časťou, ktorá stála v spoločnom `@media`
+   nižšie. Triedy sa pri presune premenovali z `ab-*` na `nums-*` / `num`. */
 
 /* ============ SYSTÉM PÉČE O KLIENTA ============
    Štyri kroky ako štyri karty v rade; prvým prvkom karty je ÚSEK LINKY vo
@@ -333,7 +301,6 @@
 @media(min-width:620px){
   .site .ab-helps{grid-template-columns:repeat(3,1fr);}
   .site .ab-projects{grid-template-columns:repeat(2,1fr);}
-  .site .ab-nums{grid-template-columns:repeat(3,1fr);}
   .site .ab-chans{grid-template-columns:repeat(3,1fr);}
 }
 @media(min-width:980px){
@@ -347,14 +314,7 @@
     rgba(0,70,200,.82) 0%,rgba(0,48,150,.86) 40%,rgba(0,40,130,.8) 58%,
     rgba(0,24,84,.44) 82%,rgba(0,24,84,.3) 100%);}
   .site .ab-intro{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:54px;}
-  /* 4 stĺpce × 2 riadky = 8 buniek; vysoká dlaždica „2003" berie dve, zvyšných
-     šesť čísel vyplní mriežku presne - žiadna prázdna bunka na konci */
-  .site .ab-nums{grid-template-columns:repeat(4,1fr);}
 
-  /* ZMAZANÉ 2026-08-19 (user): rozvrh pásu s nadpisom VĽAVO (`.ab-band--nadpis`)
-     aj s prepínačom. Pás má nadpis nad dlaždicami - jediný rozvrh, takže
-     modifikátor netreba a mriežka ôsmich čísel zostáva na štyroch stĺpcoch.
-     Skôr (2026-08-17) z tej istej osi odišla `vedla` - stĺpec s tirážou. */
 
   .site .ab-split{grid-template-columns:minmax(0,var(--split-tx)) minmax(0,var(--split-img));}
   /* zrkadlenie: obrázok do prvého stĺpca aj s jeho šírkou */

@@ -11,6 +11,7 @@ import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import Ecosystem from '../components/Ecosystem.jsx'
 import CareSteps from '../components/CareSteps.jsx'
+import NumbersBand from '../components/NumbersBand.jsx'
 import { SecHead } from '../components/PageParts.jsx'
 import { Decor } from '../components/Decor.jsx'
 import { Line } from '../components/Line.jsx'
@@ -18,7 +19,7 @@ import TabBar from '../components/TabBar.jsx'
 import { DebugPanel } from '../components/DebugPanel.jsx'
 import HeaderDebug from '../components/HeaderDebug.jsx'
 import {
-  NUMBERS, numbers, INTRO, LEADERSHIP, PARTNERS, PROJECTS,
+  INTRO, LEADERSHIP, PARTNERS, PROJECTS,
   CHANNELS, EXAMS, HELP, CERTIFICATES,
 } from '../data/company.js'
 import {
@@ -46,28 +47,11 @@ import {
 
 const CHANNEL_ICONS = { home: IconHome, office: IconBuildingStore, video: IconVideo }
 
-// Poradie čísel na modrom páse - presne podľa tlače (user, 2026-08-12).
-// „Na trhu již od roku 2003" je v brožúre samostatná veľká dlaždica vľavo,
-// ostatné sú rad okolo nej; tu je z toho prvá dlaždica radu, ktorá si to
-// postavenie nesie cez `.ab-num--lead`.
+// Výber a poradie čísel na modrom páse si od 2026-08-27 nesie
+// components/NumbersBand.jsx - pás stojí aj na úvode a dve kópie toho istého
+// výpočtu by sa raz rozišli.
 // Hero čísla nemá: sedem údajov na dvoch miestach je jeden údaj dvakrát,
-// takže všetky stoja tu (user, 2026-08-12).
-const BAND_NUMS = numbers('klienti', 'poradci', 'pojistne', 'skody', 'uvery', 'pobocky')
-
-// ZMAZANÉ 2026-08-17 (user): os „Dlaždice" s voľbou `riadok` (popis vedľa
-// čísla na jednej svislici). Zostáva popis POD číslom, teda jediný rozvrh
-// dlaždice - a s ním aj celá os, lebo prepínač s jednou hodnotou nie je voľba.
-
-// ZMAZANÉ 2026-08-17 (user, ten istý deň): značkové gesto na veľkej dlaždici
-// „2003" (žiara pod číslom / stuha po boku) aj s prepínačom. Dlaždica sa vracia
-// k tomu, čím bola - sklo ako susedia, len väčšie; jediné, čo ju povyšuje, je
-// mierka sadzby. Veľkosti sú v about.css pri `.ab-num--lead`.
-// ZMAZANÉ 2026-08-17: `vedla` (tiráž ako stĺpec vpravo od dlaždíc). Celá os
-// vznikla kvôli tomu, kam postaviť tiráž - tá je z pásu preč.
-// ZMAZANÁ 2026-08-19 (user) aj celá os „Rozvrh pásu" so zvyšnou dvojicou
-// `pod` / `nadpis`: PÁS MÁ NADPIS NAD DLAŽDICAMI, bodka. S nadpisom vľavo
-// museli dlaždice do dvoch stĺpcov, takže sa z ôsmich čísel stal vysoký stĺpec
-// vedľa krátkeho nadpisu - a pás prestal byť pásom.
+// takže všetky stoja na páse (user, 2026-08-12).
 
 // ZMAZANÉ 2026-08-19 (user): prepínače ekosystému - podoba sekcie (`dbg:eko4`)
 // aj poloha šípok (`dbg:ekonav`) aj s components/EcosystemDebug.jsx. Sekcia má
@@ -177,42 +161,11 @@ export default function About() {
         </div>
       </section>
 
-      {/* ============ ČÍSLA + REGISTROVÉ ÚDAJE ============
-          V tlači je to jedna modrá strana: vpravo tabuľka „O společnosti",
-          pod ňou dlaždice s číslami. Tu je to jeden pás v rovnakom poradí. */}
-      <section className="sec wrap">
-        {/* modrý pás je spoločný .banner - tu len jeho vnútorný rozvrh */}
-        <div className="banner ab-band">
-          {/* Linka stránky. Hero je fotka (balón), na tú stuha nepatrí - nesie ju
-              preto prvý plochý modrý pás. Ostatné dva bannery majú len kružnice. */}
-          <Decor />
-          <Line />
-          <div className="ab-band-head">
-            <span className="ey">O společnosti</span>
-            <h2>Čísla, která za nás <b>mluví</b></h2>
-          </div>
-          <div className="ab-nums">
-            {/* Jediná veľká dlaždica pásu. Popis je nad číslom, takže sa
-                zhora nadol číta ako veta „na trhu již od roku 2003". */}
-            <div className="ab-num ab-num--lead">
-              <span className="c">{NUMBERS.odRoku.label}</span>
-              <b>{NUMBERS.odRoku.value}</b>
-            </div>
-            {BAND_NUMS.map((n) => (
-              <div className="ab-num" key={n.label}>
-                <b>{n.value}</b>
-                <span className="c">{n.label}</span>
-              </div>
-            ))}
-          </div>
-          {/* ZMAZANÉ 2026-08-17 (user): tiráž pod dlaždicami (.ab-facts) -
-              právna forma, základné imanie, limit odpovědnosti, statutárne
-              orgány, dozorná rada a obe centrály. Pás nesie čísla, ktoré niečo
-              tvrdia; údaje z rejstříku vedľa nich argument neniesli.
-              Dáta zostávajú v company.js (FACTS, OFFICES) - sú to prepisy
-              z tlače, čakajú na tichšie miesto. */}
-        </div>
-      </section>
+      {/* ============ ČÍSLA ============
+          Pás si od 2026-08-27 nesie komponent sám (components/NumbersBand.jsx):
+          to isté pole s tými istými číslami stojí aj na úvode pod „Proč Allrisk?",
+          takže sadzba ani výber čísel nesmú žiť v stránke. */}
+      <NumbersBand />
 
       {/* ============ EKOSYSTÉM - najdôležitejšia sekcia ============
           SEKCIU SI NESIE KOMPONENT SÁM (`<section class="sec">` + `.wrap`

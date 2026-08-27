@@ -114,11 +114,13 @@ export function SectionHead({ icon, title, action }) {
 }
 
 // Karta človeka (poradce) - avatar, meno, rola. Zhodná v tíme pobočky aj vo formulári.
-export function PersonCard({ a, initials, to, plain }) {
+// `sub` prepíše druhý riadok (zoznam poradcov na /kontakt k role dopĺňa mesto pobočky -
+// na pobočke by to bola zbytočná repetícia, tam je karta v jej vlastnom tíme).
+export function PersonCard({ a, initials, to, plain, sub }) {
   const inner = (
     <>
       <span className="avatar">{initials(a.name)}</span>
-      <span className="tx"><b>{a.name}</b><small>{a.role}</small></span>
+      <span className="tx"><b>{a.name}</b><small>{sub || a.role}</small></span>
     </>
   )
   if (plain) return <div className="pcard plain">{inner}</div>

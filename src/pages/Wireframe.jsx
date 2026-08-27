@@ -44,6 +44,9 @@ import { WHY_VARIANTS, WHY_VARIANT_DEFAULT, whyVariant } from '../bizVariants.js
 import ContactBand from '../components/ContactBand.jsx'
 import SiteFooter from '../components/SiteFooter.jsx'
 import Illus from '../components/Illus.jsx'
+import Ecosystem from '../components/Ecosystem.jsx'
+import NumbersBand from '../components/NumbersBand.jsx'
+import BranchMap from '../components/BranchMap.jsx'
 import HeroVideo from '../components/HeroVideo.jsx'
 import { ReferenceCarousel } from '../components/References.jsx'
 import { REFERENCES_HOME } from '../data/references.js'
@@ -60,7 +63,7 @@ import {
   IconMovie,
   IconHomeDollar, IconHomeSearch, IconHomeCheck,
   IconLicense, IconShieldCheck, IconUserCheck, IconArrowRight,
-  IconLayoutGrid,
+  IconLayoutGrid, IconMapPin,
 } from '@tabler/icons-react'
 
 // Ikony rozcestníka a ilustračné fallbacky: kľúč z dát -> tabler komponent
@@ -298,6 +301,12 @@ export default function Wireframe() {
   // je na úvode len pre podnikateľov - ostatné publiká tú sekciu nemajú.
   const [whyRaw, setWhy] = useDebugOption('bizWhy', WHY_VARIANT_DEFAULT)
   const whyStyle = whyVariant(whyRaw)
+  // Mapa „Kde nás najdete" nad kontaktným boxom. VYPNUTÁ (user, 2026-08-27:
+  // sekciu si dal najprv zmazať, potom vrátiť ako voľbu) - preto `ne` ako
+  // východzia hodnota a nie prepínač dvoch podôb: je to os zap/vyp.
+  const [mapRaw, setMap] = useDebugOption('mapa', 'ne')
+  const showMap = mapRaw === 'ano'
+
   // Podoba hera pre rodiny: `video` (kulisa) alebo `classic` (motto, čísla, dve
   // tlačidlá a video ako karta) - viď src/heroVariants.js. Podobu si nesie
   // sekcia triedou, dokument o nej nemusí vedieť.
@@ -339,7 +348,32 @@ export default function Wireframe() {
           jeho motor (.phil vo wireframe.css, PHIL v data/home.js). */}
 
       {/* ============ PROČ ALLRISK ============ */}
-      {/* Rodiny a obce: tri bloky text + ilustrácia, striedavo.
+      {/* PRIDANÉ 2026-08-27 (user): sekcia sa otvára tým, čo dovtedy žilo len
+          na /o-nas - kolesom ekosystému a modrým pásom s číslami. Je to dôkaz
+          pred argumentom: najprv ČO všetko Allrisk je (šesť línií) a ČÍM to
+          dokladá (čísla), až potom jednotlivé dôvody.
+
+          Obe sekcie si nesie komponent sám a obe stoja na /o-nas z toho istého
+          zdroja - koleso nad `LINES`, pás nad `NUMBERS` (data/company.js).
+          Úprava čísel je preto jedna zmena na jednom mieste, nie dve kópie.
+
+          Nadpis sekcie nesie OKO nad titulkom kolesa, nie samostatný h2:
+          dva veľké nadpisy pod sebou („Proč Allrisk?" a „Ucelený unikátní
+          ekosystém Allrisk") by boli dva nadpisy o tom istom mieste. Ten istý
+          spôsob, akým sekciu uvádza BizCare („Vše pod jednou střechou").
+
+          LEN RODINY A JEDNOTLIVCI (user, 2026-08-27). Podnikatelia koleso majú
+          na konci systému péče (BizCare) a druhýkrát na tej istej stránke
+          nepatrí; úvod pre obce zostáva bez zmeny. Preto sa tu neskúša `why`
+          (to majú aj obce), ale priamo publikum. */}
+      {seg === 'rodiny' && (
+        <>
+          <Ecosystem ey="Proč Allrisk?" />
+          <NumbersBand ey="Allrisk v číslech" />
+        </>
+      )}
+
+      {/* Rodiny a obce: bloky text + ilustrácia, striedavo.
           Podnikatelia: celý systém péče zo zrušenej stránky /podnikatele. */}
       {why ? (
         <section className="sec wrap">
@@ -349,7 +383,15 @@ export default function Wireframe() {
                 <div className="feature-tx">
                   <span className="ey">{f.ey}</span>
                   <h2>{accentTitle(f.t, f.accent)}</h2>
-                  <p>{f.p}</p>
+                  {/* `p` smie byť veta aj pole viet - druhý odstavec je o stupeň
+                      menší (.feature-tx p ~ p), takže blok znesie dlhší text
+                      bez toho, aby prerástol susedný. Odstavec smie byť aj
+                      `{ t, b }` s tučným začiatkom; vysádza ho ten istý
+                      `accentTitle` ako tučné slovo v nadpise. */}
+                  {(Array.isArray(f.p) ? f.p : [f.p]).map((par) => {
+                    const t = par.t || par
+                    return <p key={t.slice(0, 24)}>{accentTitle(t, par.b)}</p>
+                  })}
                   <span className="btn fill">{f.cta} <IconArrowUpRight size={18} stroke={2.2} /></span>
                 </div>
                 <Illus src={f.img} icon={RZ_ICONS[f.ic] || IconShield} />
@@ -421,6 +463,23 @@ export default function Wireframe() {
         />
       </section>
 
+      {/* ============ KDE NÁS NAJDETE - mapa ============ */}
+      {/* VYPNUTÁ, žije len ako voľba v ladiacom paneli (user, 2026-08-27:
+          sekciu si dal najprv zmazať a potom vrátiť ako vypnutú možnosť).
+          Je to TÁ ISTÁ MAPA AKO NA /kontakt (user, 2026-08-27), teda spoločný
+          komponent nad tými istými dátami - nie tlačová strana z brožúry, ktorá
+          tu stála prvý pokus. Pin na každej pobočke, bez filtra: úvod je prehľad,
+          hľadanie patrí na /kontakt.
+
+          BEZ TLAČIDLA (user): pod mapou nič nenasleduje, hneď za ňou je
+          kontaktný box a v ňom „Najít pobočku" už raz stojí. */}
+      {seg === 'rodiny' && showMap && (
+        <section className="sec wrap">
+          <SecHead ey="Pobočky" title={<>Kde nás <b>najdete</b></>} />
+          <BranchMap />
+        </section>
+      )}
+
       {/* ============ KONTAKT (spoločný banner) ============ */}
       <ContactBand />
 
@@ -446,6 +505,14 @@ export default function Wireframe() {
           <DebugGroup
             icon={IconLayoutGrid} label="Proč Allrisk" value={whyStyle} onChange={setWhy} wrap
             options={WHY_VARIANTS}
+          />
+        )}
+        {/* Len pre rodiny - sekcia inde na úvode nie je, tak by prepínač nemal
+            čo prepínať. Os je zap/vyp, nie dve podoby: východzí stav je `ne`. */}
+        {seg === 'rodiny' && (
+          <DebugGroup
+            icon={IconMapPin} label="Mapa poboček" value={mapRaw} onChange={setMap}
+            options={[{ value: 'ne', label: 'Skrytá' }, { value: 'ano', label: 'Zobrazit' }]}
           />
         )}
       </DebugPanel>

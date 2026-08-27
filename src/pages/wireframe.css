@@ -710,6 +710,11 @@
 /* „Proč Allrisk" - varianta zo striedavých feature blokov */
 .site .why-feats{display:flex;flex-direction:column;gap:clamp(44px,7vw,84px);}
 
+/* ZMAZANÉ 2026-08-27 (user): `.wf-map` - rám pre tlačovú mapu z brožúry
+   (public/o-nas/mapa.jpg) v sekcii „Kde nás najdete". Sekcia dostala namiesto
+   obrázka tú istú kresbu s pinmi ako /kontakt (components/BranchMap.jsx), tá si
+   štýly nesie sama. Obrázok zostáva v public, nepoužitý. */
+
 /* príbehy klientov - 4 modelové typy klientov na výber (dlaždica = voľba, nie odkaz) */
 .site .stories{display:grid;grid-template-columns:1fr;gap:18px;}
 .site .story{display:flex;flex-direction:column;align-items:flex-start;gap:8px;border:1px solid var(--l);border-radius:16px;background:var(--box);padding:22px;transition:.2s;text-align:left;font:inherit;color:inherit;cursor:pointer;box-shadow:0 1px 3px rgba(13,31,91,.04);}
