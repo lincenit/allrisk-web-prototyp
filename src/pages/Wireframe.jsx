@@ -357,10 +357,17 @@ export default function Wireframe() {
           zdroja - koleso nad `LINES`, pás nad `NUMBERS` (data/company.js).
           Úprava čísel je preto jedna zmena na jednom mieste, nie dve kópie.
 
-          Nadpis sekcie nesie OKO nad titulkom kolesa, nie samostatný h2:
-          dva veľké nadpisy pod sebou („Proč Allrisk?" a „Ucelený unikátní
-          ekosystém Allrisk") by boli dva nadpisy o tom istom mieste. Ten istý
-          spôsob, akým sekciu uvádza BizCare („Vše pod jednou střechou").
+          NADPISOM SEKCIE JE OTÁZKA (user, 2026-08-27): „Proč si zvolit Allrisk".
+          Prvý pokus ju mal v oku nad tlačovým nadpisom, teda štítok tam, kde má
+          stáť nadpis. Slovo „právě" sa do nej nesmie dostať - má ho nadpis
+          rozcestníka priamo nad touto sekciou („Co právě řešíte?"). Oko nesie „Ucelený ekosystém služeb" - holé „Ekosystém"
+          (východzia hodnota komponentu, tá istá ako na /o-nas) je názov
+          predmetu, nie hlavička sekcie: nad otázkou „proč zvolit" má stáť to,
+          čo je odpoveďou, teda ucelenosť ponuky.
+
+          Veta pod nadpisom tu NIE JE (user): tvrdenie z brožúry („Ucelený
+          unikátní ekosystém Allrisk") sekciu chvíľu uvádzalo ako odpoveď na
+          otázku, ale na otázku odpovedá samotné koleso.
 
           LEN RODINY A JEDNOTLIVCI (user, 2026-08-27). Podnikatelia koleso majú
           na konci systému péče (BizCare) a druhýkrát na tej istej stránke
@@ -368,7 +375,10 @@ export default function Wireframe() {
           (to majú aj obce), ale priamo publikum. */}
       {seg === 'rodiny' && (
         <>
-          <Ecosystem ey="Proč Allrisk?" />
+          <Ecosystem
+            ey="Ucelený ekosystém služeb"
+            title={<>Proč si zvolit <b>Allrisk</b></>}
+          />
           <NumbersBand ey="Allrisk v číslech" />
         </>
       )}

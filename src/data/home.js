@@ -140,7 +140,10 @@ export const WHY = {
   rodiny: [
     {
       key: 'produkty', ey: 'Vlastní produkty',
-      t: 'Inkasní pojištění, které jinde nedostanete', accent: 'jinde nedostanete',
+      // Nadpis je plný názov veci, rovnako ako pri Centre likvidace pod ním
+      // (user, 2026-08-27). Predtým tu stálo „Inkasní pojištění, které jinde
+      // nedostanete" - to sľubovalo inkasný systém, o ktorom nový text nehovorí.
+      t: 'Jedinečné pojištění Allrisk', accent: 'pojištění Allrisk',
       // Znenie z podkladov (user, 2026-08-27). DVA ODSTAVCE, tak ako prišli:
       // prvý je AKO produkty staviame, druhý ČÍM prevyšujú trh. `p` preto smie
       // byť aj pole - blok ich vysadí pod seba (viď Wireframe.jsx).

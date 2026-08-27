@@ -47,8 +47,11 @@ import {
 // stála do tejto zmeny vlastná mriežka šiestich kariet (`.biz-eco`) nad iným
 // rezom dát - dve podoby toho istého tvrdenia. User ju vymenil za tento
 // komponent, takže sa ekosystém kreslí a otáča na oboch miestach rovnako.
-// Líši sa JEDINE oko nad nadpisom (`ey`), preto je to prop - nadpis je na oboch
-// miestach ten istý a ostáva zapísaný tu.
+// Oko nad nadpisom je prop (`ey`) - hlavička sa na každom mieste líši. Od
+// 2026-08-27 je prepisovateľný aj `title`: úvod pre rodiny sekciu volá „Proč
+// zvolit Allrisk?", /o-nas aj podnikatelia berú nadpis z tlače. Veta pod
+// nadpisom nikde nie je - skúšaná bola (tvrdenie z brožúry pod otázkou) a user
+// ju zamietol, na otázku odpovedá samotné koleso.
 //
 // Štýly si komponent importuje sám (pages/ecosystem.css). Boli v about.css,
 // ale stránka, ktorá si sekciu zavolá, si nemá ťahať šatník cudzej stránky.
@@ -64,7 +67,14 @@ const ECO_ICONS = {
   help: IconLifebuoy, scale: IconScale, club: IconSparkles,
 }
 
-export default function Ecosystem({ ey = 'Ekosystém', id }) {
+export default function Ecosystem({
+  ey = 'Ekosystém',
+  // Nadpis je na /o-nas aj u podnikateľov ten istý, preto stojí tu ako východzia
+  // hodnota. Úvod pre rodiny ho prepisuje - sekcia sa tam volá „Proč zvolit
+  // Allrisk?", lebo je to prvý argument stránky, nie výpočet služieb.
+  title = <>Ucelený unikátní <b>ekosystém Allrisk</b></>,
+  id,
+}) {
   const [i, setI] = useState(0)
   // Uhol sa akumuluje, nepočíta sa modulo 360: prechod z poslednej línie na
   // prvú tak koleso dotočí dopredu o krok, a nie späť skoro cez celú kružnicu.
@@ -98,10 +108,7 @@ export default function Ecosystem({ ey = 'Ekosystém', id }) {
     <section id={id} className="sec eco-sec">
       <div className="wrap eco-in">
         <div className="eco-head">
-          <SecHead
-            ey={ey}
-            title={<>Ucelený unikátní <b>ekosystém Allrisk</b></>}
-          />
+          <SecHead ey={ey} title={title} />
         </div>
 
         <div className="eco">

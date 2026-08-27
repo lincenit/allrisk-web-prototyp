@@ -278,9 +278,9 @@ export function BizCare() {
 
           Zostáva JEDINE oko nad nadpisom: „Vše pod jednou střechou" je vetná
           hlavička úvodu, kde sekcia nadväzuje na predchádzajúce pásy; /o-nas má
-          na tom mieste holé „Ekosystém". Nadpis je na oboch miestach ten istý,
-          takže ho nesie komponent. Odišla veta pod ním - na /o-nas žiadna nie je
-          a popis línie ju hovorí presnejšie. */}
+          na tom mieste holé „Ekosystém". Nadpis aj vetu pod ním berieme východzie
+          (nadpis z tlače, veta žiadna) - prepisuje si ich len úvod pre rodiny,
+          kde sa sekcia volá „Proč Allrisk?". */}
       <Ecosystem id="ekosystem" ey="Vše pod jednou střechou" />
     </>
   )

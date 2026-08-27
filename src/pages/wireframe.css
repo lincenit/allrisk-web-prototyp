@@ -693,7 +693,9 @@
    --g600 bol viditeľný skok farby uprostred jedného textu. */
 .site .feature-tx p{color:var(--g600);font-size:var(--fs-lead);max-width:52ch;line-height:1.6;}
 .site .feature-tx p ~ p{font-size:var(--fs-body);max-width:56ch;}
-.site .feature-tx .btn{margin-top:14px;}
+/* Tlačidlo má väčší odstup než riadky textu nad ním (user, 2026-08-27): je to
+   iná vrstva - koniec argumentu a začiatok akcie, nie ďalší odsek. */
+.site .feature-tx .btn{margin-top:26px;}
 .site .illus{position:relative;min-height:300px;border-radius:18px;overflow:hidden;background:radial-gradient(60% 60% at 50% 45%,var(--blue-50),transparent 72%);
   display:flex;align-items:center;justify-content:center;}
 .site .illus-img{width:100%;height:100%;max-height:340px;object-fit:contain;padding:30px;}
