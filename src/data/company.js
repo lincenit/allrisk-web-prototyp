@@ -171,7 +171,7 @@ export const LINES = [
       'měnové konverze', 'privátní bankovnictví'],
   },
   {
-    key: 'servis', label: 'Klientský servis', short: 'Servis', icon: 'help', img: '/o-nas/eko-servis.jpg',
+    key: 'servis', label: 'Likvidace pojistných událostí', short: 'Likvidace', icon: 'help', img: '/o-nas/eko-servis.jpg',
     desc: 'Komfortní služby asistované likvidace pojistných událostí a autopůjčovny poskytované všem našim klientům.',
     items: ['asistovaná likvidace pojistných událostí', 'odborné posudky a poradenství ke škodám',
       'poskytnutí náhradního vozidla při dopravní nehodě i zaviněné a nezaviněné nehodě', 'autopůjčovna'],
