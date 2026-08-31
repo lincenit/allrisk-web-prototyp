@@ -7,7 +7,7 @@
            splýva s pásom pod sebou.
      dole  značka vľavo; vpravo Produkty (panel so VŠETKÝMI obchodnými líniami),
            Společnost (O nás, Kariéra, Blog, Reference), Kontakt, hľadanie,
-           Můj Allrisk a „Nahlásit škodu" (→ kontakt s témou).
+           Klientský portál a „Nahlásit škodu" (→ kontakt s témou).
 
    Do 2026-08-12 tu žili TRI verzie hlavičky (`jeden`, `dva`, `figma`) a ŠTYRI
    varianty lepivosti, do 2026-08-19 tri rozvrhy záložiek (`bila`, `modra`,
@@ -380,10 +380,16 @@ export default function SiteHeader() {
       <IconSearch size={19} stroke={2} /> <span>Hledat</span>
     </button>
   )
-  // aria-label aj pri viditeľnom popisku: v lište je z tlačidla len ikona
-  // (CSS skryje `span`) a bez neho by tam ostalo tlačidlo bez mena. Ten istý
-  // markup nesie aj mobilný drawer, kde popisok vidno.
-  const accountBtn = <button className="hdr-mua" aria-label="Můj Allrisk"><IconUser size={19} stroke={2} /><span>Můj Allrisk</span></button>
+  // Portál je TLAČIDLO s popiskom, nie holá ikona (user, 2026-08-31): vstup do
+  // klientskej zóny sa nemá hádať z panáčika. Ikona (24px, ako lupa) stojí pred
+  // textom a ten istý markup nesie aj mobilný drawer.
+  // aria-label zostáva: na najužšom desktope CSS `span` skryje a bez neho by
+  // tam ostalo tlačidlo bez mena.
+  const accountBtn = (
+    <button className="hdr-mua" aria-label="Klientský portál">
+      <IconUser size={24} stroke={2} /><span>Klientský portál</span>
+    </button>
+  )
   const claimBtn = (
     <Link to={CLAIM_TO} className="hdr-claim" aria-label="Nahlásit škodu" onClick={closeAll}>
       <IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span>
@@ -437,7 +443,7 @@ export default function SiteHeader() {
 
         {/* ---- lišta ----
             Značka vľavo, na druhej strane všetko ostatné: Produkty, Společnost,
-            Kontakt, hľadanie, Můj Allrisk a Nahlásit škodu. */}
+            Kontakt, hľadanie, Klientský portál a Nahlásit škodu. */}
         <div className="hdr-top">
           <div className="hdr-top-in">
             {logo}
@@ -548,7 +554,7 @@ export default function SiteHeader() {
           </div>
           <div className="hdr-mfoot">
             <Link to={CLAIM_TO} className="hdr-claim" onClick={closeDrawer}><IconAlertTriangle size={20} stroke={2} /><span>Nahlásit škodu</span></Link>
-            <button className="hdr-mua"><IconUser size={20} stroke={2} /><span>Můj Allrisk</span></button>
+            <button className="hdr-mua"><IconUser size={20} stroke={2} /><span>Klientský portál</span></button>
           </div>
         </div>
       </div>

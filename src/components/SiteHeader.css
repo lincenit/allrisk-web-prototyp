@@ -24,7 +24,7 @@
    (MegaMenu.css si ho číta). Návrh mal 12px, user ho 2026-08-12 zväčšil - jeden
    token preto, aby sa všetky tie miesta nerozišli po prvom doladení.
    Tlačidlá, z ktorých je v páse len IKONA, ho nepoužívajú: tie musia byť
-   štvorcové - pravidlo je pri .hdr-mua nižšie. */
+   štvorcové - pravidlo je pri .hdr-searchbtn nižšie. */
 /* Tokeny stoja na OBOCH koreňoch hlavičky. Mobilný drawer je súrodenec <header>,
    nie jeho potomok, takže z `.hdr` nededí NIČ. Kým --hdr-item-px žil len tam,
    padala v drawri každá skratka, ktorá ho čítala: neplatná premenná zneplatní
@@ -443,32 +443,28 @@ html[data-hdrtop="obrys"].hero-hdr .hdr--solid .hdr-tabs .hdr-tab.on{color:#fff;
 }
 
 /* ============ AKCIE VPRAVO ============
-   Hľadanie aj účet sú v lište LEN ikony (24px) - v návrhu tam nie je ani jeden
-   popisok. Text v markupe zostáva: nesie ho `aria-label` pre čítačku a v mobilnom
-   drawri je vidieť, tam sa `span` neskrýva.
-   nowrap: „Můj Allrisk" sa v tlačidle s pevnou výškou nesmie zalomiť na dva
-   riadky, keď na lištu tlačí navigácia. */
+   Hľadanie je v lište LEN ikona (24px) - lupa sa nemusí popisovať. Klientský
+   portál popisok MÁ (user, 2026-08-31): je to tlačidlo s obrysom, ikona plus
+   text, takže vedľa červeného „Nahlásit škodu" stojí druhá čitateľná akcia.
+   nowrap: „Klientský portál" sa v tlačidle s pevnou výškou nesmie zalomiť na
+   dva riadky, keď na lištu tlačí navigácia. */
 .hdr-mua{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;
-  border:1px solid transparent;border-radius:var(--r-btn);padding:0 var(--hdr-item-px);
+  border:1px solid #fff;border-radius:var(--r-btn);padding:0 var(--ctl-px);
   font-family:inherit;font-size:var(--fs-body);font-weight:500;color:#fff;background:transparent;
   white-space:nowrap;cursor:pointer;text-decoration:none;transition:.2s;}
 .hdr-mua:hover{background:rgba(255,255,255,.14);}
-.hdr-top-in > .hdr-searchbtn span,.hdr-top-in > .hdr-mua span{display:none;}
-.hdr-top-in > .hdr-searchbtn svg,.hdr-top-in > .hdr-mua svg{width:24px;height:24px;}
-/* IKONOVÉ TLAČIDLÁ = ŠTVOREC. V páse je z lupy aj z účtu len ikona (`span` je
-   skrytý vyššie), takže sa im vodorovné odsadenie NEsmie zväčšovať s ostatnými
+.hdr-top-in > .hdr-searchbtn span{display:none;}
+.hdr-top-in > .hdr-searchbtn svg{width:24px;height:24px;}
+/* IKONOVÉ TLAČIDLÁ = ŠTVOREC. V páse je z lupy len ikona (`span` je skrytý
+   vyššie), takže sa jej vodorovné odsadenie NEsmie zväčšovať s ostatnými
    položkami - inak z 48×48 vznikne ležatý obdĺžnik. Šírka sa preto rovná výške
    a odsadenie ide na nulu.
-   `justify-content` MUSÍ byť tu, na spoločnom pravidle oboch. Lupa nemá vlastnú
-   sadu - berie spoločné pravidlo položiek horného pásu (vyššie), kde stojí
-   vedľa textových odkazov a `justify-content` tam netreba, lebo text šírku
-   vyplní sám. Účet ho má vo vlastnom `.hdr-mua`. Kým mali obe prirodzenú šírku,
-   nebolo to vidieť; v okamihu, keď sa im natvrdo dá 48 px, vznikne 24 px voľna
-   a lupa v ňom sadne doľava - teda na susednú položku.
-   `border-box` nie je poistka navyše: .hdr-mua má 1px priehľadný rám a bez neho
-   by bolo o 2px širšie než vysoké. */
-.hdr-top-in > .hdr-searchbtn,
-.hdr-top-in > .hdr-mua{box-sizing:border-box;width:48px;padding-inline:0;justify-content:center;}
+   `justify-content` musí byť tu: lupa nemá vlastnú sadu, berie spoločné
+   pravidlo položiek horného pásu (vyššie), kde stojí vedľa textových odkazov
+   a tam ho netreba, lebo text šírku vyplní sám. V okamihu, keď sa jej natvrdo
+   dá 48 px, vznikne 24 px voľna a ikona v ňom sadne doľava - teda na susednú
+   položku. Klientský portál sem NEPATRÍ, ten má popisok a šírku podľa textu. */
+.hdr-top-in > .hdr-searchbtn{box-sizing:border-box;width:48px;padding-inline:0;justify-content:center;}
 .hdr-claim{display:inline-flex;align-items:center;gap:8px;height:48px;background:#BB2019;
   color:#fff;border:0;border-radius:var(--r-btn);padding:0 22px;
   font-size:var(--fs-body);font-weight:500;white-space:nowrap;cursor:pointer;
@@ -698,10 +694,14 @@ html[data-hdrtop="obrys"].hero-hdr .hdr--solid .hdr-tabs .hdr-tab.on{color:#fff;
    medzi položkami zo 8 na 4 a odsadenia. Nič nemizne a nič sa nepremenúva -
    to je podmienka z rozpočtu šírky vyššie. */
 @media(min-width:980px) and (max-width:1179px){
-  /* Lišta tu nepotrebuje nič: nesie značku, katalóg (jedna položka), dva odkazy,
-     dve ikony a akciu, čo je 875px pri 934 dostupných na 990px okne. Miesto
-     uvoľnilo práve to, že päť línií sa zbalilo pod „Produkty". Blok zostáva ako
-     miesto, kam sa to dopíše, keby do lišty niečo pribudlo. */
+  /* Lišta niesla značku, katalóg (jedna položka), dva odkazy, dve ikony a akciu,
+     čo je 875px pri 934 dostupných na 990px okne - teda 59px voľna. Popisok
+     „Klientský portál" je z toho rozpočtu o ~130px viac, než tu je, takže sa
+     tlačidlo na najužšom desktope vracia k holej ikone a štvorcu. Nad 1180px
+     miesto je a popisok sa ukáže; na telefóne je portál v drawri, tam popisok
+     vidno vždy. */
+  .hdr-top-in > .hdr-mua span{display:none;}
+  .hdr-top-in > .hdr-mua{box-sizing:border-box;width:48px;padding-inline:0;border-color:transparent;}
 }
 
 /* ============ DOTYK ============
