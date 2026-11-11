@@ -1,12 +1,55 @@
 <!doctype html>
 <html lang="cs">
   <head>
+<script>
+(() => {
+  const h = (s) => {
+  let h1 = 0x811c9dc5, h2 = 5381
+  for (let i = 0; i < s.length; i++) {
+    const c = s.charCodeAt(i)
+    h1 = Math.imul(h1 ^ c, 16777619) >>> 0
+    h2 = (Math.imul(h2, 33) + c) >>> 0
+  }
+  return h1.toString(16) + h2.toString(16)
+};
+  const real = window.fetch.bind(window);
+  window.fetch = (input, init) => {
+    const url = new URL(typeof input === 'string' || input instanceof URL ? input : input.url, location.origin);
+    const method = (init && init.method) || (input instanceof Request ? input.method : 'GET');
+    if (url.origin !== location.origin || !url.pathname.startsWith('/api/')) return real(input, init);
+    if (method.toUpperCase() !== 'GET') return Promise.resolve(new Response('{"ok":true}', { status: 200, headers: { 'content-type': 'application/json' } }));
+    return real('/allrisk-web-prototyp/api/' + h(url.pathname + url.search) + '.json').then((r) =>
+      r.ok ? r : new Response('{"docs":[],"totalDocs":0}', { status: 404, headers: { 'content-type': 'application/json' } }));
+  };
+})();
+</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- One head for every site: favicon, title rule (`documentTitle`), Open Graph. -->
     <link rel="icon" type="image/svg+xml" href="/allrisk-web-prototyp/favicon.svg" />
-    <title>Allrisk.cz - Prototyp</title>
-    <script type="module" crossorigin src="/allrisk-web-prototyp/assets/index-vsqtO79u.js"></script>
-    <link rel="stylesheet" crossorigin href="/allrisk-web-prototyp/assets/index-Bs2kxj-A.css">
+    <link rel="apple-touch-icon" href="/allrisk-web-prototyp/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0046c8" />
+    <title>Allrisk, a.s. - partner, který poradí</title>
+    <meta
+      name="description"
+      content="Pojištění, finance a reality pod jednou střechou. Neprodáváme produkty, jsme partner, který poradí."
+    />
+    <link rel="canonical" href="https://www.allrisk.cz/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Allrisk, a.s." />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:url" content="https://www.allrisk.cz/" />
+    <meta property="og:title" content="Allrisk, a.s. - partner, který poradí" />
+    <meta
+      property="og:description"
+      content="Pojištění, finance a reality pod jednou střechou. Neprodáváme produkty, jsme partner, který poradí."
+    />
+    <meta property="og:image" content="https://www.allrisk.cz/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" crossorigin src="/allrisk-web-prototyp/assets/index-BmQ0LgUb.js"></script>
+    <link rel="stylesheet" crossorigin href="/allrisk-web-prototyp/assets/index-CRL6_JBN.css">
   </head>
   <body>
     <div id="root"></div>
