@@ -1,12 +1,55 @@
 <!doctype html>
 <html lang="cs">
-  <head>
+  <head><script>// Web nemá za sebou CMS: každé čítanie /api ide zo statickej kópie (api-data),
+// odoslanie formulára len odpovie „prijaté" a nikam nič nepošle.
+;(() => {
+  const B = '/allrisk-web-prototyp/'
+  let manifest
+  const load = () => (manifest ||= origFetch(B + 'api-data/manifest.json').then((r) => r.json()))
+  const origFetch = window.fetch.bind(window)
+  const json = (body, status = 200) =>
+    new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })
+
+  window.fetch = async (input, init) => {
+    const raw = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+    const url = new URL(raw, location.href)
+    if (url.origin !== location.origin || !url.pathname.startsWith('/api/')) return origFetch(input, init)
+    const method = (init?.method || (input instanceof Request ? input.method : 'GET')).toUpperCase()
+    if (method !== 'GET') return json({ ok: true, message: 'Odesláno (prototyp, nic se neodeslalo).' })
+    const file = (await load())[url.pathname + url.search]
+    if (file) return origFetch(B + 'api-data/' + file)
+    return json({ docs: [], totalDocs: 0, limit: 0, page: 1, totalPages: 0, hasNextPage: false, hasPrevPage: false })
+  }
+})()
+</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <!-- One head for every site: favicon, title rule (`documentTitle`), Open Graph. -->
     <link rel="icon" type="image/svg+xml" href="/allrisk-web-prototyp/favicon.svg" />
-    <title>Allrisk.cz - Prototyp</title>
-    <script type="module" crossorigin src="/allrisk-web-prototyp/assets/index-BuVCAodk.js"></script>
-    <link rel="stylesheet" crossorigin href="/allrisk-web-prototyp/assets/index-Com9eO-l.css">
+    <link rel="apple-touch-icon" href="/allrisk-web-prototyp/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0046c8" />
+    <title>Allrisk, a.s. - partner, který poradí</title>
+    <meta
+      name="description"
+      content="Pojištění, finance a reality pod jednou střechou. Neprodáváme produkty, jsme partner, který poradí."
+    />
+    <link rel="canonical" href="https://www.allrisk.cz/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Allrisk, a.s." />
+    <meta property="og:locale" content="cs_CZ" />
+    <meta property="og:url" content="https://www.allrisk.cz/" />
+    <meta property="og:title" content="Allrisk, a.s. - partner, který poradí" />
+    <meta
+      property="og:description"
+      content="Pojištění, finance a reality pod jednou střechou. Neprodáváme produkty, jsme partner, který poradí."
+    />
+    <meta property="og:image" content="https://www.allrisk.cz/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="module" crossorigin src="/allrisk-web-prototyp/assets/index-7yKToGHt.js"></script>
+    <link rel="stylesheet" crossorigin href="/allrisk-web-prototyp/assets/index-ECXg5Fud.css">
   </head>
   <body>
     <div id="root"></div>
