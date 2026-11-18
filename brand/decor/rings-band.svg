@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#fff" stroke-width="1">
+  <!-- Banner v šírke .wrap (namerané 4,0). Farebná linka sedí vpravo, kružnice
+       preto držia ľavú polovicu. -->
+  <g vector-effect="non-scaling-stroke">
+    <circle cx="48" cy="96" r="464" stroke-opacity=".15"/>
+    <circle cx="48" cy="96" r="364" stroke-opacity=".15"/>
+    <circle cx="576" cy="480" r="320" stroke-opacity=".09"/>
+    <circle cx="576" cy="480" r="251" stroke-opacity=".09"/>
+  </g>
+</svg>
