@@ -21,6 +21,91 @@
     return json({ docs: [], totalDocs: 0, limit: 0, page: 1, totalPages: 0, hasNextPage: false, hasPrevPage: false })
   }
 })()
+</script><script>// Prepínač verzie produktu (len prototyp): „Text" = ako je na webe, „Co lze sjednat" = záložky
+// z api-data/variants.json (variants.mjs). Adresa s ?verze=sjednat alebo ?verze=text otvorí danú verziu.
+;(() => {
+  const B = '/allrisk-web-prototyp'
+  const KEY = 'prototyp-verze'
+  const asked = new URLSearchParams(location.search).get('verze')
+  if (asked) sessionStorage.setItem(KEY, asked === 'sjednat' ? 'sjednat' : 'text')
+  const on = () => sessionStorage.getItem(KEY) === 'sjednat'
+
+  const shimFetch = window.fetch
+  let variants
+  const load = () => (variants ||= shimFetch(`${B}/api-data/variants.json`).then((r) => r.json()).catch(() => ({ paths: {}, content: {} })))
+  load()
+
+  const originals = new Map()
+  const withVariant = (doc, v) => {
+    if (!doc?.content || !v.content[doc.id]) return doc
+    if (!originals.has(String(doc.id))) originals.set(String(doc.id), doc.content)
+    return { ...doc, content: on() ? v.content[doc.id] : originals.get(String(doc.id)) }
+  }
+
+  window.fetch = async (input, init) => {
+    const res = await shimFetch(input, init)
+    const raw = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url
+    const url = new URL(raw, location.href)
+    if (url.origin !== location.origin || !url.pathname.startsWith('/api/allrisk-products')) return res
+    const [body, v] = [await res.json(), await load()]
+    const out = body.docs ? { ...body, docs: body.docs.map((d) => withVariant(d, v)) } : withVariant(body, v)
+    return new Response(JSON.stringify(out), { status: res.status, headers: { 'content-type': 'application/json' } })
+  }
+
+  // React Query web nevystavuje, tak sa klient nájde v strome Reactu; ak nie, stránka sa obnoví.
+  const queryClient = () => {
+    const root = document.getElementById('root')
+    const key = root && Object.keys(root).find((k) => k.startsWith('__reactContainer$'))
+    const stack = key ? [root[key]] : []
+    for (let n = 0; stack.length && n < 5000; n++) {
+      const f = stack.pop()
+      const c = f.memoizedProps?.client
+      if (c?.getQueryCache && c?.setQueryData) return c
+      if (f.sibling) stack.push(f.sibling)
+      if (f.child) stack.push(f.child)
+    }
+  }
+  const set = async (value) => {
+    sessionStorage.setItem(KEY, value)
+    const [c, v] = [queryClient(), await load()]
+    if (!c) return location.reload()
+    for (const q of c.getQueryCache().findAll({ queryKey: ['allrisk', 'product'] })) c.setQueryData(q.queryKey, (d) => withVariant(d, v))
+    draw()
+  }
+
+  const box = document.createElement('div')
+  box.setAttribute('role', 'group')
+  box.setAttribute('aria-label', 'Verze stránky (jen v prototypu)')
+  box.innerHTML = `<style>
+    #proto-verze{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;display:flex;align-items:center;gap:4px;padding:6px;border-radius:14px;background:#0a1650;box-shadow:0 10px 30px rgb(10 22 80/.35);font:600 14px/1 Inter,system-ui,sans-serif;white-space:nowrap;max-width:calc(100vw - 24px)}
+    #proto-verze[hidden]{display:none}
+    #proto-verze span{padding:0 10px;color:#b9c7ff;font-weight:500}
+    #proto-verze button{min-height:44px;padding:0 16px;border:0;border-radius:10px;background:transparent;color:#fff;font:inherit;cursor:pointer}
+    #proto-verze button:hover{background:rgb(255 255 255/.12)}
+    #proto-verze button[aria-pressed=true]{background:#fff;color:#0046c8}
+    #proto-verze button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+    @media(max-width:480px){#proto-verze span{display:none}}
+  </style><span>Verze</span><button type="button" data-v="text">Text</button><button type="button" data-v="sjednat">Co lze sjednat</button>`
+  box.id = 'proto-verze'
+  box.hidden = true
+  box.addEventListener('click', (e) => {
+    const v = e.target.closest('button')?.dataset.v
+    if (v) set(v)
+  })
+  const draw = async () => {
+    const v = await load()
+    const p = location.pathname.replace(B, '').replace(/\/$/, '')
+    box.hidden = !v.paths[p]
+    for (const b of box.querySelectorAll('button')) b.setAttribute('aria-pressed', String((b.dataset.v === 'sjednat') === on()))
+  }
+  const start = () => {
+    document.body.append(box)
+    draw()
+    let last = location.pathname
+    setInterval(() => { if (location.pathname !== last) { last = location.pathname; draw() } }, 200)
+  }
+  document.body ? start() : document.addEventListener('DOMContentLoaded', start)
+})()
 </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
